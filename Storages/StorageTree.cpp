@@ -28,3 +28,25 @@ QStringList StorageTree::children(const QString &id) const
 {   
     return nodes_.value(id).childrenIDs();
 }
+
+int StorageTree::level(const QString &node) const
+{
+    return level("root", node,  1);
+}
+
+int StorageTree::level(const QString &node, const QString &find, const int l) const
+{
+    const StorageTreeNode current = nodes_.value(node);
+    if(node == find)
+    {
+        return l;
+    }
+    else
+    {
+        foreach(const StorageTreeNode &child, current.children())
+        {
+            return level(child.id(), find,  l + 1);
+        }
+        return 0;
+    }
+}

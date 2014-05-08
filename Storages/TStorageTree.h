@@ -14,6 +14,9 @@ public:
 private slots:
     void TestChildren_data();
     void TestChildren();
+
+    void TestLevel_data();
+    void TestLevel();
 };
 
 #endif // TSTORAGETREE_H

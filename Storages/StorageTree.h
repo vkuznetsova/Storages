@@ -56,6 +56,11 @@ public:
 
     QStringList children(const QString &id) const;
 
+    int level(const QString &node) const;
+
+protected:
+    int level(const QString &node, const QString &find, const int l) const;
+
 private:
     QString rootID_;
     QHash<QString, StorageTreeNode> nodes_;
