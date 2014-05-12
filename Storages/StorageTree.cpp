@@ -29,10 +29,12 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
 {
     if(!nodes_.contains(parent))
         return *this;
-    const_cast<StorageTreeNode&>(child).setParent(parent);
-    nodes_.insert(child.id(),child);
-    nodes_[parent].addChild(child);
 
+    StorageTreeNode newChild = child;
+    newChild.setParent(parent);
+
+    nodes_.insert(newChild.id(),newChild);
+    nodes_[parent].addChild(newChild);
     return *this;
 }
 
@@ -68,15 +70,18 @@ QString StorageTree::parent(const QString &child) const
     return nodes_.value(child).getParent();
 }
 
-/*bool StorageTree::operator ==(const StorageTree &tree) const
+bool StorageTree::operator ==(const StorageTree &tree) const
 {
 
-    return rootID_ == tree.root().id();
+    // return rootID_ == tree.root().id();
+    // qDebug()<<"== "<<root().id()<<"  "<<nodes_.value(root().id()).childrenIDs();
+    //qDebug()<<"S-record-this:"<<toString()<<"S-record-tree:"<<tree.toString();
+    return toString() == tree.toString();
 }
 
 void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTree &tree) const
- {
-    QStringList children  = parentNode.childrenIDs();
+{
+    QStringList children = parentNode.childrenIDs();
     for(int i = 0; i < children.size(); i++)
     {
         QString idChild = children.at(i);
@@ -84,15 +89,16 @@ void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTre
         tree.addChild(parentNode.id(),elCopy);
         recursiveSubTree(elCopy, tree);
     }
- }
+}
 
 StorageTree StorageTree::subTree(const QString &root) const
 {
-    StorageTree treeCopy(nodes_.value(root));
+    StorageTree treeCopy;
+    treeCopy.setRoot(StorageTreeNode(root));
     recursiveSubTree(nodes_.value(root), treeCopy);
     return treeCopy;
 
-}*/
+}
 
 void StorageTree::recursive(const StorageTreeNode &parent, QString &sRecord) const
 {
@@ -137,3 +143,13 @@ bool StorageTree:: isBoolean()
 
     return recursiveISBoolean(root());
 }
+
+/*bool StorageTree::isBalanced()
+{
+
+}
+
+QStringList StorageTree::leafs(const QString &node)
+{
+
+}*/

@@ -21,8 +21,8 @@ private slots:
     void TestParent_data();
     void TestParent();
 
-   /* void TestSubTree_data();
-    void TestSubTree();*/
+    void TestSubTree_data();
+    void TestSubTree();
 
     void TestToString_data();
     void TestToString();
@@ -32,6 +32,14 @@ private slots:
 
     void TestIsBoolean_data();
     void TestIsBoolean();
+
+   /* void TestIsBalanced_data();
+    void TestIsBalanced();
+
+    void TestLeafs_data();
+    void TestLeafs();*/
+
+
 };
 
 #endif // TSTORAGETREE_H

@@ -78,11 +78,15 @@ public:
 
     QString toString() const;
 
-   // bool operator ==(const StorageTree &tree) const;
+    bool operator ==(const StorageTree &tree) const;
 
     bool isLeaf(const QString &node);
 
     bool isBoolean();
+
+   /* bool isBalanced();
+
+    QStringList leafs(const QString &node);*/
 
 protected:
     int level(const QString &node, const QString &find, const int l) const;
@@ -96,9 +100,8 @@ private:
 
     bool recursiveISBoolean(const StorageTreeNode &parent) const;
 
-    //void recursiveSubTree(const StorageTreeNode &parent, StorageTree &tree) const;
+    void recursiveSubTree(const StorageTreeNode &parent, StorageTree &tree) const;
 };
-
 Q_DECLARE_METATYPE(StorageTree)
 
 #endif // STORAGETREE_H
