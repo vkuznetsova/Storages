@@ -84,9 +84,9 @@ public:
 
     bool isBoolean();
 
-   /* bool isBalanced();
+   // bool isBalanced();
 
-    QStringList leafs(const QString &node);*/
+    QStringList leafs(const QString &node);
 
 protected:
     int level(const QString &node, const QString &find, const int l) const;
@@ -101,6 +101,8 @@ private:
     bool recursiveISBoolean(const StorageTreeNode &parent) const;
 
     void recursiveSubTree(const StorageTreeNode &parent, StorageTree &tree) const;
+
+    void recursiveLeafs(const StorageTreeNode &parent, QStringList &children) const;
 };
 Q_DECLARE_METATYPE(StorageTree)
 

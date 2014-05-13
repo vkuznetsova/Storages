@@ -33,11 +33,11 @@ private slots:
     void TestIsBoolean_data();
     void TestIsBoolean();
 
-   /* void TestIsBalanced_data();
-    void TestIsBalanced();
+    /*void TestIsBalanced_data();
+    void TestIsBalanced();*/
 
     void TestLeafs_data();
-    void TestLeafs();*/
+    void TestLeafs();
 
 
 };

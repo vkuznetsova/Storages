@@ -72,10 +72,6 @@ QString StorageTree::parent(const QString &child) const
 
 bool StorageTree::operator ==(const StorageTree &tree) const
 {
-
-    // return rootID_ == tree.root().id();
-    // qDebug()<<"== "<<root().id()<<"  "<<nodes_.value(root().id()).childrenIDs();
-    //qDebug()<<"S-record-this:"<<toString()<<"S-record-tree:"<<tree.toString();
     return toString() == tree.toString();
 }
 
@@ -90,6 +86,7 @@ void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTre
         recursiveSubTree(elCopy, tree);
     }
 }
+
 
 StorageTree StorageTree::subTree(const QString &root) const
 {
@@ -147,9 +144,32 @@ bool StorageTree:: isBoolean()
 /*bool StorageTree::isBalanced()
 {
 
+}*/
+
+
+void StorageTree::recursiveLeafs(const StorageTreeNode &parent, QStringList &children) const
+{
+    QStringList childs  = parent.childrenIDs();
+    if(nodes_.value(parent.id()).childrenIDs().isEmpty()) return;
+    for(int i = 0; i < childs.size(); i++)
+    {
+        QString idChild = childs.at(i);
+        if(!nodes_[idChild].childrenIDs().isEmpty())
+        {
+        recursiveLeafs(nodes_[idChild], children);
+        }
+        else
+        {
+            children += idChild;
+        }
+    }
 }
 
 QStringList StorageTree::leafs(const QString &node)
 {
+    QStringList children;
+    StorageTree(nodes_[node]).subTree(node);
+    recursiveLeafs(nodes_[node], children);
+    return children;
 
-}*/
+}
