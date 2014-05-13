@@ -141,10 +141,32 @@ bool StorageTree:: isBoolean()
     return recursiveISBoolean(root());
 }
 
-/*bool StorageTree::isBalanced()
+bool StorageTree::recursiveIsBalanced(const StorageTreeNode &parent) const
 {
+    QStringList children = parent.childrenIDs();
+    if(children.isEmpty())
+        return false;
+    for(int i = 0; i < children.size(); i++)
+    {
+        QString idChild = children.at(i);
+        if(!recursiveIsBalanced(nodes_.value(idChild)))
+        {
+            if(children.size() == nodes_.value(parent.id()).childrenIDs().size()
+                    && StorageTree(nodes_[idChild]).isLeaf(idChild)
+                    && StorageTree(nodes_[nodes_.value(idChild).id()]).isLeaf(nodes_.value(idChild).id()) && level(idChild) == level(nodes_.value(idChild).id()))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 
-}*/
+}
+
+bool StorageTree::isBalanced()
+{
+    return recursiveIsBalanced(root());
+}
 
 
 void StorageTree::recursiveLeafs(const StorageTreeNode &parent, QStringList &children) const
@@ -156,7 +178,7 @@ void StorageTree::recursiveLeafs(const StorageTreeNode &parent, QStringList &chi
         QString idChild = childs.at(i);
         if(!nodes_[idChild].childrenIDs().isEmpty())
         {
-        recursiveLeafs(nodes_[idChild], children);
+            recursiveLeafs(nodes_[idChild], children);
         }
         else
         {
@@ -164,6 +186,7 @@ void StorageTree::recursiveLeafs(const StorageTreeNode &parent, QStringList &chi
         }
     }
 }
+
 
 QStringList StorageTree::leafs(const QString &node)
 {
