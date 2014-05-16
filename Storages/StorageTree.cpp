@@ -1,5 +1,10 @@
 #include "StorageTree.h"
+#include"BooleanStorageTreePredicat.h"
+#include"BalancedStorageTreePredicat.h"
+#include"NSunsStorageTreePredicat.h"
+#include"IDStorageTreePredicat.h"
 #include <QDebug>
+
 
 StorageTree::StorageTree()
 {
@@ -10,6 +15,7 @@ StorageTree::StorageTree(const StorageTreeNode &root)
 {
     rootID_ = root.id();
     nodes_.insert(root.id(), root);
+    nodes_[root.id()].setLevel(1);
 }
 
 StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
@@ -17,12 +23,18 @@ StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
     nodes_.remove(root.id());
     rootID_ = root.id();
     nodes_.insert(root.id(), root);
+    nodes_[root.id()].setLevel(1);
     return *this;
 }
 
 StorageTreeNode StorageTree:: root()const
 {
-    return nodes_[rootID_];
+    return nodes_.value(rootID_);
+}
+
+StorageTreeNode StorageTree::node(const QString &id) const
+{
+    return nodes_.value(id);
 }
 
 StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode &child)
@@ -32,9 +44,13 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
 
     StorageTreeNode newChild = child;
     newChild.setParent(parent);
+    newChild.setLevel(nodes_[parent].level() + 1);
+    nodes_[parent].setLeaf(false);
+
 
     nodes_.insert(newChild.id(),newChild);
     nodes_[parent].addChild(newChild);
+    nodes_[newChild.id()].setLeaf(true);
     return *this;
 }
 
@@ -45,7 +61,7 @@ QStringList StorageTree::children(const QString &id) const
 
 int StorageTree::level(const QString &node) const
 {
-    return level("root", node,  1);
+    return nodes_.value(node).level();
 }
 
 int StorageTree::level(const QString &node, const QString &find, const int l) const
@@ -116,12 +132,12 @@ QString StorageTree:: toString() const
     return sRecord;
 }
 
-bool StorageTree::isLeaf(const QString &node)
+bool StorageTree::isLeaf(const QString &node) const
 {
-    return nodes_[node].childrenIDs().isEmpty();
+    return nodes_.value(node).childrenIDs().isEmpty();
 }
 
-bool StorageTree::recursiveISBoolean(const StorageTreeNode &parent) const
+/*bool StorageTree::recursiveISBoolean(const StorageTreeNode &parent) const
 {
     QStringList children  = parent.childrenIDs();
     if(!children.isEmpty() && children.size() != 2)
@@ -133,15 +149,15 @@ bool StorageTree::recursiveISBoolean(const StorageTreeNode &parent) const
             return false;
     }
     return true;
-}
+}*/
 
 bool StorageTree:: isBoolean()
 {
-
-    return recursiveISBoolean(root());
+    BooleanStorageTreePredicat p;
+    return all(&p);
 }
 
-bool StorageTree::recursiveIsBalanced(const StorageTreeNode &parent) const
+/*bool StorageTree::recursiveIsBalanced(const StorageTreeNode &parent) const
 {
     QStringList children = parent.childrenIDs();
     if(children.isEmpty())
@@ -161,11 +177,34 @@ bool StorageTree::recursiveIsBalanced(const StorageTreeNode &parent) const
     }
     return false;
 
-}
+}*/
 
 bool StorageTree::isBalanced()
 {
-    return recursiveIsBalanced(root());
+    int count = -1;
+    int level = -1;
+
+    foreach(const QString &nodeID, nodes_.keys())
+    {
+        if(isLeaf(nodeID))
+        {
+            level = this->level(nodeID);
+        }
+        else
+        {
+
+            count = nodes_.value(nodeID).children().size();
+        }
+
+        if(count >= 0 && level >= 0)
+        {
+            break;
+        }
+    }
+
+    BalancedStorageTreePredicat p(count, level);
+
+    return all(&p);
 }
 
 
@@ -196,3 +235,52 @@ QStringList StorageTree::leafs(const QString &node)
     return children;
 
 }
+
+bool StorageTree::all(StorageTreePredicat *predicat) const
+{
+    foreach(const QString &nodeID, nodes_.keys())
+    {
+        if(!predicat->check(*this, nodeID))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool StorageTree::any(StorageTreePredicat *predicat) const
+{
+    foreach(const QString &nodeID, nodes_.keys())
+    {
+        if(predicat->check(*this, nodeID))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool StorageTree::idSize(const int size) const
+{
+    IDStorageTreePredicat p(size);
+    return all(&p);
+}
+
+bool StorageTree:: moreNSuns(const int count) const
+{
+    NSunsStorageTreePredicat p(count, StorageUtils::greater);
+    return any(&p);
+}
+
+bool StorageTree::nSuns(const int count) const
+{
+    NSunsStorageTreePredicat p(count, StorageUtils::equal);
+    return any(&p);
+
+}
+
+/*int StorageTree::run(QString &node)
+{
+    return 0;
+
+}*/

@@ -21,4 +21,12 @@ SOURCES += main.cpp \
 
 HEADERS += \
     StorageTree.h \
-    TStorageTree.h
+    TStorageTree.h \
+    StorageTreeNode.h \
+    StorageTreeNodeMap.h \
+    StorageTreePredicat.h \
+    BooleanStorageTreePredicat.h \
+    StorageUtils.h \
+    BalancedStorageTreePredicat.h \
+    IDStorageTreePredicat.h \
+    NSunsStorageTreePredicat.h

@@ -39,6 +39,18 @@ private slots:
     void TestLeafs_data();
     void TestLeafs();
 
+    void TestCheck_data();
+    void TestCheck();
+
+    void TestCheckMore_data();
+    void TestCheckMore();
+
+    void TestNSuns_data();
+    void TestNSuns();
+
+    /* void TestRun_data();
+    void TestRun();*/
+
 
 };
 
