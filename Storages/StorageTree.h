@@ -6,7 +6,7 @@
 #include<QList>
 #include"StorageTreeNode.h"
 #include"StorageTreeNodeMap.h"
-
+#include"StorageUtils.h"
 
 class StorageTreePredicat;
 
@@ -26,7 +26,9 @@ public:
 
     StorageTree& addChild(const QString &parent, const StorageTreeNode &child);
 
-    QStringList children(const QString &id) const;
+    QStringList childrenIDs(const QString &id) const;
+
+    QList<StorageTreeNode> children(const QString &id) const;
 
     int level(const QString &node) const;
 
@@ -56,7 +58,9 @@ public:
 
     bool nSuns(const int count) const;
 
-    //int run(QString &node);
+    StorageTree run() const;
+
+//    void run(const QString &nodeID, StorageTree &tree) const;
 
 protected:
     int level(const QString &node, const QString &find, const int l) const;
@@ -72,9 +76,17 @@ private:
 
     void recursiveSubTree(const StorageTreeNode &parent, StorageTree &tree) const;
 
-    void recursiveLeafs(const StorageTreeNode &parent, QStringList &children) const;
+    void recursiveLeafs(const StorageTreeNode &parent, QStringList &childrenIDs) const;
 
     // bool recursiveIsBalanced(const StorageTreeNode &parent) const;
+
+    StorageTree recursiveRun(const StorageTreeNode &parent) const;
+
+//    void runLeaf(const QString &nodeID, StorageTree &tree) const;
+
+//    void runInternal(const QString &nodeID, StorageTree &tree) const;
+
+
 };
 Q_DECLARE_METATYPE(StorageTree)
 

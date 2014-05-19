@@ -9,10 +9,12 @@ class StorageTreeNode
 public:
     int (*expense_)();
     StorageTreeNode(const QString &id = QString(),
-                    QList<StorageTreeNode> children = QList<StorageTreeNode>(),
-                    const int level = 0, const int balance = 0, int (*expense)()=0) :
+                    QList<QString> childrenID = QList<QString>(),
+                    const int level = 0,
+                    int(*expense)() = StorageUtils::expense,
+                    int balance = 0) :
         id_(id),
-        children_(children),
+        childrenID_(childrenID),
         level_(level),
         balance_(balance),
         expense_(expense)
@@ -24,24 +26,14 @@ public:
         return id_;
     }
 
-    QStringList childrenIDs() const
+    QStringList childrenID() const
     {
-        QStringList ids;
-        foreach(StorageTreeNode child, children_)
-        {
-            ids << child.id();
-        }
-        return ids;
+        return childrenID_;
     }
 
-    void addChild(const StorageTreeNode &child)
+    void addChild(const QString &childID)
     {
-        children_ << child;
-    }
-
-    QList<StorageTreeNode> children() const
-    {
-        return children_;
+        childrenID_ << childID;
     }
 
     void setParent(const QString &parent = QString())
@@ -86,7 +78,7 @@ public:
 
 private:
     QString id_;
-    QList<StorageTreeNode> children_;
+    QList<QString> childrenID_;
     QString parent_;
     bool isLeaf_;
     int level_;

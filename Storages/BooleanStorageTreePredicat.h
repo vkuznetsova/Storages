@@ -11,7 +11,7 @@ class BooleanStorageTreePredicat : public StorageTreePredicat
 public:
     bool check(const StorageTree &tree, const QString &nodeID) const
     {
-        return tree.node(nodeID).children().size() == 2 || tree.isLeaf(nodeID);
+        return tree.node(nodeID).childrenID().size() == 2 || tree.isLeaf(nodeID);
     }
 };
 

@@ -16,7 +16,8 @@ public:
 
     static int expense()
     {
-        return 7;
+        int exp = 7;
+        return exp;
     }
 };
 

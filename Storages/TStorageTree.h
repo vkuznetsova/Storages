@@ -48,8 +48,8 @@ private slots:
     void TestNSuns_data();
     void TestNSuns();
 
-    /* void TestRun_data();
-    void TestRun();*/
+//    void TestRun_data();
+//    void TestRun();
 
 
 };
