@@ -48,8 +48,20 @@ private slots:
     void TestNSuns_data();
     void TestNSuns();
 
-//    void TestRun_data();
-//    void TestRun();
+    void TestRun_data();
+    void TestRun();
+
+    void TestTotalSum_data();
+    void TestTotalSum();
+
+    void TestPositiveElemsSum_data();
+    void TestPositiveElemsSum();
+
+    void TestEuclidMetric_data();
+    void TestEuclidMetric();
+
+    void TestAccumBalance_data();
+    void TestAccumBalance();
 
 
 };

@@ -56,7 +56,7 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
 }
 
 QStringList StorageTree::childrenIDs(const QString &id) const
-{   
+{
     return nodes_.value(id).childrenID();
 }
 
@@ -126,14 +126,14 @@ StorageTree StorageTree::subTree(const QString &root) const
 
 }
 
-void StorageTree::recursive(const StorageTreeNode &parent, QString &sRecord) const
+void StorageTree::recursiveToString(const StorageTreeNode &parent, QString &sRecord) const
 {
     QStringList children  = parent.childrenID();
     sRecord += "(" + parent.id();
     for(int i = 0; i < children.size(); i++)
     {
         QString idChild = children.at(i);
-        recursive(nodes_.value(idChild), sRecord);
+        recursiveToString(nodes_.value(idChild), sRecord);
     }
     sRecord += ")";
 
@@ -141,7 +141,7 @@ void StorageTree::recursive(const StorageTreeNode &parent, QString &sRecord) con
 QString StorageTree:: toString() const
 {
     QString sRecord;
-    recursive(nodes_.value(rootID_), sRecord);
+    recursiveToString(nodes_.value(rootID_), sRecord);
     return sRecord;
 }
 
@@ -272,6 +272,41 @@ bool StorageTree::any(StorageTreePredicat *predicat) const
     return false;
 }
 
+StorageTree StorageTree::map(StorageTreeNodeMap *map) const
+{
+    QHash<QString, StorageTreeNode> nodes;
+
+    foreach(const QString nodeID, nodes_.keys())
+    {
+        nodes.insert(nodeID, map->map(nodes_.value(nodeID)));
+    }
+
+    return StorageTree(rootID_, nodes);
+}
+
+int StorageTree::sum(STNTotalSum *sum) const
+{
+    QList<int> elems;
+    foreach(const QString &nodeID, nodes_.keys())
+    {
+        elems << sum->map(nodes_.value(nodeID));
+    }
+
+    return sum->sum(elems);
+}
+
+QString StorageTree::fold(const QString &acc, const QString &nodeID, STNFold *f) const
+{
+    QString res = acc;
+    foreach(const QString &childID, nodes_.value(nodeID).childrenID())
+    {
+        res = fold(res, childID, f);
+    }
+    res = f->left(res, nodes_.value(nodeID));
+
+    return res;
+}
+
 bool StorageTree::idSize(const int size) const
 {
     IDStorageTreePredicat p(size);
@@ -291,50 +326,58 @@ bool StorageTree::nSuns(const int count) const
 
 }
 
-//StorageTree StorageTree::run() const
-//{
-//    StorageTree tree(nodes_.value(rootID_));
-//    run(rootID_, tree);
-//    return tree;
-//}
+StorageTree::StorageTree(const QString &rootID,
+                         const QHash<QString, StorageTreeNode> &nodes) :
+    rootID_(rootID),
+    nodes_(nodes)
+{
+}
 
-//void StorageTree::run(const QString &nodeID, StorageTree &tree) const
-//{
-//    if(isLeaf(nodeID))
-//    {
-//        return runLeaf(nodeID, tree);
-//    }
-//    else
-//    {
-//        return runInternal(nodeID, tree);
-//    }
-//}
+StorageTree StorageTree::run() const
+{
+    STNConsumptionMap m(StorageTreeNode().getExpence());
 
+    return map(&m);
+}
 
-//void StorageTree::runLeaf(const QString &nodeID, StorageTree &tree) const
-//{
-//    int forecastBalance = nodes_.value(nodeID).getBalance() - StorageUtils::expense();
-//    tree.addChild(parent(nodeID),
-//                  StorageTreeNode(nodeID,
-//                                  QList<QString>(),
-//                                  level(nodeID),
-//                                  StorageUtils::expense,
-//                                  forecastBalance));
-//}
+int StorageTree::totalSum()
+{
+    QList<int> data;
+    foreach(const QString &nodeID, nodes_.keys())
+    {
+        data<<nodes_.value(nodeID).getBalance();
+    }
+    return STNTotalSum().sum(data);
+}
 
-//void StorageTree::runInternal(const QString &nodeID, StorageTree &tree) const
-//{
+int StorageTree::PositiveElemsSum()
+{
+    QList<int> data;
+    foreach(const QString &nodeID, nodes_.keys())
+    {
+        if(nodes_.value(nodeID).getBalance() < 0)
+            continue;
+        else{
+            data<<nodes_.value(nodeID).getBalance();
+        }
+    }
+    return STNTotalSum().sum(data);
 
-//    foreach(const QString &child, childrenIDs(nodeID))
-//    {
-//        run(child, tree);
-//    }
-//    int forecastBalance = nodes_.value(nodeID).getBalance() - StorageUtils::expense();
-//    tree.addChild(parent(nodeID),
-//                  StorageTreeNode(nodeID,
-//                                  tree.children(nodeID),
-//                                  level(nodeID),
-//                                  StorageUtils::expense,
-//                                  forecastBalance));
+}
 
-//}
+int StorageTree::euclidMetric()
+{
+    QList<int> data;
+    foreach(const QString &nodeID, nodes_.keys())
+    {
+          data<<pow((nodes_.value(nodeID).getExpence()- nodes_.value(nodeID).getBalance()), 2);
+    }
+    return sqrt(STNTotalSum().sum(data));
+
+}
+
+StorageTree StorageTree::accumBalance(const StorageTree &tree) const
+{
+
+}
+

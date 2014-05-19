@@ -7,6 +7,8 @@
 #include"StorageTreeNode.h"
 #include"StorageTreeNodeMap.h"
 #include"StorageUtils.h"
+#include"STNFold.h"
+#include"STNTotalSum.h"
 
 class StorageTreePredicat;
 
@@ -49,8 +51,10 @@ public:
     QStringList leafs(const QString &node);
 
     bool all(StorageTreePredicat *predicat) const;
-
     bool any(StorageTreePredicat *predicat) const;
+    StorageTree map(StorageTreeNodeMap *map) const;
+    int sum(STNTotalSum *sum) const;
+    QString fold(const QString &init, const QString &nodeID, STNFold *f) const;
 
     bool idSize(const int size) const;
 
@@ -60,9 +64,17 @@ public:
 
     StorageTree run() const;
 
-//    void run(const QString &nodeID, StorageTree &tree) const;
+    int totalSum();
+
+    int PositiveElemsSum();
+
+    int euclidMetric();
+
+    StorageTree accumBalance(const StorageTree &tree) const;
 
 protected:
+    StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes);
+
     int level(const QString &node, const QString &find, const int l) const;
 
 
@@ -70,7 +82,7 @@ private:
     QString rootID_;
     QHash<QString, StorageTreeNode> nodes_;
 
-    void recursive(const StorageTreeNode &parent, QString &sRecord) const;
+    void recursiveToString(const StorageTreeNode &parent, QString &sRecord) const;
 
     // bool recursiveISBoolean(const StorageTreeNode &parent) const;
 
@@ -82,33 +94,8 @@ private:
 
     StorageTree recursiveRun(const StorageTreeNode &parent) const;
 
-//    void runLeaf(const QString &nodeID, StorageTree &tree) const;
-
-//    void runInternal(const QString &nodeID, StorageTree &tree) const;
-
-
 };
 Q_DECLARE_METATYPE(StorageTree)
 
-
-
-
-
-/*class OnlyNSunsStorageTreePredicat: public StorageTreePredicat
-{
-public:
-    bool (*equal_)(int, int);
-    OnlyNSunsStorageTreePredicat(const int count, bool (*equal)(int, int)):
-        count_(count), equal_(equal)
-    {}
-    bool check(const StorageTree &tree, const QString &nodeID) const
-    {
-
-        return equal_(tree.node(nodeID).childrenIDs().size(), count_) && !tree.isLeaf(nodeID);
-
-    }
-private:
-    int count_;
-};*/
 
 #endif // STORAGETREE_H

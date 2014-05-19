@@ -4,14 +4,15 @@
 #include <QtCore>
 #include"StorageUtils.h"
 
+class STNConsumptionMap;
+
 class StorageTreeNode
 {
 public:
-    int (*expense_)();
     StorageTreeNode(const QString &id = QString(),
                     QList<QString> childrenID = QList<QString>(),
                     const int level = 0,
-                    int(*expense)() = StorageUtils::expense,
+                    const int expense = 0,
                     int balance = 0) :
         id_(id),
         childrenID_(childrenID),
@@ -71,9 +72,30 @@ public:
         balance_ = balance;
     }
 
+    void expend(const int consumption)
+    {
+        balance_ = balance_ - consumption;
+    }
+
     int getBalance()const
     {
         return balance_;
+    }
+
+   /* static int expense()
+    {
+        int exp = 7;
+        return exp;
+    }*/
+
+    void setExpence(const int expense)
+    {
+        expense_ = expense;
+    }
+
+    int getExpence() const
+    {
+        return expense_;
     }
 
 private:
@@ -83,6 +105,7 @@ private:
     bool isLeaf_;
     int level_;
     int balance_;
+    int expense_;
 };
 
 #endif // STORAGETREENODE_H

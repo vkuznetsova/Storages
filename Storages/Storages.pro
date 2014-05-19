@@ -29,4 +29,8 @@ HEADERS += \
     StorageUtils.h \
     BalancedStorageTreePredicat.h \
     IDStorageTreePredicat.h \
-    NSunsStorageTreePredicat.h
+    NSunsStorageTreePredicat.h \
+    STNFold.h \
+    STNToStringFold.h \
+    STNSum.h \
+    STNTotalSum.h
