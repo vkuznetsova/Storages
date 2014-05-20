@@ -370,14 +370,34 @@ int StorageTree::euclidMetric()
     QList<int> data;
     foreach(const QString &nodeID, nodes_.keys())
     {
-          data<<pow((nodes_.value(nodeID).getExpence()- nodes_.value(nodeID).getBalance()), 2);
+        data<<pow(nodes_.value(nodeID).getBalance(), 2);
     }
     return sqrt(STNTotalSum().sum(data));
 
 }
 
-StorageTree StorageTree::accumBalance(const StorageTree &tree) const
+StorageTree StorageTree::recursiveAccumBalance(const StorageTreeNode &parent) const
 {
+    int balance = 0;
+    QStringList childsCopy = parent.childrenID();
+    for(int i = 0; i < childsCopy.size(); i++)
+    {
+        QString idChild = childsCopy.at(i);
+        recursiveAccumBalance(StorageTreeNode(idChild,
+                                              QList<QString>(), level(idChild),
+                                              nodes_.value(idChild).getExpence(),
+                                              nodes_.value(rootID_).getBalance()));
+        if(isLeaf(idChild))
+        {
+            balance += nodes_.value(idChild).getBalance() + nodes_.value(rootID_).getBalance();
+        }
+    }
+    return *this;
+}
 
+StorageTree StorageTree::accumBalance() const
+{
+    StorageTree tree = recursiveAccumBalance(nodes_.value(rootID_));
+    return tree;
 }
 

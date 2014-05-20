@@ -70,7 +70,7 @@ public:
 
     int euclidMetric();
 
-    StorageTree accumBalance(const StorageTree &tree) const;
+    StorageTree accumBalance() const;
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes);
@@ -92,7 +92,8 @@ private:
 
     // bool recursiveIsBalanced(const StorageTreeNode &parent) const;
 
-    StorageTree recursiveRun(const StorageTreeNode &parent) const;
+    StorageTree recursiveAccumBalance(const StorageTreeNode &parent) const;
+
 
 };
 Q_DECLARE_METATYPE(StorageTree)

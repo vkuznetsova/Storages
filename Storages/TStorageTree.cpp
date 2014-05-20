@@ -882,13 +882,13 @@ void TStorageTree::TestEuclidMetric_data()
 
     QTest::newRow("single-root") << (StorageTree(StorageTreeNode("root",QList<QString>(), 0,
                                                                  7, -10)))
-                                 << 17;
+                                 << 10;
 
     QTest::newRow("level12-1") << (StorageTree(StorageTreeNode("root",QList<QString>(), 0,
                                                                4, -10)))
                                   .addChild("root",StorageTreeNode("leaf1", QList<QString>(),
                                                                    0, 4, 5 ))
-                               << 14;
+                               << 11;
 
     QTest::newRow("level2") << (StorageTree(StorageTreeNode("root",QList<QString>(), 0,
                                                             16, 7)))
@@ -896,15 +896,15 @@ void TStorageTree::TestEuclidMetric_data()
                                                                 0, 5, 5 ))
                                .addChild("root", StorageTreeNode("leaf2", QList<QString>(),
                                                                  0, 8, -1))
-                            << 12;
+                            << 8;
 
-    QTest::newRow("level3-1") << (StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100)))
+    QTest::newRow("level3-1") << (StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -10)))
                                  .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
                                  .addChild("root", StorageTreeNode("leaf2", QList<QString>(), 2, 5, 10))
                                  .addChild("leaf1", StorageTreeNode("leaf3", QList<QString>(), 3, 10, 5))
                                  .addChild("leaf2", StorageTreeNode("leaf4", QList<QString>(), 3, 5, 5))
                                  .addChild("leaf2", StorageTreeNode("leaf5", QList<QString>(), 3, 1, 0))
-                              <<103;
+                              <<15;
 
 
 }
@@ -941,13 +941,18 @@ void TStorageTree::TestAccumBalance_data()
                                   .addChild("root",StorageTreeNode("leaf1", QList<QString>(),
                                                                    0, 4, 5 ));
 
-    /*QTest::newRow("level2") << (StorageTree(StorageTreeNode("root",QList<QString>(), 0,
+    QTest::newRow("level2") << (StorageTree(StorageTreeNode("root",QList<QString>(), 0,
                                                             16, 7)))
                                .addChild("root",StorageTreeNode("leaf1", QList<QString>(),
                                                                 0, 5, 5 ))
                                .addChild("root", StorageTreeNode("leaf2", QList<QString>(),
                                                                  0, 8, -1))
-                            << 12;
+                            << (StorageTree(StorageTreeNode("root",QList<QString>(), 0,
+                                                            16, 11)))
+                               .addChild("root",StorageTreeNode("leaf1", QList<QString>(),
+                                                                0, 5, 4 ))
+                               .addChild("root", StorageTreeNode("leaf2", QList<QString>(),
+                                                                 0, 8, -1));
 
     QTest::newRow("level3-1") << (StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100)))
                                  .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
@@ -955,7 +960,12 @@ void TStorageTree::TestAccumBalance_data()
                                  .addChild("leaf1", StorageTreeNode("leaf3", QList<QString>(), 3, 10, 5))
                                  .addChild("leaf2", StorageTreeNode("leaf4", QList<QString>(), 3, 5, 5))
                                  .addChild("leaf2", StorageTreeNode("leaf5", QList<QString>(), 3, 1, 0))
-                              <<103;*/
+                              <<(StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -81)))
+                                .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, 4))
+                                .addChild("root", StorageTreeNode("leaf2", QList<QString>(), 2, 5, 15))
+                                .addChild("leaf1", StorageTreeNode("leaf3", QList<QString>(), 3, 10, 5))
+                                .addChild("leaf2", StorageTreeNode("leaf4", QList<QString>(), 3, 5, 5))
+                                .addChild("leaf2", StorageTreeNode("leaf5", QList<QString>(), 3, 1, 0));
 
 
 }
@@ -965,7 +975,7 @@ void TStorageTree::TestAccumBalance()
     QFETCH(StorageTree, tree);
     QFETCH(StorageTree, expected);
 
-    const StorageTree actual = tree.accumBalance(tree);
+    const StorageTree actual = tree.accumBalance();
     QCOMPARE(actual, expected);
 
 }
