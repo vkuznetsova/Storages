@@ -82,12 +82,6 @@ public:
         return balance_;
     }
 
-   /* static int expense()
-    {
-        int exp = 7;
-        return exp;
-    }*/
-
     void setExpence(const int expense)
     {
         expense_ = expense;

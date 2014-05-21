@@ -328,8 +328,8 @@ bool StorageTree::nSuns(const int count) const
 
 StorageTree::StorageTree(const QString &rootID,
                          const QHash<QString, StorageTreeNode> &nodes) :
-    rootID_(rootID),
-    nodes_(nodes)
+rootID_(rootID),
+nodes_(nodes)
 {
 }
 
@@ -370,9 +370,9 @@ int StorageTree::euclidMetric()
     QList<int> data;
     foreach(const QString &nodeID, nodes_.keys())
     {
-        data<<pow(nodes_.value(nodeID).getBalance(), 2);
+        data<<static_cast<int>(pow(nodes_.value(nodeID).getBalance(), 2));
     }
-    return sqrt(STNTotalSum().sum(data));
+    return static_cast<int>(sqrt(STNTotalSum().sum(data)));
 
 }
 
@@ -401,3 +401,26 @@ StorageTree StorageTree::accumBalance() const
     return tree;
 }
 
+StorageTree StorageTree::generateTree(const int maxLevel)
+{
+    if(maxLevel == 0)
+        return StorageTree();
+    StorageTreeNode node("root");
+    StorageTree tree(node);
+    recursiveIns(tree, node,maxLevel,1);
+    return tree;
+
+}
+
+void StorageTree::recursiveIns(StorageTree &tree, const StorageTreeNode &parent, const int maxLvl, int lvl)
+{
+    if(lvl == maxLvl)
+        return;
+    StorageTreeNode node("leaf" + QString::number(tree.nodes_.size()));
+    tree.addChild(parent.id(),node);
+    StorageTreeNode node1("leaf" + QString::number(tree.nodes_.size()));
+    tree.addChild(parent.id(),node1);
+    lvl++;
+    recursiveIns(tree,node,maxLvl,lvl);
+    recursiveIns(tree,node1,maxLvl,lvl);
+}

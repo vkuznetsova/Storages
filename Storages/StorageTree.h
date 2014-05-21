@@ -72,6 +72,8 @@ public:
 
     StorageTree accumBalance() const;
 
+    static StorageTree generateTree(const int level);
+
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes);
 
@@ -87,6 +89,7 @@ private:
     // bool recursiveISBoolean(const StorageTreeNode &parent) const;
 
     void recursiveSubTree(const StorageTreeNode &parent, StorageTree &tree) const;
+    static void recursiveIns(StorageTree &tree,const StorageTreeNode &parent, const int maxLvl, int lvl);
 
     void recursiveLeafs(const StorageTreeNode &parent, QStringList &childrenIDs) const;
 

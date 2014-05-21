@@ -13,12 +13,6 @@ public:
     {
         return count1 > count;
     }
-
-   /* static int expense()
-    {
-        int exp = 7;
-        return exp;
-    }*/
 };
 
 #endif // STORAGEUTILS_H
