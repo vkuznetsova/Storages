@@ -74,6 +74,9 @@ public:
 
     static StorageTree generateTree(const int level);
 
+    int count() const;
+    //QString nodeForNum(const int num) const;
+
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes);
 
@@ -96,6 +99,8 @@ private:
     // bool recursiveIsBalanced(const StorageTreeNode &parent) const;
 
     StorageTree recursiveAccumBalance(const StorageTreeNode &parent) const;
+
+    //void recursiveNodeForNum(const StorageTreeNode &parent, const int num, int findNum) const;
 
 
 };

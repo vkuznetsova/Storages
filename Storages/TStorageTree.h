@@ -63,8 +63,11 @@ private slots:
     void TestAccumBalance_data();
     void TestAccumBalance();
 
-    void TestGenerateTree();
     void TestGenerateTree_data();
+    void TestGenerateTree();
+
+//    void TestNodeForNum_data();
+//    void TestNodeForNum();
 
 
 };

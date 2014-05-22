@@ -92,6 +92,10 @@ public:
         return expense_;
     }
 
+     bool operator ==(const StorageTreeNode &node) const
+     {
+         return id() == node.id();
+     }
 private:
     QString id_;
     QList<QString> childrenID_;
@@ -103,3 +107,5 @@ private:
 };
 
 #endif // STORAGETREENODE_H
+
+

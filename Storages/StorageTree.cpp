@@ -328,8 +328,8 @@ bool StorageTree::nSuns(const int count) const
 
 StorageTree::StorageTree(const QString &rootID,
                          const QHash<QString, StorageTreeNode> &nodes) :
-rootID_(rootID),
-nodes_(nodes)
+    rootID_(rootID),
+    nodes_(nodes)
 {
 }
 
@@ -355,9 +355,8 @@ int StorageTree::PositiveElemsSum()
     QList<int> data;
     foreach(const QString &nodeID, nodes_.keys())
     {
-        if(nodes_.value(nodeID).getBalance() < 0)
-            continue;
-        else{
+        if(!(nodes_.value(nodeID).getBalance() < 0))
+        {
             data<<nodes_.value(nodeID).getBalance();
         }
     }
@@ -411,6 +410,43 @@ StorageTree StorageTree::generateTree(const int maxLevel)
     return tree;
 
 }
+
+int StorageTree::count() const
+{
+    return nodes_.size();
+
+}
+
+//void StorageTree::recursiveNodeForNum(const StorageTreeNode &parent, const int num, int findNum) const
+//{
+//    qDebug()<<"recurs";
+//    if(findNum == num)
+//            {
+//                return;
+//            }
+//    StorageTreeNode node = nodes_.value(parent.id());
+//    StorageTreeNode node1 = nodes_.value(node.childrenID().first());
+
+//    qDebug()<<nodes_.value(node.id()).id()<<findNum;
+//    qDebug()<<nodes_.value(node1.id()).id()<<findNum;
+
+//    findNum++;
+
+//    recursiveNodeForNum(node,num,findNum);
+//    recursiveNodeForNum(node1,num,findNum);
+//}
+
+//QString StorageTree::nodeForNum(const int num) const
+//{
+//    if(num == 0)
+//    {
+//        return StorageTreeNode().id();
+//    }
+//    StorageTreeNode node(rootID_);
+//    recursiveNodeForNum(nodes_.value(rootID_), num, 1);
+
+//    return node.id();
+//}
 
 void StorageTree::recursiveIns(StorageTree &tree, const StorageTreeNode &parent, const int maxLvl, int lvl)
 {

@@ -4,20 +4,34 @@
 #
 #-------------------------------------------------
 
-QT       += core testlib
+QT       += core testlib gui widgets
 
-QT       -= gui
 
 TARGET = Storages
-CONFIG   += console
+
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+CODECFORTR  = utf8
+CODECFORSRC = utf8
+
+CONFIG(tests){
+    QT       -= gui
+    CONFIG  += console
+    DEFINES += TESTS
+}
+
+CONFIG(gui){
+    DEFINES += GUI
+}
 
 SOURCES += main.cpp \
     StorageTree.cpp \
-    TStorageTree.cpp
+    TStorageTree.cpp \
+    Swindow.cpp \
+    TableModel.cpp \
+    TTableModel.cpp
 
 HEADERS += \
     StorageTree.h \
@@ -33,4 +47,7 @@ HEADERS += \
     STNFold.h \
     STNToStringFold.h \
     STNSum.h \
-    STNTotalSum.h
+    STNTotalSum.h \
+    Swindow.h \
+    TableModel.h \
+    TTableModel.h
