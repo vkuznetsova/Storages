@@ -14,8 +14,8 @@ void TTableModel::TestColumnCount()
 void TTableModel::TestHorizontalHeader()
 {
     TableModel model;
-    QCOMPARE(model.headerData(0, Qt::Horizontal), QVariant("Родитель"));
-    QCOMPARE(model.headerData(1, Qt::Horizontal), QVariant("Потомок"));
+    QCOMPARE(model.headerData(0, Qt::Horizontal), QVariant("Потомок"));
+    QCOMPARE(model.headerData(1, Qt::Horizontal), QVariant("Родитель"));
     QCOMPARE(model.headerData(2, Qt::Horizontal), QVariant("Баланс Потомка"));
 }
 
@@ -59,8 +59,8 @@ void TTableModel::TestRowCount()
 void TTableModel::TestRowData_data()
 {
     QTest::addColumn<StorageTree>("tree");
-    QTest::addColumn<int>("column");
     QTest::addColumn<int>("row");
+    QTest::addColumn<int>("column");
     QTest::addColumn<QVariant>("data");
 
     QTest::newRow("empty-tree")<<StorageTree()
@@ -69,8 +69,8 @@ void TTableModel::TestRowData_data()
                             <<QVariant();
 
     QTest::newRow("single-tree1")<<StorageTree(StorageTreeNode("root"))
-                                << 0
                                 << 1
+                                << 0
                                 <<QVariant("");
 
     QTest::newRow("single-tree2")<<StorageTree(StorageTreeNode("root"))
@@ -79,8 +79,8 @@ void TTableModel::TestRowData_data()
                                 <<QVariant("root");
 
     QTest::newRow("single-tree3")<<StorageTree(StorageTreeNode("root",QList<QString>(), 1, 1, 10))
-                                << 2
                                 << 1
+                                << 2
                                 <<QVariant(10);
 
 
@@ -89,8 +89,8 @@ void TTableModel::TestRowData_data()
 void TTableModel::TestRowData()
 {
     QFETCH(StorageTree, tree);
-    QFETCH(int, column);
     QFETCH(int, row);
+    QFETCH(int, column);
     QFETCH(QVariant, data);
 
     TableModel model(tree);

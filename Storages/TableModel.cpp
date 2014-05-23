@@ -35,12 +35,11 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
             switch(index.column())
             {
             case 0: return "";
-            case 1: return "root";
+            case 1: return tree_.root().id();
             case 2: return 10;
             }
         }
     }
-
     return QVariant();
 }
 
@@ -52,8 +51,8 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
         {
             switch(section)
             {
-            case 0: return "Родитель";
-            case 1: return "Потомок";
+            case 0: return "Потомок";
+            case 1: return "Родитель";
             case 2: return "Баланс Потомка";
             }
         }

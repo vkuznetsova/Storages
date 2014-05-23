@@ -66,8 +66,8 @@ private slots:
     void TestGenerateTree_data();
     void TestGenerateTree();
 
-//    void TestNodeForNum_data();
-//    void TestNodeForNum();
+    void TestNodeForNum_data();
+    void TestNodeForNum();
 
 
 };
