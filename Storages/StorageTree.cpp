@@ -48,7 +48,6 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
     newChild.setLevel(nodes_[parent].level() + 1);
     nodes_[parent].setLeaf(false);
 
-
     nodes_.insert(newChild.id(),newChild);
     nodes_[parent].addChild(newChild.id());
     nodes_[newChild.id()].setLeaf(true);

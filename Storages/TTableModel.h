@@ -21,6 +21,13 @@ private slots:
 
     void TestRowData_data();
     void TestRowData();
+
+    void TestAddNewChild_data();
+    void TestAddNewChild();
+
+//    void TestSort_data();
+//    void TestSort();
+
 };
 
 #endif // TTABLEMODEL_H

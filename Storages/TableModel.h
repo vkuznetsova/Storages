@@ -3,6 +3,8 @@
 #define TABLEMODEL_H
 
 #include <QAbstractItemModel>
+#include <QColor>
+#include<QBrush>
 
 #include "StorageTree.h"
 #include"StorageTreeNode.h"
@@ -21,6 +23,14 @@ public:
     virtual QVariant headerData(int section,
                                 Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
+
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+
+    //void sort(int column, Qt::SortOrder order);
+
+    void addNewChild(const QString &parentID, const QString &childID);
+
+    QString rowID(const int row) const;
 
 private:
     StorageTree tree_;

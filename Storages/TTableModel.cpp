@@ -101,3 +101,85 @@ void TTableModel::TestRowData()
 
     QCOMPARE(model.data(model.index(row, column, QModelIndex()), Qt::DisplayRole), data);
 }
+
+void TTableModel::TestAddNewChild_data()
+{
+    QTest::addColumn<StorageTree>("tree");
+    QTest::addColumn<QString>("parentID");
+    QTest::addColumn<QString>("childID");
+    QTest::addColumn<int>("row");
+    QTest::addColumn<int>("column");
+    QTest::addColumn<QVariant>("data");
+
+    QTest::newRow("empty-tree")<<StorageTree()
+                              << QString()
+                              << QString()
+                              << 0
+                              << 0
+                              << QVariant();
+
+    QTest::newRow("single-tree")<<StorageTree(StorageTreeNode("root"))
+                               << "root"
+                               << "node1"
+                               << 1
+                               << 0
+                               << QVariant("node1");
+
+    QTest::newRow("level2")<<(StorageTree(StorageTreeNode("root"))
+                              .addChild("root", StorageTreeNode("node1")))
+                          << "node1"
+                          << "leaf1"
+                          << 2
+                          << 0
+                          << QVariant("leaf1");
+
+    QTest::newRow("level3")<<(StorageTree(StorageTreeNode("root"))
+                              .addChild("root", StorageTreeNode("node1"))
+                              .addChild("node1", StorageTreeNode("leaf1"))
+                              .addChild("node1", StorageTreeNode("leaf2")))
+                             << "node1"
+                             << "leaf3"
+                             << 4
+                             << 0
+                             << QVariant("leaf3");
+}
+
+void TTableModel::TestAddNewChild()
+{
+    QFETCH(StorageTree, tree);
+    QFETCH(QString, parentID);
+    QFETCH(QString, childID);
+    QFETCH(int, row);
+    QFETCH(int, column);
+    QFETCH(QVariant, data);
+
+    TableModel model(tree);
+    model.addNewChild(parentID, childID);
+    QCOMPARE(model.data(model.index(row, column, QModelIndex()), Qt::DisplayRole), data);
+}
+
+//void TTableModel::TestSort_data()
+//{
+//    QTest::addColumn<StorageTree>("tree");
+//    QTest::addColumn<int>("column");
+//    QTest::addColumn<QStringList>("nodeOrder");
+//    QTest::addColumn<QVariant>("data");
+
+//    QTest::newRow("empty-tree")<< StorageTree()
+//                               << 0
+//                               << QStringList()
+//                               << QVariant();
+
+//}
+
+//void TTableModel::TestSort()
+//{
+//    QFETCH(StorageTree, tree);
+//    QFETCH(int, column);
+//    QFETCH(QStringList, nodeOrder);
+//    QFETCH(QVariant, data);
+
+//    TableModel model(tree);
+//    QCOMPARE(model.sort(column, nodeOrder), data);
+
+//}
