@@ -65,28 +65,28 @@ void TTableModel::TestRowData_data()
     QTest::addColumn<QVariant>("data");
 
     QTest::newRow("empty-tree")<<StorageTree()
-                              <<0
-                             <<0
-                            <<QVariant();
+                              << 0
+                              << 0
+                              << QVariant();
 
     QTest::newRow("single-tree1")<<StorageTree(StorageTreeNode("root"))
-                                << 1
                                 << 0
-                                <<QVariant("");
-
-    QTest::newRow("single-tree2")<<StorageTree(StorageTreeNode("root"))
-                                << 1
-                                << 1
+                                << 0
                                 <<QVariant("root");
 
-    QTest::newRow("single-tree3")<<StorageTree(StorageTreeNode("root",QList<QString>(), 1, 1, 10))
+    QTest::newRow("single-tree2")<<StorageTree(StorageTreeNode("root"))
+                                << 0
                                 << 1
+                                << QVariant(QString());
+
+    QTest::newRow("single-tree3")<<StorageTree(StorageTreeNode("root",QList<QString>(), 1, 1, 10))
+                                << 0
                                 << 2
                                 <<QVariant(10);
     QTest::newRow("level1")<<(StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100)))
                              .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
                           << 1
-                          << 1
+                          << 0
                           <<QVariant("leaf1");
 }
 
