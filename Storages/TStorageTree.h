@@ -69,6 +69,8 @@ private slots:
     void TestNodeForNum_data();
     void TestNodeForNum();
 
+    void TestOrder_data();
+    void TestOrder();
 
 };
 

@@ -3,44 +3,84 @@
 TableModel::TableModel(const StorageTree &tree) :
     tree_(tree)
 {
-
+    nodeOrder_ = tree_.order();
 }
 
 QModelIndex TableModel::index(int row, int column, const QModelIndex &parent) const
 {
-    return createIndex(row, column);
+    if (!hasIndex(row, column, parent)) {
+        return QModelIndex();
+    }
+
+    if (!parent.isValid()){
+        return createIndex(row, column);
+    }
 }
 
 QModelIndex TableModel::parent(const QModelIndex &child) const
 {
+    if (!child.isValid()) {
+        return QModelIndex();
+    }
+
     return QModelIndex();
 }
 
 int TableModel::rowCount(const QModelIndex &parent) const
 {
-    return tree_.count();
+    if (!parent.isValid()) {
+        return tree_.count();
+    }
 }
 
 int TableModel::columnCount(const QModelIndex &parent) const
 {
-    return 3;
+    return 4;
+}
+
+QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIndex &index) const
+{
+    if(index.isValid())
+    {
+        QStringList children = parent.childrenID();
+        for(int i = 0; i < children.size(); i++)
+        {
+            QString idChild = children.at(i);
+            if(index.row() == i)
+            {
+                switch(index.column())
+                {
+                case 0: return idChild; break;
+                case 1: return tree_.parent(idChild); break;
+                case 2: return tree_.node(idChild).getBalance();break;
+                case 3: return tree_.node(idChild).getExpence();break;
+                }
+            }
+            recursiveData(tree_.node(idChild), index);
+        }
+    }
+    return QVariant();
 }
 
 QVariant TableModel::data(const QModelIndex &index, int role) const
 {
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
     if(role == Qt::DisplayRole)
     {
-        if(index.row() == 1)
+        const QString nodeID = nodeOrder_.value(index.row());
+        const StorageTreeNode node = tree_.node(nodeID);
+        switch(index.column())
         {
-            switch(index.column())
-            {
-            case 0: return "";
-            case 1: return tree_.root().id();
-            case 2: return 10;
-            }
+        case 0: return node.id(); break;
+        case 1: return node.getParent(); break;
+        case 2: return node.getBalance();break;
+        case 3: return node.getExpence();break;
         }
     }
-    return QVariant();
+    return  QVariant();
 }
 
 QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -54,6 +94,7 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
             case 0: return "Потомок";
             case 1: return "Родитель";
             case 2: return "Баланс Потомка";
+            case 3: return "Расход";
             }
         }
     }

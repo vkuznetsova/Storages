@@ -8,7 +8,7 @@ TTableModel::TTableModel()
 void TTableModel::TestColumnCount()
 {
     TableModel model;
-    QCOMPARE(model.columnCount(QModelIndex()), 3);
+    QCOMPARE(model.columnCount(QModelIndex()), 4);
 }
 
 void TTableModel::TestHorizontalHeader()
@@ -17,6 +17,7 @@ void TTableModel::TestHorizontalHeader()
     QCOMPARE(model.headerData(0, Qt::Horizontal), QVariant("Потомок"));
     QCOMPARE(model.headerData(1, Qt::Horizontal), QVariant("Родитель"));
     QCOMPARE(model.headerData(2, Qt::Horizontal), QVariant("Баланс Потомка"));
+    QCOMPARE(model.headerData(3, Qt::Horizontal), QVariant("Расход"));
 }
 
 void TTableModel::TestRowCount_data()
@@ -82,8 +83,11 @@ void TTableModel::TestRowData_data()
                                 << 1
                                 << 2
                                 <<QVariant(10);
-
-
+    QTest::newRow("level1")<<(StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100)))
+                             .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
+                          << 1
+                          << 1
+                          <<QVariant("leaf1");
 }
 
 void TTableModel::TestRowData()

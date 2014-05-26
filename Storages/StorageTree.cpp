@@ -94,6 +94,20 @@ int StorageTree::level(const QString &node, const QString &find, const int l) co
     }
 }
 
+QStringList StorageTree::order(const QString &nodeID) const
+{
+    QStringList nodes;
+
+    nodes << nodeID;
+
+    foreach(const QString childID, childrenIDs(nodeID))
+    {
+        nodes << order(childID);
+    }
+
+    return nodes;
+}
+
 QString StorageTree::parent(const QString &child) const
 {
     return nodes_.value(child).getParent();
@@ -115,7 +129,6 @@ void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTre
         recursiveSubTree(elCopy, tree);
     }
 }
-
 
 StorageTree StorageTree::subTree(const QString &root) const
 {
@@ -442,6 +455,18 @@ QString StorageTree::nodeForNum(const int num)
 
     int find = 1;
     return static_cast<StorageTreeNode>(recursiveNodeForNum(nodes_[rootID_], num, find)).id();
+}
+
+QStringList StorageTree::order() const
+{
+    if(!rootID_.isNull())
+    {
+        return order(rootID_);
+    }
+    else
+    {
+        return QStringList();
+    }
 }
 
 void StorageTree::recursiveIns(StorageTree &tree, const StorageTreeNode &parent, const int maxLvl, int lvl)

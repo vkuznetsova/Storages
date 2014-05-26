@@ -5,6 +5,7 @@
 #include <QAbstractItemModel>
 
 #include "StorageTree.h"
+#include"StorageTreeNode.h"
 
 class TableModel : public QAbstractTableModel
 {
@@ -23,6 +24,9 @@ public:
 
 private:
     StorageTree tree_;
+    QVariant recursiveData(const StorageTreeNode &parent, const QModelIndex &index) const;
+
+    QStringList nodeOrder_;
 };
 
 

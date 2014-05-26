@@ -77,11 +77,14 @@ public:
     int count() const;
     QString nodeForNum(const int num);
 
+    QStringList order() const;
+
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes);
 
     int level(const QString &node, const QString &find, const int l) const;
 
+     QStringList order(const QString &nodeID) const;
 
 private:
     QString rootID_;
@@ -104,6 +107,7 @@ private:
 
 
 };
+
 Q_DECLARE_METATYPE(StorageTree)
 
 
