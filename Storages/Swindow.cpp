@@ -1,5 +1,5 @@
 #include"Swindow.h"
-
+#include<QAbstractItemView>
 
 Swindow::Swindow(int argc,
                  char *argv[],
@@ -20,7 +20,8 @@ Swindow::Swindow(int argc,
     tableView_ = new QTableView();
     tableModel_ = new TableModel(tree);
     tableView_->setModel(tableModel_);
-
+    tableView_->setEditTriggers(QAbstractItemView::DoubleClicked);
+    tableView_->setSortingEnabled(true);
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->addWidget(addChildButton_);
     mainLayout->addWidget(tableView_);
@@ -32,6 +33,7 @@ Swindow::Swindow(int argc,
 
     connect(addChildButton_, SIGNAL(clicked()),
             this, SLOT(addNewChild()));
+
 }
 
 Swindow::~Swindow()

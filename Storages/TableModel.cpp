@@ -73,7 +73,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         QColor color = Qt::red;
         return QBrush(color);
     }
-    if(role == Qt::DisplayRole)
+    if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
         switch(index.column())
         {
@@ -83,7 +83,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         case 3: return node.getExpence();break;
         }
     }
-    return  QVariant();
+    return QVariant();
 }
 
 QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -105,30 +105,13 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-//void TableModel::sort(int column, Qt::SortOrder order)
-//{
-//    TableModel model(tree_);
-
-//}
-
-//bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
-//{
-//    TableModel model(tree_);
-//    if(index.isValid() && role == Qt::EditRole)
-//    {
-//        QString text = index.data(Qt::DisplayRole).toString();
-//        model.sort(0, nodeOrder_);
-//        tree_.node(text);
-//        emit dataChanged(index, index);
-//        return true;
-//    }
-//    return false;
-//}
-
 void TableModel::addNewChild(const QString &parentID, const QString &childID)
 {
+    TableModel model(tree_);
     tree_.addChild(parentID, StorageTreeNode(childID));
     nodeOrder_ = tree_.order();
+    int row = model.rowCount(QModelIndex());
+    model.insertRow(row);
     insertRows(1, 1);
     emit dataChanged(index(0,0, QModelIndex()), index(tree_.count(), 4, QModelIndex()));
 }
@@ -136,4 +119,67 @@ void TableModel::addNewChild(const QString &parentID, const QString &childID)
 QString TableModel::rowID(const int row) const
 {
     return nodeOrder_.at(row);
+}
+
+Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    if(index.isValid() && index.column() == 2 || index.column() == 3)
+        flags |= Qt::ItemIsEditable;
+    return flags;
+}
+
+bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(index.isValid() && role == Qt::EditRole)
+    {
+        QString id = index.data(Qt::DisplayRole).toString();
+        tree_.node(id).setBalance(value.toInt());
+        tree_.node(id).setExpence(value.toInt());
+        emit dataChanged(index, index);
+        return true;
+    }
+    return false;
+}
+
+void TableModel::sort(int column, Qt::SortOrder order)
+{
+    QList< QPair<QString, QVariant> > modelData;
+
+    for(int i = 0; i < rowCount(); i++)
+    {
+        modelData << QPair<QString, QVariant>(rowID(i), data(index(i, column), Qt::EditRole));
+    }
+    if(order == Qt::AscendingOrder)
+    {
+        std::sort(modelData.begin(), modelData.end(), greaterThan);
+    }
+    else
+    {
+        std::sort(modelData.begin(), modelData.end(), lessThan);
+    }
+
+    nodeOrder_.clear();
+
+    for(int i = 0; i < modelData.size(); i++)
+    {
+        nodeOrder_ << modelData.at(i).first;
+    }
+    emit layoutChanged();
+}
+
+bool TableModel::greaterThan(const QPair<QString, QVariant> &pair1, const QPair<QString, QVariant> &pair2)
+{
+    return pair1.second > pair2.second;
+}
+
+bool TableModel::lessThan(const QPair<QString, QVariant> &pair1, const QPair<QString, QVariant> &pair2)
+{
+    return pair1.second < pair2.second;
+}
+
+void TableModel::removeNode(const QString &parentID)
+{
+
+
 }

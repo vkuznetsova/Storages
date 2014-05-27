@@ -8,7 +8,7 @@
 #include <QPushButton>
 #include <QInputDialog>
 
-#include"TableModel.h"
+#include "TableModel.h"
 
 class Swindow:public QMainWindow
 {

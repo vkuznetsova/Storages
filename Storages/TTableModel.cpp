@@ -137,11 +137,11 @@ void TTableModel::TestAddNewChild_data()
                               .addChild("root", StorageTreeNode("node1"))
                               .addChild("node1", StorageTreeNode("leaf1"))
                               .addChild("node1", StorageTreeNode("leaf2")))
-                             << "node1"
-                             << "leaf3"
-                             << 4
-                             << 0
-                             << QVariant("leaf3");
+                          << "node1"
+                          << "leaf3"
+                          << 4
+                          << 0
+                          << QVariant("leaf3");
 }
 
 void TTableModel::TestAddNewChild()
@@ -158,28 +158,49 @@ void TTableModel::TestAddNewChild()
     QCOMPARE(model.data(model.index(row, column, QModelIndex()), Qt::DisplayRole), data);
 }
 
-//void TTableModel::TestSort_data()
-//{
-//    QTest::addColumn<StorageTree>("tree");
-//    QTest::addColumn<int>("column");
-//    QTest::addColumn<QStringList>("nodeOrder");
-//    QTest::addColumn<QVariant>("data");
+void TTableModel::TestSort_data()
+{
+    QTest::addColumn<StorageTree>("tree");
+    QTest::addColumn<int>("column");
+    QTest::addColumn<Qt::SortOrder>("order");
+    QTest::addColumn<QVariant>("data");
 
-//    QTest::newRow("empty-tree")<< StorageTree()
-//                               << 0
-//                               << QStringList()
-//                               << QVariant();
+    QTest::newRow("empty-tree") << StorageTree()
+                                << 0
+                                << Qt::AscendingOrder
+                                << QVariant();
 
-//}
+    QTest::newRow("single-root") << StorageTree(StorageTreeNode("root"))
+                                 << 0
+                                 << Qt::AscendingOrder
+                                 << QVariant();
 
-//void TTableModel::TestSort()
-//{
-//    QFETCH(StorageTree, tree);
-//    QFETCH(int, column);
-//    QFETCH(QStringList, nodeOrder);
-//    QFETCH(QVariant, data);
+    QTest::newRow("level-2-1") << (StorageTree(StorageTreeNode("root"))
+                                   .addChild("root", StorageTreeNode("node1")))
+                               << 1
+                               << Qt::AscendingOrder
+                               << QVariant();
 
-//    TableModel model(tree);
-//    QCOMPARE(model.sort(column, nodeOrder), data);
+    QTest::newRow("level-2-2") << (StorageTree(StorageTreeNode("root"))
+                                   .addChild("root", StorageTreeNode("node1")))
+                               << 1
+                               << Qt::DescendingOrder
+                               << QVariant();
 
-//}
+
+}
+
+void TTableModel::TestSort()
+{
+    QFETCH(StorageTree, tree);
+    QFETCH(int, column);
+    QFETCH(Qt::SortOrder, order);
+    QFETCH(QVariant, data);
+
+    TableModel model(tree);
+    model.sort(column, order);
+    QCOMPARE(model.data(model.index(model.rowCount(QModelIndex()), column, QModelIndex()),
+                        Qt::DisplayRole), data);
+
+}
+Q_DECLARE_METATYPE(Qt::SortOrder)

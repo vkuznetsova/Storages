@@ -3,7 +3,8 @@
 #define TTABLEMODEL_H
 
 #include <QtTest/QtTest>
-#include"TableModel.h"
+
+#include "TableModel.h"
 
 class TTableModel : public QObject
 {
@@ -25,8 +26,8 @@ private slots:
     void TestAddNewChild_data();
     void TestAddNewChild();
 
-//    void TestSort_data();
-//    void TestSort();
+    void TestSort_data();
+    void TestSort();
 
 };
 
