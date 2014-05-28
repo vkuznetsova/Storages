@@ -31,6 +31,9 @@ Swindow::Swindow(int argc,
 
     setCentralWidget(centralWidget);
 
+    menu_ = new QMenu(this);
+    menu_->addAction("Удалить вершину");
+    connect(menu_, SIGNAL(triggered(QAction*)), SLOT(removeNode()));
     connect(addChildButton_, SIGNAL(clicked()),
             this, SLOT(addNewChild()));
 
@@ -51,8 +54,19 @@ void Swindow::addNewChild()
     if(selected.size() == 1)
     {
         const QString parentID = tableModel_->rowID(selected.first().row());
-        qWarning() << parentID << " " << childID;
         tableModel_->addNewChild(parentID, childID);
         tableView_->reset();
+    }
+}
+
+void Swindow::removeNode()
+{
+    const QModelIndexList selected = tableView_->selectionModel()->selectedIndexes();
+    if(selected.size() == 1)
+    {
+        QString parentID = tableModel_->rowID(selected.first().row());
+        tableModel_->removeNode(parentID);
+        tableView_->reset();
+
     }
 }

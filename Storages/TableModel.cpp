@@ -121,6 +121,12 @@ QString TableModel::rowID(const int row) const
     return nodeOrder_.at(row);
 }
 
+
+QString TableModel::columnID(const int column) const
+{
+    return nodeOrder_.at(column);
+}
+
 Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
@@ -178,8 +184,20 @@ bool TableModel::lessThan(const QPair<QString, QVariant> &pair1, const QPair<QSt
     return pair1.second < pair2.second;
 }
 
-void TableModel::removeNode(const QString &parentID)
+bool TableModel::removeNode(QString &parentID)
 {
+    for(int i = 0; i < rowCount(); i++)
+    {
+        QModelIndex index = this->index(i, 0);
+        QVariant value = this->data(index);
 
+        if(value.toString() == parentID)
+        {
+            tree_.removeNode(parentID);
+            emit layoutChanged();
+            return true;
+        }
+    }
+    return false;
 
 }

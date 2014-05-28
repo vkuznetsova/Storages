@@ -7,6 +7,10 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QInputDialog>
+#include <QAction>
+#include <QToolButton>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 #include "TableModel.h"
 
@@ -21,12 +25,23 @@ public:
     ~Swindow();
 private slots:
     void addNewChild();
+    void removeNode();
 
 private:
     QTableView *tableView_;
     TableModel *tableModel_;
 
     QPushButton *addChildButton_;
+
+    QMenu *menu_;
+
+protected:
+    virtual void contextMenuEvent(QContextMenuEvent* event)
+    {
+        menu_->exec(event->globalPos());
+    }
+
+
 };
 
 #endif // SWINDOW_H

@@ -1153,3 +1153,44 @@ void TStorageTree::TestOrder()
     QCOMPARE(tree.order(), nodes);
 }
 
+void TStorageTree::TestRemoveNode_data()
+{
+    QTest::addColumn<StorageTree>("tree");
+    QTest::addColumn<QString>("node");
+    QTest::addColumn<QString>("expected");
+
+    QTest::newRow("empty-tree") << StorageTree()
+                                << QString()
+                                << "()";
+
+    QTest::newRow("single-root")<<StorageTree(StorageTreeNode("root"))
+                              <<"root"
+                             <<"()";
+
+    QTest::newRow("level2-1") << (StorageTree(StorageTreeNode("root"))
+                                 .addChild("root", StorageTreeNode("node1")))
+                               << "node1"
+                               << "(root)";
+
+    QTest::newRow("level2-2") << (StorageTree(StorageTreeNode("root"))
+                                 .addChild("root", StorageTreeNode("node1")))
+                               << "root"
+                               << "()";
+
+}
+
+void TStorageTree::TestRemoveNode()
+{
+    QFETCH(StorageTree, tree);
+    QFETCH(QString, node);
+    QFETCH(QString, expected);
+
+    tree.removeNode(node);
+    qDebug()<<tree.removeNode(node);
+
+   const QString actual = tree.toString();
+
+    QCOMPARE(actual, expected);
+
+}
+

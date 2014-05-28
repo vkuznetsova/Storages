@@ -203,4 +203,58 @@ void TTableModel::TestSort()
                         Qt::DisplayRole), data);
 
 }
+
+void TTableModel::TestRemoveNode_data()
+{
+    QTest::addColumn<StorageTree>("tree");
+    QTest::addColumn<QString>("node");
+    QTest::addColumn<QStringList>("result");
+
+//        QTest::newRow("empty-tree") << StorageTree()
+//                                    << QString()
+//                                    << QStringList();
+
+//        QTest::newRow("single-root") << StorageTree(StorageTreeNode("root", QList<QString>(), 1, 8, 10))
+//                                     << "root"
+//                                     << QStringList();
+
+         QTest::newRow("level2-1") << (StorageTree(StorageTreeNode("root"))
+                                  .addChild("root", StorageTreeNode("node1")))
+                                    << "node1"
+                                    << (QStringList()<< QString("root"));
+
+
+}
+
+void TTableModel::TestRemoveNode()
+{
+    QFETCH(StorageTree, tree);
+    QFETCH(QString, node);
+    QFETCH(QStringList, result);
+
+    TableModel model(tree);
+    model.removeNode(node);
+    qDebug()<<model.removeNode(node);
+
+    QStringList modelData;
+    for(int i = 0; i < model.rowCount(); i++)
+    {
+        QStringList rowData;
+
+        for(int j = 0; j < model.columnCount(); j++)
+        {
+            rowData << model.data(model.index(i, j)).toString();
+        }
+
+        modelData << rowData.join(" ;");
+    }
+    qDebug()<<"modelData"<<modelData;
+
+
+    const QStringList actualResult = modelData;
+    const QStringList expectedResult = result;
+
+    QCOMPARE(actualResult, expectedResult);
+
+}
 Q_DECLARE_METATYPE(Qt::SortOrder)

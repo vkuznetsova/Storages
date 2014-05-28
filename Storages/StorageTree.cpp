@@ -446,7 +446,6 @@ StorageTreeNode StorageTree::recursiveNodeForNum(const StorageTreeNode &parent, 
     }
     return StorageTreeNode();
 }
-
 QString StorageTree::nodeForNum(const int num)
 {
     if(num <= 1)
@@ -479,4 +478,33 @@ void StorageTree::recursiveIns(StorageTree &tree, const StorageTreeNode &parent,
     lvl++;
     recursiveIns(tree,node,maxLvl,lvl);
     recursiveIns(tree,node1,maxLvl,lvl);
+}
+
+
+bool StorageTree::recursiveRemoveNode(StorageTreeNode &parent)
+{
+    QStringList children = parent.childrenID();
+    for(int i = 0; i < children.size(); i++)
+    {
+        QString idChild = children.at(i);
+        StorageTreeNode n = node(idChild);
+        if(!recursiveRemoveNode(n))
+        {
+            nodes_.remove(idChild);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    nodes_.remove(parent.id());
+}
+
+bool StorageTree::removeNode(QString &parentID)
+{
+    StorageTreeNode nodeT = node(parentID);
+    if(recursiveRemoveNode(nodeT))
+        return true;
+    return false;
 }

@@ -72,6 +72,9 @@ private slots:
     void TestOrder_data();
     void TestOrder();
 
+    void TestRemoveNode_data();
+    void TestRemoveNode();
+
 };
 
 #endif // TSTORAGETREE_H

@@ -29,6 +29,9 @@ private slots:
     void TestSort_data();
     void TestSort();
 
+    void TestRemoveNode_data();
+    void TestRemoveNode();
+
 };
 
 #endif // TTABLEMODEL_H

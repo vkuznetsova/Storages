@@ -20,7 +20,7 @@ public:
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section,
                                 Qt::Orientation orientation,
@@ -36,7 +36,9 @@ public:
 
     virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
 
-    void removeNode(const QString &parentID);
+    bool removeNode(QString &parentID);
+
+    QString columnID(const int column) const;
 
 private:
    static bool greaterThan(const QPair<QString, QVariant> &pair1,
