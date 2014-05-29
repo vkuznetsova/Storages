@@ -163,30 +163,29 @@ void TTableModel::TestSort_data()
     QTest::addColumn<StorageTree>("tree");
     QTest::addColumn<int>("column");
     QTest::addColumn<Qt::SortOrder>("order");
-    QTest::addColumn<QVariant>("data");
+    QTest::addColumn<QStringList>("data");
 
     QTest::newRow("empty-tree") << StorageTree()
                                 << 0
                                 << Qt::AscendingOrder
-                                << QVariant();
+                                << QStringList();
 
     QTest::newRow("single-root") << StorageTree(StorageTreeNode("root"))
                                  << 0
                                  << Qt::AscendingOrder
-                                 << QVariant();
+                                 << (QStringList() << "root");
 
     QTest::newRow("level-2-1") << (StorageTree(StorageTreeNode("root"))
                                    .addChild("root", StorageTreeNode("node1")))
                                << 1
                                << Qt::AscendingOrder
-                               << QVariant();
+                               << (QStringList() << "node1" << "root");
 
     QTest::newRow("level-2-2") << (StorageTree(StorageTreeNode("root"))
                                    .addChild("root", StorageTreeNode("node1")))
                                << 1
                                << Qt::DescendingOrder
-                               << QVariant();
-
+                               << (QStringList() << "root" << "node1");
 
 }
 
@@ -195,13 +194,24 @@ void TTableModel::TestSort()
     QFETCH(StorageTree, tree);
     QFETCH(int, column);
     QFETCH(Qt::SortOrder, order);
-    QFETCH(QVariant, data);
+    QFETCH(QStringList, data);
 
     TableModel model(tree);
     model.sort(column, order);
-    QCOMPARE(model.data(model.index(model.rowCount(QModelIndex()), column, QModelIndex()),
-                        Qt::DisplayRole), data);
 
+    QStringList modelData;
+    for(int i = 0; i < model.rowCount(); i++)
+    {
+        QStringList rowData;
+        rowData << model.data(model.index(i, 0)).toString();
+
+        modelData << rowData.join(" ;");
+    }
+
+    const QStringList actual = modelData;
+    const QStringList expected = data;
+
+    QCOMPARE(actual, expected);
 }
 
 void TTableModel::TestRemoveNode_data()
@@ -210,18 +220,18 @@ void TTableModel::TestRemoveNode_data()
     QTest::addColumn<QString>("node");
     QTest::addColumn<QStringList>("result");
 
-//        QTest::newRow("empty-tree") << StorageTree()
-//                                    << QString()
-//                                    << QStringList();
+    QTest::newRow("empty-tree") << StorageTree()
+                                << QString()
+                                << QStringList();
 
-//        QTest::newRow("single-root") << StorageTree(StorageTreeNode("root", QList<QString>(), 1, 8, 10))
-//                                     << "root"
-//                                     << QStringList();
+    QTest::newRow("single-root") << StorageTree(StorageTreeNode("root", QList<QString>(), 1, 8, 10))
+                                 << "root"
+                                 << QStringList();
 
-         QTest::newRow("level2-1") << (StorageTree(StorageTreeNode("root"))
+    QTest::newRow("level2-1") << (StorageTree(StorageTreeNode("root"))
                                   .addChild("root", StorageTreeNode("node1")))
-                                    << "node1"
-                                    << (QStringList()<< QString("root"));
+                              << "node1"
+                              << (QStringList()<< QString("root"));
 
 
 }
@@ -234,22 +244,16 @@ void TTableModel::TestRemoveNode()
 
     TableModel model(tree);
     model.removeNode(node);
-    qDebug()<<model.removeNode(node);
 
     QStringList modelData;
     for(int i = 0; i < model.rowCount(); i++)
     {
         QStringList rowData;
 
-        for(int j = 0; j < model.columnCount(); j++)
-        {
-            rowData << model.data(model.index(i, j)).toString();
-        }
+        rowData << model.data(model.index(i, 0)).toString();
 
         modelData << rowData.join(" ;");
     }
-    qDebug()<<"modelData"<<modelData;
-
 
     const QStringList actualResult = modelData;
     const QStringList expectedResult = result;

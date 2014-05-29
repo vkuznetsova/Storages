@@ -92,10 +92,16 @@ public:
         return expense_;
     }
 
-     bool operator ==(const StorageTreeNode &node) const
-     {
-         return id() == node.id();
-     }
+    bool operator ==(const StorageTreeNode &node) const
+    {
+        return id() == node.id();
+    }
+
+    void removeChild(const QString &childID)
+    {
+        childrenID_.removeAll(childID);
+    }
+
 private:
     QString id_;
     QList<QString> childrenID_;

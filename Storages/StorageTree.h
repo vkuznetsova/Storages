@@ -79,7 +79,11 @@ public:
 
     QStringList order() const;
 
-    bool removeNode(QString &parentID);
+    void removeNode(const QString &subTreeRoot);
+
+    void setBalance(const QString &nodeID, const int balance);
+
+    void setExpense(const QString &nodeID, const int expense);
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes);
@@ -106,8 +110,6 @@ private:
     StorageTree recursiveAccumBalance(const StorageTreeNode &parent) const;
 
     StorageTreeNode recursiveNodeForNum(const StorageTreeNode &parent, const int num, int &findNum);
-
-    bool recursiveRemoveNode(StorageTreeNode &parent);
 
 
 };

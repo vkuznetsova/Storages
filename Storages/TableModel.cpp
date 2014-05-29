@@ -139,9 +139,9 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
 {
     if(index.isValid() && role == Qt::EditRole)
     {
-        QString id = index.data(Qt::DisplayRole).toString();
-        tree_.node(id).setBalance(value.toInt());
-        tree_.node(id).setExpence(value.toInt());
+        const QString id = data(createIndex(index.row(), 0), Qt::DisplayRole).toString();
+        tree_.setBalance(id, value.toInt());
+        tree_.setExpense(id, value.toInt());
         emit dataChanged(index, index);
         return true;
     }
@@ -184,7 +184,7 @@ bool TableModel::lessThan(const QPair<QString, QVariant> &pair1, const QPair<QSt
     return pair1.second < pair2.second;
 }
 
-bool TableModel::removeNode(QString &parentID)
+void TableModel::removeNode(QString &parentID)
 {
     for(int i = 0; i < rowCount(); i++)
     {
@@ -194,10 +194,9 @@ bool TableModel::removeNode(QString &parentID)
         if(value.toString() == parentID)
         {
             tree_.removeNode(parentID);
-            emit layoutChanged();
-            return true;
+            //removeRow(2);
+            return;
         }
     }
-    return false;
 
 }

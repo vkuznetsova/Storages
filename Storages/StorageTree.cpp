@@ -114,7 +114,7 @@ QString StorageTree::parent(const QString &child) const
 
 bool StorageTree::operator ==(const StorageTree &tree) const
 {
-    return toString() == tree.toString();
+    return rootID_ == tree.rootID_ && nodes_ == tree.nodes_;
 }
 
 void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTree &tree) const
@@ -131,6 +131,10 @@ void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTre
 
 StorageTree StorageTree::subTree(const QString &root) const
 {
+    if(root == "")
+    {
+        return StorageTree();
+    }
     StorageTree treeCopy;
     treeCopy.setRoot(StorageTreeNode(root));
     recursiveSubTree(nodes_.value(root), treeCopy);
@@ -480,31 +484,37 @@ void StorageTree::recursiveIns(StorageTree &tree, const StorageTreeNode &parent,
     recursiveIns(tree,node1,maxLvl,lvl);
 }
 
-
-bool StorageTree::recursiveRemoveNode(StorageTreeNode &parent)
+void StorageTree::removeNode(const QString &subTreeRoot)
 {
-    QStringList children = parent.childrenID();
-    for(int i = 0; i < children.size(); i++)
+    if(subTreeRoot == rootID_)
     {
-        QString idChild = children.at(i);
-        StorageTreeNode n = node(idChild);
-        if(!recursiveRemoveNode(n))
-        {
-            nodes_.remove(idChild);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        rootID_ = QString();
+        nodes_.clear();
+        return;
     }
-    nodes_.remove(parent.id());
+
+    foreach(const QString &childID, childrenIDs(subTreeRoot))
+    {
+        removeNode(childID);
+    }
+    QString parentSubTree =  parent(subTreeRoot);
+    nodes_[parentSubTree].removeChild(subTreeRoot);
+    nodes_.remove(subTreeRoot);
 }
 
-bool StorageTree::removeNode(QString &parentID)
+void StorageTree::setBalance(const QString &nodeID, const int balance)
 {
-    StorageTreeNode nodeT = node(parentID);
-    if(recursiveRemoveNode(nodeT))
-        return true;
-    return false;
+    if(nodes_.contains(nodeID))
+    {
+        nodes_[nodeID].setBalance(balance);
+    }
+}
+
+void StorageTree::setExpense(const QString &nodeID, const int expense)
+{
+    if(nodes_.contains(nodeID))
+    {
+        nodes_[nodeID].setExpence(expense);
+    }
+
 }

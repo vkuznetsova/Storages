@@ -1157,25 +1157,60 @@ void TStorageTree::TestRemoveNode_data()
 {
     QTest::addColumn<StorageTree>("tree");
     QTest::addColumn<QString>("node");
-    QTest::addColumn<QString>("expected");
+    QTest::addColumn<StorageTree>("expected");
 
     QTest::newRow("empty-tree") << StorageTree()
                                 << QString()
-                                << "()";
+                                << StorageTree();
 
     QTest::newRow("single-root")<<StorageTree(StorageTreeNode("root"))
-                              <<"root"
-                             <<"()";
+                               << "root"
+                               << StorageTree();
 
     QTest::newRow("level2-1") << (StorageTree(StorageTreeNode("root"))
-                                 .addChild("root", StorageTreeNode("node1")))
-                               << "node1"
-                               << "(root)";
+                                  .addChild("root", StorageTreeNode("node1")))
+                              << "node1"
+                              << StorageTree(StorageTreeNode("root"));
 
     QTest::newRow("level2-2") << (StorageTree(StorageTreeNode("root"))
-                                 .addChild("root", StorageTreeNode("node1")))
-                               << "root"
-                               << "()";
+                                  .addChild("root", StorageTreeNode("node1")))
+                              << "root"
+                              << StorageTree();
+
+    QTest::newRow("level3-1") << (StorageTree(StorageTreeNode("root"))
+                                  .addChild("root", StorageTreeNode("node1"))
+                                  .addChild("node1", StorageTreeNode("leaf1")))
+                              << "node1"
+                              << StorageTree(StorageTreeNode("root"));
+
+    QTest::newRow("level3-2") << (StorageTree(StorageTreeNode("root"))
+                                  .addChild("root", StorageTreeNode("node1"))
+                                  .addChild("node1", StorageTreeNode("leaf1")))
+                              << "leaf1"
+                              << (StorageTree(StorageTreeNode("root"))
+                                  .addChild("root", StorageTreeNode("node1")));
+
+    QTest::newRow("level4") << (StorageTree(StorageTreeNode("root"))
+                                .addChild("root", StorageTreeNode("node1"))
+                                .addChild("node1", StorageTreeNode("leaf1"))
+                                .addChild("root", StorageTreeNode("node2"))
+                                .addChild("node2", StorageTreeNode("leaf2"))
+                                .addChild("node2", StorageTreeNode("leaf3")))
+                            << "node2"
+                            << (StorageTree(StorageTreeNode("root"))
+                                .addChild("root", StorageTreeNode("node1"))
+                                .addChild("node1", StorageTreeNode("leaf1")));
+
+    QTest::newRow("level5")<<(StorageTree(StorageTreeNode("root"))
+                              .addChild("root", StorageTreeNode("leaf1"))
+                              .addChild("root", StorageTreeNode("leaf2"))
+                              .addChild("leaf1", StorageTreeNode("leaf3"))
+                              .addChild("leaf2", StorageTreeNode("leaf4"))
+                              .addChild("leaf2", StorageTreeNode("leaf5")))
+                          << "leaf2"
+                          << (StorageTree(StorageTreeNode("root"))
+                              .addChild("root", StorageTreeNode("leaf1"))
+                              .addChild("leaf1", StorageTreeNode("leaf3")));
 
 }
 
@@ -1183,14 +1218,10 @@ void TStorageTree::TestRemoveNode()
 {
     QFETCH(StorageTree, tree);
     QFETCH(QString, node);
-    QFETCH(QString, expected);
+    QFETCH(StorageTree, expected);
 
     tree.removeNode(node);
-    qDebug()<<tree.removeNode(node);
 
-   const QString actual = tree.toString();
-
-    QCOMPARE(actual, expected);
-
+    QCOMPARE(tree, expected);
 }
 

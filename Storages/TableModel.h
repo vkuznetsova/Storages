@@ -36,7 +36,7 @@ public:
 
     virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
 
-    bool removeNode(QString &parentID);
+    void removeNode(QString &parentID);
 
     QString columnID(const int column) const;
 

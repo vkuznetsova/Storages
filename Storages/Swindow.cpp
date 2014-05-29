@@ -55,18 +55,17 @@ void Swindow::addNewChild()
     {
         const QString parentID = tableModel_->rowID(selected.first().row());
         tableModel_->addNewChild(parentID, childID);
+        //emit tableModel_->layoutChanged();
         tableView_->reset();
     }
+
 }
 
 void Swindow::removeNode()
 {
-    const QModelIndexList selected = tableView_->selectionModel()->selectedIndexes();
-    if(selected.size() == 1)
-    {
-        QString parentID = tableModel_->rowID(selected.first().row());
-        tableModel_->removeNode(parentID);
-        tableView_->reset();
-
-    }
+    const QModelIndex index = tableView_->currentIndex();
+    QString parentID = tableModel_->data(index).toString();
+    tableModel_->removeNode(parentID);
+   // emit tableModel_->layoutChanged();
+    tableView_->reset();
 }
