@@ -10,7 +10,8 @@
 #include "StorageTree.h"
 #include "StorageTreeNode.h"
 
-
+static int columnBalance_ = 2;
+static int columnExpense_ = 3;
 class TableModel : public QAbstractTableModel
 {
     // QAbstractItemModel interface

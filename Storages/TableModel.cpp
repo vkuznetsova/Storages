@@ -107,13 +107,11 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
 
 void TableModel::addNewChild(const QString &parentID, const QString &childID)
 {
-    TableModel model(tree_);
     tree_.addChild(parentID, StorageTreeNode(childID));
     nodeOrder_ = tree_.order();
-    int row = model.rowCount(QModelIndex());
-    model.insertRow(row);
-    insertRows(1, 1);
-    emit dataChanged(index(0,0, QModelIndex()), index(tree_.count(), 4, QModelIndex()));
+    int row =rowCount(QModelIndex());
+    insertRow(row);
+    layoutChanged();
 }
 
 QString TableModel::rowID(const int row) const
@@ -130,7 +128,7 @@ QString TableModel::columnID(const int column) const
 Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if(index.isValid() && index.column() == 2 || index.column() == 3)
+    if(index.isValid() && index.column() == columnBalance_ || index.column() == columnExpense_)
         flags |= Qt::ItemIsEditable;
     return flags;
 }
@@ -140,8 +138,13 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if(index.isValid() && role == Qt::EditRole)
     {
         const QString id = data(createIndex(index.row(), 0), Qt::DisplayRole).toString();
-        tree_.setBalance(id, value.toInt());
-        tree_.setExpense(id, value.toInt());
+        if(index.column() == columnBalance_){
+            tree_.setBalance(id, value.toInt());
+        }
+        if(index.column() == columnExpense_)
+        {
+            tree_.setExpense(id, value.toInt());
+        }
         emit dataChanged(index, index);
         return true;
     }
@@ -194,9 +197,10 @@ void TableModel::removeNode(QString &parentID)
         if(value.toString() == parentID)
         {
             tree_.removeNode(parentID);
-            //removeRow(2);
+            nodeOrder_ = tree_.order();
+            layoutChanged();
             return;
         }
     }
-
 }
+

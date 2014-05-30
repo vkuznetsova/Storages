@@ -11,6 +11,7 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QGridLayout>
 
 #include "TableModel.h"
 
@@ -23,6 +24,12 @@ public:
             QWidget *parent = 0,
             Qt::WindowFlags flags = 0);
     ~Swindow();
+
+    void createModel();
+
+    void createView();
+
+    void createConnections();
 private slots:
     void addNewChild();
     void removeNode();
