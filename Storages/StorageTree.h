@@ -20,6 +20,10 @@ public:
 
     StorageTree(const StorageTreeNode &root);
 
+    StorageTree(const QString id);
+
+    QString id()const;
+
     StorageTree& setRoot(const StorageTreeNode &root);
 
     StorageTreeNode root()const;
@@ -111,7 +115,7 @@ private:
 
     StorageTreeNode recursiveNodeForNum(const StorageTreeNode &parent, const int num, int &findNum);
 
-
+    QString id_;
 };
 
 Q_DECLARE_METATYPE(StorageTree)

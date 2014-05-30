@@ -19,6 +19,17 @@ StorageTree::StorageTree(const StorageTreeNode &root)
     nodes_[root.id()].setLevel(1);
 }
 
+StorageTree::StorageTree(const QString id) :
+    id_(id)
+{
+
+}
+
+QString StorageTree::id() const
+{
+    return QString();
+}
+
 StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
 {
     nodes_.remove(root.id());
@@ -114,7 +125,9 @@ QString StorageTree::parent(const QString &child) const
 
 bool StorageTree::operator ==(const StorageTree &tree) const
 {
-    return rootID_ == tree.rootID_ && nodes_ == tree.nodes_;
+    return id_ == tree.id_
+            && rootID_ == tree.rootID_
+            && nodes_ == tree.nodes_;
 }
 
 void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTree &tree) const

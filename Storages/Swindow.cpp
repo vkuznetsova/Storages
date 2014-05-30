@@ -21,12 +21,14 @@ Swindow::~Swindow()
 
 void Swindow::createModel()
 {
-    StorageTree tree (StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100))
-                      .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
-                      .addChild("root", StorageTreeNode("leaf2", QList<QString>(), 2, 5, 10))
-                      .addChild("leaf1", StorageTreeNode("leaf3", QList<QString>(), 3, 10, 5))
-                      .addChild("leaf2", StorageTreeNode("leaf4", QList<QString>(), 3, 5, 5))
-                      .addChild("leaf2", StorageTreeNode("leaf5", QList<QString>(), 3, 1, 0)));
+    StorageTree tree = StorageTree::generateTree(15);
+//    StorageTree tree (StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100))
+//                      .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
+//                      .addChild("root", StorageTreeNode("leaf2", QList<QString>(), 2, 5, 10))
+//                      .addChild("leaf1", StorageTreeNode("leaf3", QList<QString>(), 3, 10, 5))
+//                      .addChild("leaf2", StorageTreeNode("leaf4", QList<QString>(), 3, 5, 5))
+//                      .addChild("leaf2", StorageTreeNode("leaf5", QList<QString>(), 3, 1, 0)));
+
     tableModel_ = new TableModel(tree);
 }
 

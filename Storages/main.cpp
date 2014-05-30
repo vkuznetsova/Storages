@@ -2,6 +2,7 @@
 
 #include "TStorageTree.h"
 #include "TTableModel.h"
+#include "TStorageDatabaseInterface.h"
 
 #include "Swindow.h"
 
@@ -13,6 +14,9 @@ int main(int argc, char *argv[])
 
     TTableModel tTableModel;
     QTest::qExec(&tTableModel);
+
+    TStorageDatabaseInterface tStorageDatabaseInterface;
+    QTest::qExec(&tStorageDatabaseInterface);
 
     return 0;
 #endif

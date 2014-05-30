@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core testlib gui widgets
+QT       += core testlib gui widgets sql
 
 
 TARGET = Storages
@@ -31,7 +31,11 @@ SOURCES += main.cpp \
     TStorageTree.cpp \
     Swindow.cpp \
     TableModel.cpp \
-    TTableModel.cpp
+    TTableModel.cpp \
+    TStorageDatabaseInterface.cpp \
+    StorageDatabaseInterface.cpp \
+    StorageDatabaseWriter.cpp \
+    StorageDatabaseReader.cpp
 
 HEADERS += \
     StorageTree.h \
@@ -50,4 +54,8 @@ HEADERS += \
     STNTotalSum.h \
     Swindow.h \
     TableModel.h \
-    TTableModel.h
+    TTableModel.h \
+    TStorageDatabaseInterface.h \
+    StorageDatabaseInterface.h \
+    StorageDatabaseWriter.h \
+    StorageDatabaseReader.h
