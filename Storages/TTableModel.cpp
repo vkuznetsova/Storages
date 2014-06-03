@@ -79,12 +79,12 @@ void TTableModel::TestRowData_data()
                                 << 1
                                 << QVariant(QString());
 
-    QTest::newRow("single-tree3")<<StorageTree(StorageTreeNode("root",QList<QString>(), 1, 1, 10))
+    QTest::newRow("single-tree3")<<StorageTree(StorageTreeNode("root", 1, 1, 10))
                                 << 0
                                 << 2
                                 <<QVariant(10);
-    QTest::newRow("level1")<<(StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100)))
-                             .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
+    QTest::newRow("level1")<<(StorageTree(StorageTreeNode("root", 1, 3, -100)))
+                             .addChild("root", StorageTreeNode("leaf1", 2, 1, -1))
                           << 1
                           << 0
                           <<QVariant("leaf1");
@@ -224,7 +224,7 @@ void TTableModel::TestRemoveNode_data()
                                 << QString()
                                 << QStringList();
 
-    QTest::newRow("single-root") << StorageTree(StorageTreeNode("root", QList<QString>(), 1, 8, 10))
+    QTest::newRow("single-root") << StorageTree(StorageTreeNode("root", 1, 8, 10))
                                  << "root"
                                  << QStringList();
 

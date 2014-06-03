@@ -4,6 +4,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QDebug>
 #include <QFile>
 
@@ -14,6 +15,9 @@ public:
     StorageDatabaseInterface(const QString &dataBaseName);
 
     void createSchema();
+
+protected:
+    void checkLastError(const QSqlQuery &query);
 
 private:
     QString dataBaseName_;

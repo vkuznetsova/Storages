@@ -2,6 +2,8 @@
 
 #define STORAGEDATABASEREADER_H
 
+#include <QSqlRecord>
+
 #include "StorageTree.h"
 #include "StorageDatabaseInterface.h"
 

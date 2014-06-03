@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
     TStorageTree tStorageTree;
     QTest::qExec(&tStorageTree);
 
-    TTableModel tTableModel;
-    QTest::qExec(&tTableModel);
+//    TTableModel tTableModel;
+//    QTest::qExec(&tTableModel);
 
     TStorageDatabaseInterface tStorageDatabaseInterface;
     QTest::qExec(&tStorageDatabaseInterface);

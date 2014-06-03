@@ -30,7 +30,9 @@ public:
 
     StorageTreeNode node(const QString &id) const;
 
-    StorageTree& addChild(const QString &parent, const StorageTreeNode &child);
+    StorageTree& addChild(const QString &parent, const StorageTreeNode &child);\
+
+    StorageTree& addChild(const QString &parent, const QString &child);
 
     QStringList childrenIDs(const QString &id) const;
 
@@ -44,7 +46,7 @@ public:
 
     QString toString() const;
 
-    bool operator ==(const StorageTree &tree) const;
+    bool operator ==(const StorageTree &structure) const;
 
     bool isLeaf(const QString &node) const;
 
@@ -85,27 +87,36 @@ public:
 
     void removeNode(const QString &subTreeRoot);
 
-    void setBalance(const QString &nodeID, const int balance);
+    StorageTree &setBalance(const QString &nodeID, const int balance);
 
-    void setExpense(const QString &nodeID, const int expense);
+    StorageTree& setExpense(const QString &nodeID, const int expense);
+
+    void autoSetRoot();
+
+    QHash<QString, QSet<QString> > structure() const;
+
+    QHash<QString, StorageTreeNode> structureData() const;
+
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes);
 
     int level(const QString &node, const QString &find, const int l) const;
 
-     QStringList order(const QString &nodeID) const;
+    QStringList order(const QString &nodeID) const;
 
 private:
     QString rootID_;
+    QHash<QString, QSet<QString> > tree_;
     QHash<QString, StorageTreeNode> nodes_;
+    QString id_;
 
     void recursiveToString(const StorageTreeNode &parent, QString &sRecord) const;
 
     // bool recursiveISBoolean(const StorageTreeNode &parent) const;
 
-    void recursiveSubTree(const StorageTreeNode &parent, StorageTree &tree) const;
-    static void recursiveIns(StorageTree &tree,const StorageTreeNode &parent, const int maxLvl, int lvl);
+    void recursiveSubTree(const StorageTreeNode &parent, StorageTree &structure) const;
+    static void recursiveIns(StorageTree &structure,const StorageTreeNode &parent, const int maxLvl, int lvl);
 
     void recursiveLeafs(const StorageTreeNode &parent, QStringList &childrenIDs) const;
 
@@ -114,8 +125,6 @@ private:
     StorageTree recursiveAccumBalance(const StorageTreeNode &parent) const;
 
     StorageTreeNode recursiveNodeForNum(const StorageTreeNode &parent, const int num, int &findNum);
-
-    QString id_;
 };
 
 Q_DECLARE_METATYPE(StorageTree)

@@ -10,12 +10,10 @@ class StorageTreeNode
 {
 public:
     StorageTreeNode(const QString &id = QString(),
-                    QList<QString> childrenID = QList<QString>(),
                     const int level = 0,
                     const int expense = 0,
                     int balance = 0) :
         id_(id),
-        childrenID_(childrenID),
         level_(level),
         balance_(balance),
         expense_(expense)

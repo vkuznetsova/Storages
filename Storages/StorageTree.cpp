@@ -7,7 +7,8 @@
 #include <QDebug>
 
 
-StorageTree::StorageTree()
+StorageTree::StorageTree() :
+    rootID_()
 {
 
 }
@@ -27,7 +28,7 @@ StorageTree::StorageTree(const QString id) :
 
 QString StorageTree::id() const
 {
-    return QString();
+    return id_;
 }
 
 StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
@@ -62,6 +63,19 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
     nodes_.insert(newChild.id(),newChild);
     nodes_[parent].addChild(newChild.id());
     nodes_[newChild.id()].setLeaf(true);
+    return *this;
+}
+
+StorageTree &StorageTree::addChild(const QString &parent, const QString &child)
+{
+    if(!parent.isNull())
+    {
+        tree_[parent] << child;
+    }
+
+    nodes_[child] = StorageTreeNode(child, level(parent) + 1);
+    nodes_[child].setParent(parent);
+
     return *this;
 }
 
@@ -412,7 +426,6 @@ StorageTree StorageTree::recursiveAccumBalance(const StorageTreeNode &parent) co
     {
         QString idChild = childsCopy.at(i);
         recursiveAccumBalance(StorageTreeNode(idChild,
-                                              QList<QString>(), level(idChild),
                                               nodes_.value(idChild).getExpence(),
                                               nodes_.value(rootID_).getBalance()));
         if(isLeaf(idChild))
@@ -432,10 +445,14 @@ StorageTree StorageTree::accumBalance() const
 StorageTree StorageTree::generateTree(const int maxLevel)
 {
     if(maxLevel == 0)
+    {
         return StorageTree();
+    }
+
     StorageTreeNode node("root");
     StorageTree tree(node);
     recursiveIns(tree, node,maxLevel,1);
+
     return tree;
 
 }
@@ -455,11 +472,15 @@ StorageTreeNode StorageTree::recursiveNodeForNum(const StorageTreeNode &parent, 
         QString idChild = children.at(i);
         findNum++;
         if(findNum == num)
+        {
             return nodes_.value(idChild);
+        }
 
         StorageTreeNode node = recursiveNodeForNum(nodes_.value(idChild),num,findNum);
         if(!node.id().isEmpty())
+        {
             return node;
+        }
     }
     return StorageTreeNode();
 }
@@ -515,19 +536,41 @@ void StorageTree::removeNode(const QString &subTreeRoot)
     nodes_.remove(subTreeRoot);
 }
 
-void StorageTree::setBalance(const QString &nodeID, const int balance)
+StorageTree &StorageTree::setBalance(const QString &nodeID, const int balance)
 {
     if(nodes_.contains(nodeID))
     {
         nodes_[nodeID].setBalance(balance);
+        return *this;
     }
 }
 
-void StorageTree::setExpense(const QString &nodeID, const int expense)
+StorageTree &StorageTree::setExpense(const QString &nodeID, const int expense)
 {
     if(nodes_.contains(nodeID))
     {
         nodes_[nodeID].setExpence(expense);
+        return *this;
     }
+}
 
+void StorageTree::autoSetRoot()
+{
+    foreach (const QString &nodeID, nodes_.keys())
+    {
+        if(parent(nodeID).isNull())
+        {
+            rootID_ = nodeID;
+        }
+    }
+}
+
+QHash<QString, QSet<QString> > StorageTree::structure() const
+{
+    return tree_;
+}
+
+QHash<QString, StorageTreeNode> StorageTree::structureData() const
+{
+    return nodes_;
 }

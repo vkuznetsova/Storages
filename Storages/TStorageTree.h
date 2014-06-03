@@ -75,6 +75,9 @@ private slots:
     void TestRemoveNode_data();
     void TestRemoveNode();
 
+    void TestAutoSetRoot_data();
+    void TestAutoSetRoot();
+
 };
 
 #endif // TSTORAGETREE_H
