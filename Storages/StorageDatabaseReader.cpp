@@ -12,47 +12,32 @@ StorageDatabaseReader::StorageDatabaseReader(const QString &dataBaseName):
 
 StorageTree StorageDatabaseReader::read(const QString idTree)
 {
-    QSqlQuery query;
-    query.prepare("select parent, child from trees where id = :id");
-    query.bindValue(":id", idTree);
-
     if(idTree.isNull())
     {
         return StorageTree();
     }
 
-    QSqlQuery query1;
-    query1.prepare("select nodes.balance, nodes.expense from trees inner join nodes"
-                   "on trees.child = nodes.id where trees.id = :id");
-    query1.bindValue(":id", idTree);
+    StorageTree tree = StorageTree(idTree);
+    QSqlQuery query(database());
+    query.prepare("select parent, child, balance, expense from nodes inner join trees"
+                   " on nodes.id = trees.child where trees.id = :id");
+    query.bindValue(":id", idTree);
 
     if(!query.exec())
     {
-        qDebug()<<"Запрос для таблицы trees не выполнен.....";
-    }
-    checkLastError(query);
-
-    if(!query1.exec())
-    {
         qDebug()<<"Запрос для соединенных таблиц не выполнен.....";
     }
-    query1.exec();
-    checkLastError(query1);
-
-    StorageTree tree = StorageTree(idTree);
+    checkLastError(query);
     while(query.next())
     {
         const QString parent = query.value(0).toString();
         const QString child = query.value(1).toString();
+        const int balance = query.value(2).toInt();
+        const int expense = query.value(3).toInt();
         tree.addChild(parent, child);
-        while(query1.next())
-        {
-            const int balance = query1.value(2).toInt();
-            const int expense = query1.value(3).toInt();
-            tree.setBalance(child, balance);
-            tree.setExpense(child, expense);
-        }
-   }
+        tree.setBalance(child, balance);
+        tree.setExpense(child, expense);
+    }
     tree.autoSetRoot();
     return tree;
 }

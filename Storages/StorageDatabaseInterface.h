@@ -14,15 +14,19 @@ public:
     StorageDatabaseInterface();
     StorageDatabaseInterface(const QString &dataBaseName);
 
+    ~StorageDatabaseInterface();
+
     void createSchema();
+
+    QSqlDatabase database();
+
+    bool open();
 
 protected:
     void checkLastError(const QSqlQuery &query);
 
 private:
     QString dataBaseName_;
-    QSqlDatabase dataBase_;
-    QString pathFile_;
 };
 
 #endif // STORAGEDATABASEINTERFACE_H

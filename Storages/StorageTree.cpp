@@ -141,7 +141,9 @@ bool StorageTree::operator ==(const StorageTree &tree) const
 {
     return id_ == tree.id_
             && rootID_ == tree.rootID_
-            && nodes_ == tree.nodes_;
+            && nodes_ == tree.nodes_
+            && nodes_.value(rootID_).getBalance() == tree.nodes_.value(rootID_).getBalance()
+            && nodes_.value(rootID_).getExpence() == tree.nodes_.value(rootID_).getExpence();
 }
 
 void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTree &tree) const

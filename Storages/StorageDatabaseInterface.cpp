@@ -7,28 +7,43 @@ StorageDatabaseInterface::StorageDatabaseInterface()
 StorageDatabaseInterface::StorageDatabaseInterface(const QString &dataBaseName):
     dataBaseName_(dataBaseName)
 {
+    open();
+    // createSchema();
+}
 
-    //спросить у никиты как правильно открывать базы и почему так не правильно
-    if(QSqlDatabase::contains(dataBaseName))
-    {
-        dataBase_ = QSqlDatabase::database(dataBaseName);
-    }
-    else
-    {
-        dataBase_ = QSqlDatabase::addDatabase("QSQLITE");
-        dataBase_.setDatabaseName(dataBaseName);
-    }
+StorageDatabaseInterface::~StorageDatabaseInterface()
+{
+//    database().close();
+//    QSqlDatabase::removeDatabase(dataBaseName_);
+}
 
-    if(!dataBase_.isOpen())
+QSqlDatabase StorageDatabaseInterface::database()
+{
+    return QSqlDatabase::database(dataBaseName_, false);
+}
+
+bool StorageDatabaseInterface::open()
+{
+    if(!QSqlDatabase::contains(dataBaseName_))
     {
-        dataBase_.open();
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", dataBaseName_);
+        db.setDatabaseName(dataBaseName_);
+
+        if(!db.open())
+        {
+            qWarning() << "database not open" << db.lastError().text();
+            return false;
+        }
+
         createSchema();
     }
+    return true;
 }
+
 
 void StorageDatabaseInterface::createSchema()
 {
-    QSqlQuery query;
+    QSqlQuery query(database());
     QString createTableTrees = "create table if not exists trees ( id varchar not null,"
             " parent varchar, child varchar, primary key(id, child));";
     QString createTableNodes = " create table if not exists nodes (id varchar primary key not null,"
@@ -50,6 +65,6 @@ void StorageDatabaseInterface::checkLastError(const QSqlQuery &query)
 {
     if(query.lastError().text() != " ")
     {
-       qWarning() << query.lastError().text();
+        qWarning() << query.lastError().text();
     }
 }
