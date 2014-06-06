@@ -10,7 +10,7 @@ StorageDatabaseReader::StorageDatabaseReader(const QString &dataBaseName):
 
 }
 
-StorageTree StorageDatabaseReader::read(const QString idTree)
+StorageTree StorageDatabaseReader::read(const QString &idTree)
 {
     QSqlQuery queryID(database());
     queryID.prepare("select distinct id from trees");
@@ -30,6 +30,7 @@ StorageTree StorageDatabaseReader::read(const QString idTree)
     }
 
     StorageTree tree = StorageTree(idTree);
+    qWarning() << "creating tree. id: " << tree.id();
     QSqlQuery query(database());
     query.prepare("select parent, child, balance, expense from nodes inner join trees"
                    " on nodes.id = trees.child where trees.id = :id");
@@ -46,10 +47,14 @@ StorageTree StorageDatabaseReader::read(const QString idTree)
         const QString child = query.value(1).toString();
         const int balance = query.value(2).toInt();
         const int expense = query.value(3).toInt();
+
+        qWarning() << "reading row parent: " << parent << " child: " << child << " balance: " << balance << " expense: " << expense;
+
         tree.addChild(parent, child);
         tree.setBalance(child, balance);
         tree.setExpense(child, expense);
     }
     tree.autoSetRoot();
+    qWarning() << "autosetting root: " << tree.root().id();
     return tree;
 }

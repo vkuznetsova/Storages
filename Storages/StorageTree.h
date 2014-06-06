@@ -3,7 +3,8 @@
 #define STORAGETREE_H
 
 #include <QtCore>
-#include<QList>
+#include <QList>
+#include <QSet>
 #include"StorageTreeNode.h"
 #include"StorageTreeNodeMap.h"
 #include"StorageUtils.h"
@@ -124,7 +125,7 @@ private:
 
     // bool recursiveIsBalanced(const StorageTreeNode &parent) const;
 
-    StorageTree recursiveAccumBalance(const StorageTreeNode &parent) const;
+    int recursiveAccumBalance(const QString &id);
 
     StorageTreeNode recursiveNodeForNum(const StorageTreeNode &parent, const int num, int &findNum);
 };

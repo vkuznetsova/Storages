@@ -16,6 +16,7 @@ StorageTree::StorageTree() :
 StorageTree::StorageTree(const StorageTreeNode &root)
 {
     rootID_ = root.id();
+    tree_[rootID_] = QSet<QString>();
     nodes_.insert(root.id(), root);
     nodes_[root.id()].setLevel(1);
 }
@@ -39,9 +40,16 @@ void StorageTree::setID(const QString &idTrees)
 StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
 {
     nodes_.remove(root.id());
+    tree_.remove(root.id());
     rootID_ = root.id();
     nodes_.insert(root.id(), root);
     nodes_[root.id()].setLevel(1);
+
+    if(!tree_.contains(root.id()))
+    {
+        tree_[root.id()] = QSet<QString>();
+    }
+
     return *this;
 }
 
@@ -57,18 +65,19 @@ StorageTreeNode StorageTree::node(const QString &id) const
 
 StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode &child)
 {
-    if(!nodes_.contains(parent))
+    if(!nodes_.contains(parent) && !tree_.contains(parent))
+    {
         return *this;
-
+    }
     StorageTreeNode newChild = child;
     newChild.setParent(parent);
     newChild.setLevel(nodes_[parent].level() + 1);
     nodes_[parent].setLeaf(false);
-
     nodes_.insert(newChild.id(),newChild);
-    tree_[parent] << newChild.id();
     nodes_[newChild.id()].setLeaf(true);
+    tree_[parent] << newChild.id();
     return *this;
+
 }
 
 StorageTree &StorageTree::addChild(const QString &parent, const QString &child)
@@ -77,6 +86,7 @@ StorageTree &StorageTree::addChild(const QString &parent, const QString &child)
     {
         tree_[parent] << child;
     }
+    tree_[child] = QSet<QString>();
 
     nodes_[child] = StorageTreeNode(child, level(parent) + 1);
     nodes_[child].setParent(parent);
@@ -429,27 +439,27 @@ int StorageTree::euclidMetric()
 
 }
 
-StorageTree StorageTree::recursiveAccumBalance(const StorageTreeNode &parent) const
-{
-    int balance = 0;
-    QStringList childsCopy = childrenIDs(parent.id());
-    for(int i = 0; i < childsCopy.size(); i++)
+int StorageTree::recursiveAccumBalance(const QString &id)
+{ 
+    int balance = nodes_.value(id).getBalance();
+    foreach(const QString &child, childrenIDs(id))
     {
-        QString idChild = childsCopy.at(i);
-        recursiveAccumBalance(StorageTreeNode(idChild,
-                                              nodes_.value(idChild).getExpence(),
-                                              nodes_.value(rootID_).getBalance()));
-        if(isLeaf(idChild))
-        {
-            balance += nodes_.value(idChild).getBalance() + nodes_.value(rootID_).getBalance();
-        }
+        balance += recursiveAccumBalance(child);
     }
-    return *this;
+
+    nodes_[id].setBalance(balance);
+
+    return balance;
 }
 
 StorageTree StorageTree::accumBalance() const
 {
-    StorageTree tree = recursiveAccumBalance(nodes_.value(rootID_));
+    if(nodes_.isEmpty())
+    {
+        return StorageTree();
+    }
+    StorageTree tree = *this;
+    tree.recursiveAccumBalance(tree.root().id());
     return tree;
 }
 
@@ -530,19 +540,28 @@ QStringList StorageTree::order() const
 
 void StorageTree::removeNode(const QString &subTreeRoot)
 {
+    if(nodes_.isEmpty() && tree_.isEmpty())
+    {
+        return;
+    }
     if(subTreeRoot == rootID_)
     {
         rootID_ = QString();
         nodes_.clear();
+        tree_.clear();
         return;
     }
-
     foreach(const QString &childID, childrenIDs(subTreeRoot))
     {
         removeNode(childID);
     }
     QString parentSubTree =  parent(subTreeRoot);
+    if(tree_.value(parentSubTree).isEmpty())
+    {
+        tree_.remove(parentSubTree);
+    }
     tree_[parentSubTree].remove(subTreeRoot);
+    tree_.remove(subTreeRoot);
     nodes_.remove(subTreeRoot);
 }
 
@@ -560,12 +579,22 @@ StorageTree &StorageTree::setExpense(const QString &nodeID, const int expense)
 
 void StorageTree::autoSetRoot()
 {
+    if(tree_.isEmpty())
+    {
+        return;
+    }
+
     foreach (const QString &nodeID, nodes_.keys())
     {
         if(parent(nodeID).isNull())
         {
             rootID_ = nodeID;
+            break;
         }
+    }
+    if(!tree_.contains(rootID_))
+    {
+        tree_[rootID_] = QSet<QString>();
     }
 }
 
