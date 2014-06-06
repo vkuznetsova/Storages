@@ -14,13 +14,14 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
 {
     QSqlQuery queryDeleteFromTrees(database());
     database().transaction();
-    queryDeleteFromTrees.prepare("delete from trees where exists (select * from trees where id = :id)");
+    queryDeleteFromTrees.prepare("delete from trees where id = :id");
     queryDeleteFromTrees.bindValue(":id", tree.id());
     if(!queryDeleteFromTrees.exec())
     {
-        qDebug()<<"Запрос для удаления существующей записи из trees не выполнен";
+        qDebug() << "Запрос для удаления существующей записи из trees не выполнен";
     }
-    checkLastError(queryDeleteFromTrees);
+    checkLastError(queryDeleteFromTrees);\
+    qWarning() << "deleting old tree";
 
     QSqlQuery query(database());
     query.prepare("insert into trees (id, parent, child) values (:id, :parent, :child)");
@@ -40,6 +41,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
                 qDebug()<<"Запрос для таблицы trees не выполнен";
             }
             checkLastError(query);
+            qWarning() << "inserting id: " << tree.id() << " parent: " << parent << " child: " << child;
         }
     }
     if(!tree.root().id().isNull())
@@ -52,33 +54,25 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
             qDebug()<<"Запрос для таблицы trees не выполнен";
         }
         checkLastError(query);
+        qWarning() << "inserting id: " << tree.id() << " child: " << tree.root().id();
     }
 
-    QSqlQuery queryDeleteFromNodes(database());
-    queryDeleteFromNodes.prepare("delete from nodes where exists (select * from trees"
-                                 " inner join nodes on trees.child = nodes.id where trees.id = :id)");
-    queryDeleteFromNodes.bindValue(":id", tree.id());
-    if(!queryDeleteFromNodes.exec())
-    {
-        qDebug()<<"Запрос для удаления существующей записи из nodes не выполнен";
-    }
-    checkLastError(queryDeleteFromNodes);
-
-    QSqlQuery query1(database());
-    query1.prepare("insert into nodes (id, balance, expense) values (:id, :balance, :expense)");
-    checkLastError(query1);
+    query.prepare("insert or replace into nodes (id, balance, expense) values (:id, :balance, :expense)");
+    checkLastError(query);
     QHash<QString, StorageTreeNode> structureData = tree.structureData();
-    foreach(const StorageTreeNode &childID, structureData.values())
+    foreach(const StorageTreeNode &child, structureData.values())
     {
-        query1.bindValue(":id", childID.id());
-        query1.bindValue(":balance", childID.getBalance());
-        query1.bindValue(":expense", childID.getExpence());
-        if(!query1.exec())
+        query.bindValue(":id", child.id());
+        query.bindValue(":balance", child.getBalance());
+        query.bindValue(":expense", child.getExpence());
+        if(!query.exec())
         {
             qDebug()<<"Запрос для таблицы nodes не выполнен";
         }
-        checkLastError(query1);
+        checkLastError(query);
+        qWarning() << "inserting id: " << child.id() << " balance: " << child.getBalance() << " expense: " << child.getExpence();
     }
+
     database().commit();
 }
 

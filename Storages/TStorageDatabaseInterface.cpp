@@ -26,12 +26,12 @@ void TStorageDatabaseInterface::TestWriteAndRead_data()
 {
     QTest::addColumn<StorageTree>("tree");
 
-    QTest::newRow("empty-tree") << StorageTree("id0");
+//    QTest::newRow("empty-tree") << StorageTree("id0");
 
-    QTest::newRow("single-root") << (StorageTree("first")
-                                     .setRoot(StorageTreeNode("root")))
-                                    .setBalance("root", 2)
-                                    .setExpense("root", 9);
+//    QTest::newRow("single-root") << (StorageTree("first")
+//                                     .setRoot(StorageTreeNode("root")))
+//                                    .setBalance("root", 2)
+//                                    .setExpense("root", 9);
 
     QTest::newRow("level2") << (StorageTree("second")
                                 .setRoot(StorageTreeNode("root"))

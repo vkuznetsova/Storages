@@ -13,7 +13,7 @@ public:
     StorageDatabaseReader();
     StorageDatabaseReader (const QString &dataBaseName);
 
-    StorageTree read(const QString idTree);
+    StorageTree read(const QString &idTree);
 };
 
 #endif // STORAGEDATABASEREADER_H
