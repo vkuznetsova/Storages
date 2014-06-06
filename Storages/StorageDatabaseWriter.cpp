@@ -13,6 +13,7 @@ StorageDatabaseWriter::StorageDatabaseWriter(const QString &dataBaseName):
 void StorageDatabaseWriter::write(const StorageTree &tree)
 {
     QSqlQuery queryDeleteFromTrees(database());
+    database().transaction();
     queryDeleteFromTrees.prepare("delete from trees where exists (select * from trees where id = :id)");
     queryDeleteFromTrees.bindValue(":id", tree.id());
     if(!queryDeleteFromTrees.exec())
@@ -78,5 +79,6 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
         }
         checkLastError(query1);
     }
+    database().commit();
 }
 

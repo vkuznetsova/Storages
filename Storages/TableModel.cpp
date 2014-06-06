@@ -41,7 +41,7 @@ QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIn
 {
     if(index.isValid())
     {
-        QStringList children = parent.childrenID();
+        QStringList children = tree_.childrenIDs(parent.id());
         for(int i = 0; i < children.size(); i++)
         {
             QString idChild = children.at(i);

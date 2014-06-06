@@ -25,16 +25,6 @@ public:
         return id_;
     }
 
-    QStringList childrenID() const
-    {
-        return childrenID_;
-    }
-
-    void addChild(const QString &childID)
-    {
-        childrenID_ << childID;
-    }
-
     void setParent(const QString &parent = QString())
     {
         parent_ = parent;
@@ -72,7 +62,7 @@ public:
 
     void expend(const int consumption)
     {
-        balance_ = balance_ - consumption;
+        balance_ = balance_ - expense_;
     }
 
     int getBalance()const
@@ -92,17 +82,15 @@ public:
 
     bool operator ==(const StorageTreeNode &node) const
     {
-        return id() == node.id();
-    }
-
-    void removeChild(const QString &childID)
-    {
-        childrenID_.removeAll(childID);
+        return id_ == node.id_
+                && parent_ == node.parent_
+                && level_ == node.level_
+                && balance_ == node.balance_
+                && expense_ == node.expense_;
     }
 
 private:
     QString id_;
-    QList<QString> childrenID_;
     QString parent_;
     bool isLeaf_;
     int level_;

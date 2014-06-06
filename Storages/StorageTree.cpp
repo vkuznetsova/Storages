@@ -31,6 +31,11 @@ QString StorageTree::id() const
     return id_;
 }
 
+void StorageTree::setID(const QString &idTrees)
+{
+    id_ = idTrees;
+}
+
 StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
 {
     nodes_.remove(root.id());
@@ -61,7 +66,7 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
     nodes_[parent].setLeaf(false);
 
     nodes_.insert(newChild.id(),newChild);
-    nodes_[parent].addChild(newChild.id());
+    tree_[parent] << newChild.id();
     nodes_[newChild.id()].setLeaf(true);
     return *this;
 }
@@ -81,14 +86,14 @@ StorageTree &StorageTree::addChild(const QString &parent, const QString &child)
 
 QStringList StorageTree::childrenIDs(const QString &id) const
 {
-    return nodes_.value(id).childrenID();
+    return tree_.value(id).toList();
 }
 
 QList<StorageTreeNode> StorageTree::children(const QString &id) const
 {
     QList<StorageTreeNode> ch;
 
-    foreach(const QString &childID, nodes_.value(id).childrenID())
+    foreach(const QString &childID, childrenIDs(id))
     {
         ch << nodes_.value(childID);
     }
@@ -110,7 +115,7 @@ int StorageTree::level(const QString &node, const QString &find, const int l) co
     }
     else
     {
-        foreach(const QString &childID, current.childrenID())
+        foreach(const QString &childID, childrenIDs(current.id()))
         {
             return level(childID, find,  l + 1);
         }
@@ -142,13 +147,12 @@ bool StorageTree::operator ==(const StorageTree &tree) const
     return id_ == tree.id_
             && rootID_ == tree.rootID_
             && nodes_ == tree.nodes_
-            && nodes_.value(rootID_).getBalance() == tree.nodes_.value(rootID_).getBalance()
-            && nodes_.value(rootID_).getExpence() == tree.nodes_.value(rootID_).getExpence();
+            && tree_ == tree.tree_;
 }
 
 void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTree &tree) const
 {
-    QStringList children = parentNode.childrenID();
+    QStringList children = childrenIDs(parentNode.id());
     for(int i = 0; i < children.size(); i++)
     {
         QString idChild = children.at(i);
@@ -173,7 +177,7 @@ StorageTree StorageTree::subTree(const QString &root) const
 
 void StorageTree::recursiveToString(const StorageTreeNode &parent, QString &sRecord) const
 {
-    QStringList children  = parent.childrenID();
+    QStringList children  = childrenIDs(parent.id());
     sRecord += "(" + parent.id();
     for(int i = 0; i < children.size(); i++)
     {
@@ -192,7 +196,7 @@ QString StorageTree:: toString() const
 
 bool StorageTree::isLeaf(const QString &node) const
 {
-    return nodes_.value(node).childrenID().isEmpty();
+    return childrenIDs(node).isEmpty();
 }
 
 /*bool StorageTree::recursiveISBoolean(const StorageTreeNode &parent) const
@@ -251,7 +255,7 @@ bool StorageTree::isBalanced()
         else
         {
 
-            count = nodes_.value(nodeID).childrenID().size();
+            count = childrenIDs(nodeID).size();
         }
 
         if(count >= 0 && level >= 0)
@@ -268,12 +272,15 @@ bool StorageTree::isBalanced()
 
 void StorageTree::recursiveLeafs(const StorageTreeNode &parent, QStringList &children) const
 {
-    QStringList childs  = parent.childrenID();
-    if(nodes_.value(parent.id()).childrenID().isEmpty()) return;
+    QStringList childs  = childrenIDs(parent.id());
+    if(childrenIDs(parent.id()).isEmpty())
+    {
+        return;
+    }
     for(int i = 0; i < childs.size(); i++)
     {
         QString idChild = childs.at(i);
-        if(!nodes_[idChild].childrenID().isEmpty())
+        if(!childrenIDs(idChild).isEmpty())
         {
             recursiveLeafs(nodes_[idChild], children);
         }
@@ -326,7 +333,7 @@ StorageTree StorageTree::map(StorageTreeNodeMap *map) const
         nodes.insert(nodeID, map->map(nodes_.value(nodeID)));
     }
 
-    return StorageTree(rootID_, nodes);
+    return StorageTree(rootID_, nodes, tree_);
 }
 
 int StorageTree::sum(STNTotalSum *sum) const
@@ -343,7 +350,7 @@ int StorageTree::sum(STNTotalSum *sum) const
 QString StorageTree::fold(const QString &acc, const QString &nodeID, STNFold *f) const
 {
     QString res = acc;
-    foreach(const QString &childID, nodes_.value(nodeID).childrenID())
+    foreach(const QString &childID, childrenIDs(nodeID))
     {
         res = fold(res, childID, f);
     }
@@ -372,15 +379,17 @@ bool StorageTree::nSuns(const int count) const
 }
 
 StorageTree::StorageTree(const QString &rootID,
-                         const QHash<QString, StorageTreeNode> &nodes) :
+                         const QHash<QString, StorageTreeNode> &nodes,
+                         const QHash<QString, QSet<QString> > &tree) :
     rootID_(rootID),
-    nodes_(nodes)
+    nodes_(nodes),
+    tree_(tree)
 {
 }
 
 StorageTree StorageTree::run() const
 {
-    STNConsumptionMap m(StorageTreeNode().getExpence());
+    STNConsumptionMap m(nodes_.value(root().id()).getExpence());
 
     return map(&m);
 }
@@ -423,7 +432,7 @@ int StorageTree::euclidMetric()
 StorageTree StorageTree::recursiveAccumBalance(const StorageTreeNode &parent) const
 {
     int balance = 0;
-    QStringList childsCopy = parent.childrenID();
+    QStringList childsCopy = childrenIDs(parent.id());
     for(int i = 0; i < childsCopy.size(); i++)
     {
         QString idChild = childsCopy.at(i);
@@ -444,6 +453,19 @@ StorageTree StorageTree::accumBalance() const
     return tree;
 }
 
+void StorageTree::recursiveIns(StorageTree &tree, const StorageTreeNode &parent, const int maxLvl, int lvl)
+{
+    if(lvl == maxLvl)
+        return;
+    StorageTreeNode node("leaf" + QString::number(tree.nodes_.size()));
+    tree.addChild(parent.id(),node);
+    StorageTreeNode node1("leaf" + QString::number(tree.nodes_.size()));
+    tree.addChild(parent.id(),node1);
+    lvl++;
+    recursiveIns(tree,node,maxLvl,lvl);
+    recursiveIns(tree,node1,maxLvl,lvl);
+}
+
 StorageTree StorageTree::generateTree(const int maxLevel)
 {
     if(maxLevel == 0)
@@ -456,7 +478,6 @@ StorageTree StorageTree::generateTree(const int maxLevel)
     recursiveIns(tree, node,maxLevel,1);
 
     return tree;
-
 }
 
 int StorageTree::count() const
@@ -468,7 +489,7 @@ int StorageTree::count() const
 StorageTreeNode StorageTree::recursiveNodeForNum(const StorageTreeNode &parent, const int num,
                                                  int &findNum)
 {
-    QStringList children = parent.childrenID();
+    QStringList children = childrenIDs(parent.id());
     for(int i = 0; i < children.size(); i++)
     {
         QString idChild = children.at(i);
@@ -507,19 +528,6 @@ QStringList StorageTree::order() const
     }
 }
 
-void StorageTree::recursiveIns(StorageTree &tree, const StorageTreeNode &parent, const int maxLvl, int lvl)
-{
-    if(lvl == maxLvl)
-        return;
-    StorageTreeNode node("leaf" + QString::number(tree.nodes_.size()));
-    tree.addChild(parent.id(),node);
-    StorageTreeNode node1("leaf" + QString::number(tree.nodes_.size()));
-    tree.addChild(parent.id(),node1);
-    lvl++;
-    recursiveIns(tree,node,maxLvl,lvl);
-    recursiveIns(tree,node1,maxLvl,lvl);
-}
-
 void StorageTree::removeNode(const QString &subTreeRoot)
 {
     if(subTreeRoot == rootID_)
@@ -534,26 +542,20 @@ void StorageTree::removeNode(const QString &subTreeRoot)
         removeNode(childID);
     }
     QString parentSubTree =  parent(subTreeRoot);
-    nodes_[parentSubTree].removeChild(subTreeRoot);
+    tree_[parentSubTree].remove(subTreeRoot);
     nodes_.remove(subTreeRoot);
 }
 
 StorageTree &StorageTree::setBalance(const QString &nodeID, const int balance)
 {
-    if(nodes_.contains(nodeID))
-    {
-        nodes_[nodeID].setBalance(balance);
-        return *this;
-    }
+    nodes_[nodeID].setBalance(balance);
+    return *this;
 }
 
 StorageTree &StorageTree::setExpense(const QString &nodeID, const int expense)
 {
-    if(nodes_.contains(nodeID))
-    {
-        nodes_[nodeID].setExpence(expense);
-        return *this;
-    }
+    nodes_[nodeID].setExpence(expense);
+    return *this;
 }
 
 void StorageTree::autoSetRoot()

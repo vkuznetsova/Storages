@@ -11,9 +11,12 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QContextMenuEvent>
-#include <QGridLayout>
+#include<QAbstractItemView>
+#include <QComboBox>
+#include <QDataWidgetMapper>
 
 #include "TableModel.h"
+#include "StorageDatabaseReader.h"
 
 class Swindow:public QMainWindow
 {
@@ -30,6 +33,7 @@ public:
     void createView();
 
     void createConnections();
+
 private slots:
     void addNewChild();
     void removeNode();
@@ -41,6 +45,8 @@ private:
     QPushButton *addChildButton_;
 
     QMenu *menu_;
+
+    QComboBox *comboBox_;
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event)

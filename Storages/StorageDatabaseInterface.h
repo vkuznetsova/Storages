@@ -8,6 +8,8 @@
 #include <QDebug>
 #include <QFile>
 
+#include "StorageTree.h"
+
 class StorageDatabaseInterface
 {
 public:

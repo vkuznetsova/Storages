@@ -18,9 +18,9 @@ public:
     bool check(const StorageTree &tree, const QString &nodeID) const
     {
         if(greater_)
-            return greater_(tree.node(nodeID).childrenID().size(),count_);
+            return greater_(tree.childrenIDs(nodeID).size(),count_);
         else {
-            return equal_(tree.node(nodeID).childrenID().size(), count_) && !tree.isLeaf(nodeID);
+            return equal_(tree.childrenIDs(nodeID).size(), count_) && !tree.isLeaf(nodeID);
         }
     }
 

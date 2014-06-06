@@ -22,7 +22,7 @@ public:
         }
         else
         {
-            return tree.node(nodeID).childrenID().size() == count_;
+            return tree.childrenIDs(nodeID).size() == count_;
         }
     }
 

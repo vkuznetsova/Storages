@@ -1,5 +1,5 @@
 #include"Swindow.h"
-#include<QAbstractItemView>
+
 
 Swindow::Swindow(int argc,
                  char *argv[],
@@ -21,31 +21,48 @@ Swindow::~Swindow()
 
 void Swindow::createModel()
 {
-    StorageTree tree = StorageTree::generateTree(15);
-//    StorageTree tree (StorageTree(StorageTreeNode("root", QList<QString>(), 1, 3, -100))
-//                      .addChild("root", StorageTreeNode("leaf1", QList<QString>(), 2, 1, -1))
-//                      .addChild("root", StorageTreeNode("leaf2", QList<QString>(), 2, 5, 10))
-//                      .addChild("leaf1", StorageTreeNode("leaf3", QList<QString>(), 3, 10, 5))
-//                      .addChild("leaf2", StorageTreeNode("leaf4", QList<QString>(), 3, 5, 5))
-//                      .addChild("leaf2", StorageTreeNode("leaf5", QList<QString>(), 3, 1, 0)));
+    //   StorageTree tree = StorageTree::generateTree(15);
+    StorageTree tree =(StorageTree("fourth")
+                       .setRoot(StorageTreeNode("root"))
+                       .addChild("root", "node1")
+                       .addChild("node1", "leaf1")
+                       .addChild("root", "node2")
+                       .addChild("node2", "leaf2")
+                       .addChild("node2", "leaf3"))
+            .setBalance("leaf3", -100)
+            .setExpense("leaf3", 100)
+            .setBalance("root", 3)
+            .setExpense("root", 6)
+            .setBalance("node1", 6)
+            .setExpense("node1", 5)
+            .setBalance("leaf1", 5)
+            .setExpense("leaf1", 1)
+            .setBalance("node2", 88)
+            .setExpense("node2", 100)
+            .setBalance("leaf2", 8)
+            .setExpense("leaf2", 10);
 
-    tableModel_ = new TableModel(tree);
+    // tableModel_ = new TableModel(tree);
+    StorageDatabaseReader reader("dataBaseName");
+    reader.read(tree.id());
+    comboBox_ = new QComboBox();
+    comboBox_->addItem(reader.read(tree.id()).id());
 }
 
 void Swindow::createView()
 {
     addChildButton_ = new QPushButton("Добавить потомка");
-
-    tableView_ = new QTableView();
-    tableView_->setModel(tableModel_);
-    tableView_->setEditTriggers(QAbstractItemView::DoubleClicked);
-    tableView_->setSortingEnabled(true);
+    //    tableView_ = new QTableView();
+    //        tableView_->setModel(tableModel_);
+    //        tableView_->setEditTriggers(QAbstractItemView::DoubleClicked);
+    //        tableView_->setSortingEnabled(true);
 
     menu_ = new QMenu(this);
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->addWidget(addChildButton_);
-    mainLayout->addWidget(tableView_);
+    // mainLayout->addWidget(tableView_);
+    mainLayout->addWidget(comboBox_);
 
     QWidget *centralWidget = new QWidget();
     centralWidget->setLayout(mainLayout);

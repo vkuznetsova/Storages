@@ -708,22 +708,22 @@ void TStorageTree::TestRun_data()
     QTest::addColumn<StorageTree>("tree");
     QTest::addColumn<StorageTree>("expected");
 
-    QTest::newRow("empty-tree") << StorageTree()
-                                << StorageTree();
+//    QTest::newRow("empty-tree") << StorageTree()
+//                                << StorageTree();
 
-    QTest::newRow("single-root") << (StorageTree(StorageTreeNode("root", 0,
-                                                                 7, 10)))
-                                 << (StorageTree(StorageTreeNode("root", 0,
-                                                                 7, 3)));
+//    QTest::newRow("single-root") << (StorageTree(StorageTreeNode("root", 0,
+//                                                                 7, 10)))
+//                                 << (StorageTree(StorageTreeNode("root", 0,
+//                                                                 7, 3)));
 
-    QTest::newRow("level12-1") << (StorageTree(StorageTreeNode("root", 0,
-                                                               4, 10)))
-                                  .addChild("root",StorageTreeNode("leaf1",
-                                                                   0, 4, 5 ))
-                               << (StorageTree(StorageTreeNode("root", 0,
-                                                               4, 6))
-                                   .addChild("root",StorageTreeNode("leaf1",
-                                                                    0,4, 1)));
+//    QTest::newRow("level12-1") << (StorageTree(StorageTreeNode("root", 0,
+//                                                               4, 10)))
+//                                  .addChild("root",StorageTreeNode("leaf1",
+//                                                                   0, 4, 5 ))
+//                               << (StorageTree(StorageTreeNode("root", 0,
+//                                                               4, 6))
+//                                   .addChild("root",StorageTreeNode("leaf1",
+//                                                                    0,4, 1)));
 
     QTest::newRow("level2") << (StorageTree(StorageTreeNode("root", 0,
                                                             16, 7)))
@@ -761,7 +761,6 @@ void TStorageTree::TestRun()
 
     const StorageTree actual = tree.run();
     QCOMPARE(actual, expected);
-
 }
 
 void TStorageTree::TestTotalSum_data()
