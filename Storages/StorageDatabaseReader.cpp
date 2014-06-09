@@ -12,18 +12,6 @@ StorageDatabaseReader::StorageDatabaseReader(const QString &dataBaseName):
 
 StorageTree StorageDatabaseReader::read(const QString &idTree)
 {
-    QSqlQuery queryID(database());
-    queryID.prepare("select distinct id from trees");
-
-    if(!queryID.exec())
-    {
-        qDebug()<<"Запрос для выборки все id деревьев не выполнен.....";
-    }
-    checkLastError(queryID);
-//    while(queryID.next())
-//    {
-//        qDebug()<<queryID.value(0).toString();
-//    }
     if(idTree.isNull())
     {
         return StorageTree();
@@ -57,4 +45,23 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
     tree.autoSetRoot();
     qWarning() << "autosetting root: " << tree.root().id();
     return tree;
+}
+
+QList<QString> StorageDatabaseReader::readID()
+{
+    QList <QString> ids;
+    QSqlQuery queryID(database());
+    queryID.prepare("select distinct id from trees");
+
+    if(!queryID.exec())
+    {
+        qDebug()<<"Запрос для выборки всех id деревьев не выполнен.....";
+    }
+    checkLastError(queryID);
+    while(queryID.next())
+    {
+        ids << queryID.value(0).toString();
+        qDebug()<<"all ids from db.."<<queryID.value(0).toString();
+    }
+    return ids;
 }

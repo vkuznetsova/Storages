@@ -37,6 +37,18 @@ void StorageTree::setID(const QString &idTrees)
     id_ = idTrees;
 }
 
+StorageTree StorageTree::setLevel(const QString &nodeID, const int lvl)
+{
+    nodes_[nodeID].setLevel(lvl);
+    return *this;
+}
+
+StorageTree &StorageTree::setLeaf(const QString &nodeID, const bool value)
+{
+    nodes_[nodeID].setLeaf(value);
+    return *this;
+}
+
 StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
 {
     nodes_.remove(root.id());
@@ -53,6 +65,14 @@ StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
     return *this;
 }
 
+StorageTree &StorageTree::setRoot(const QString &rootID)
+{
+    rootID_ = rootID;
+    addChild(QString(), rootID_);
+
+    return *this;
+}
+
 StorageTreeNode StorageTree:: root()const
 {
     return nodes_.value(rootID_);
@@ -65,7 +85,7 @@ StorageTreeNode StorageTree::node(const QString &id) const
 
 StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode &child)
 {
-    if(!nodes_.contains(parent) && !tree_.contains(parent))
+    if(!nodes_.contains(parent))
     {
         return *this;
     }
@@ -75,7 +95,7 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
     nodes_[parent].setLeaf(false);
     nodes_.insert(newChild.id(),newChild);
     nodes_[newChild.id()].setLeaf(true);
-    tree_[parent] << newChild.id();
+    tree_[parent].insert(newChild.id());
     return *this;
 
 }
@@ -596,6 +616,33 @@ void StorageTree::autoSetRoot()
     {
         tree_[rootID_] = QSet<QString>();
     }
+}
+
+void StorageTree::autoSetLevel()
+{
+    if(tree_.isEmpty())
+    {
+        return;
+    }
+
+    foreach (const QString &nodeID, nodes_.keys())
+    {
+        int lvl = nodes_.value(nodeID).level();
+    }
+}
+
+void StorageTree::autoSetLeaf()
+{
+    if(tree_.isEmpty())
+    {
+        return;
+    }
+
+    foreach (const QString &nodeID, nodes_.keys())
+    {
+        bool leaf = nodes_.value(nodeID).isLeaf();
+    }
+
 }
 
 QHash<QString, QSet<QString> > StorageTree::structure() const

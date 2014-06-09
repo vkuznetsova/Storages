@@ -44,9 +44,9 @@ void Swindow::createModel()
 
     // tableModel_ = new TableModel(tree);
     StorageDatabaseReader reader("dataBaseName");
-    reader.read(tree.id());
+    reader.readID();
     comboBox_ = new QComboBox();
-    comboBox_->addItem(reader.read(tree.id()).id());
+    comboBox_->addItems(reader.readID());
 }
 
 void Swindow::createView()

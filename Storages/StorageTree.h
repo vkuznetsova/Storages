@@ -27,7 +27,13 @@ public:
 
     void setID(const QString &idTrees);
 
+    StorageTree setLevel(const QString &nodeID, const int lvl);
+
+    StorageTree &setLeaf(const QString &nodeID, const bool value);
+
     StorageTree& setRoot(const StorageTreeNode &root);
+
+    StorageTree& setRoot(const QString &rootID);
 
     StorageTreeNode root()const;
 
@@ -95,6 +101,10 @@ public:
     StorageTree &setExpense(const QString &nodeID, const int expense);
 
     void autoSetRoot();
+
+    void autoSetLevel();
+
+    void autoSetLeaf();
 
     QHash<QString, QSet<QString> > structure() const;
 
