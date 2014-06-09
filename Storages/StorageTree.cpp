@@ -62,6 +62,7 @@ StorageTree &StorageTree::setRoot(const StorageTreeNode &root)
         tree_[root.id()] = QSet<QString>();
     }
 
+
     return *this;
 }
 
@@ -85,10 +86,13 @@ StorageTreeNode StorageTree::node(const QString &id) const
 
 StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode &child)
 {
+
     if(!nodes_.contains(parent))
-    {
-        return *this;
-    }
+
+        if(!nodes_.contains(parent) && !tree_.contains(parent))
+        {
+            return *this;
+        }
     StorageTreeNode newChild = child;
     newChild.setParent(parent);
     newChild.setLevel(nodes_[parent].level() + 1);
@@ -96,6 +100,7 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
     nodes_.insert(newChild.id(),newChild);
     nodes_[newChild.id()].setLeaf(true);
     tree_[parent].insert(newChild.id());
+    tree_[parent] << newChild.id();
     return *this;
 
 }
@@ -642,7 +647,6 @@ void StorageTree::autoSetLeaf()
     {
         bool leaf = nodes_.value(nodeID).isLeaf();
     }
-
 }
 
 QHash<QString, QSet<QString> > StorageTree::structure() const

@@ -15,7 +15,9 @@ public:
 
     StorageTree read(const QString &idTree);
 
+
     QList<QString> readID();
+
 };
 
 #endif // STORAGEDATABASEREADER_H
