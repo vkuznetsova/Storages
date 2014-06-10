@@ -55,7 +55,7 @@ public:
 
     QString toString() const;
 
-    bool operator ==(const StorageTree &structure) const;
+    bool operator ==(const StorageTree &tree) const;
 
     bool isLeaf(const QString &node) const;
 

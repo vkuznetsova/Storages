@@ -1157,9 +1157,9 @@ void TStorageTree::TestRemoveNode_data()
     QTest::addColumn<QString>("node");
     QTest::addColumn<StorageTree>("expected");
 
-//    QTest::newRow("empty-tree") << StorageTree()
-//                                << QString()
-//                                << StorageTree();
+    QTest::newRow("empty-tree") << StorageTree()
+                                << QString()
+                                << StorageTree();
 
     QTest::newRow("single-root")<<StorageTree().setRoot(StorageTreeNode("root"))
                                << "root"
@@ -1181,25 +1181,25 @@ void TStorageTree::TestRemoveNode_data()
                               << "node1"
                               << StorageTree(StorageTreeNode("root"));
 
-//    QTest::newRow("single-root")<<StorageTree(StorageTreeNode("root"))
-//                               << "root"
-//                               << StorageTree();
+    QTest::newRow("single-root")<<StorageTree(StorageTreeNode("root"))
+                               << "root"
+                               << StorageTree();
 
-//    QTest::newRow("level2-1") << (StorageTree(StorageTreeNode("root"))
-//                                  .addChild("root", StorageTreeNode("node1")))
-//                              << "node1"
-//                              << StorageTree(StorageTreeNode("root"));
+    QTest::newRow("level2-1") << (StorageTree(StorageTreeNode("root"))
+                                  .addChild("root", StorageTreeNode("node1")))
+                              << "node1"
+                              << StorageTree(StorageTreeNode("root"));
 
-//    QTest::newRow("level2-2") << (StorageTree(StorageTreeNode("root"))
-//                                  .addChild("root", StorageTreeNode("node1")))
-//                              << "root"
-//                              << StorageTree();
+    QTest::newRow("level2-2") << (StorageTree(StorageTreeNode("root"))
+                                  .addChild("root", StorageTreeNode("node1")))
+                              << "root"
+                              << StorageTree();
 
-//    QTest::newRow("level3-1") << (StorageTree(StorageTreeNode("root"))
-//                                  .addChild("root", StorageTreeNode("node1"))
-//                                  .addChild("node1", StorageTreeNode("leaf1")))
-//                              << "node1"
-//                              << StorageTree(StorageTreeNode("root"));
+    QTest::newRow("level3-1") << (StorageTree(StorageTreeNode("root"))
+                                  .addChild("root", StorageTreeNode("node1"))
+                                  .addChild("node1", StorageTreeNode("leaf1")))
+                              << "node1"
+                              << StorageTree(StorageTreeNode("root"));
 
     QTest::newRow("level3-2") << (StorageTree(StorageTreeNode("root"))
                                   .addChild("root", StorageTreeNode("node1"))
@@ -1230,27 +1230,27 @@ void TStorageTree::TestRemoveNode_data()
                               .addChild("root", "leaf1")
                               .addChild("leaf1", "leaf3"));
 
-//    QTest::newRow("level4") << (StorageTree(StorageTreeNode("root"))
-//                                .addChild("root", StorageTreeNode("node1"))
-//                                .addChild("node1", StorageTreeNode("leaf1"))
-//                                .addChild("root", StorageTreeNode("node2"))
-//                                .addChild("node2", StorageTreeNode("leaf2"))
-//                                .addChild("node2", StorageTreeNode("leaf3")))
-//                            << "node2"
-//                            << (StorageTree(StorageTreeNode("root"))
-//                                .addChild("root", StorageTreeNode("node1"))
-//                                .addChild("node1", StorageTreeNode("leaf1")));
+    QTest::newRow("level4") << (StorageTree(StorageTreeNode("root"))
+                                .addChild("root", StorageTreeNode("node1"))
+                                .addChild("node1", StorageTreeNode("leaf1"))
+                                .addChild("root", StorageTreeNode("node2"))
+                                .addChild("node2", StorageTreeNode("leaf2"))
+                                .addChild("node2", StorageTreeNode("leaf3")))
+                            << "node2"
+                            << (StorageTree(StorageTreeNode("root"))
+                                .addChild("root", StorageTreeNode("node1"))
+                                .addChild("node1", StorageTreeNode("leaf1")));
 
-//    QTest::newRow("level5")<<(StorageTree(StorageTreeNode("root"))
-//                              .addChild("root", StorageTreeNode("leaf1"))
-//                              .addChild("root", StorageTreeNode("leaf2"))
-//                              .addChild("leaf1", StorageTreeNode("leaf3"))
-//                              .addChild("leaf2", StorageTreeNode("leaf4"))
-//                              .addChild("leaf2", StorageTreeNode("leaf5")))
-//                          << "leaf2"
-//                          << (StorageTree(StorageTreeNode("root"))
-//                              .addChild("root", StorageTreeNode("leaf1"))
-//                              .addChild("leaf1", StorageTreeNode("leaf3")));
+    QTest::newRow("level5")<<(StorageTree(StorageTreeNode("root"))
+                              .addChild("root", StorageTreeNode("leaf1"))
+                              .addChild("root", StorageTreeNode("leaf2"))
+                              .addChild("leaf1", StorageTreeNode("leaf3"))
+                              .addChild("leaf2", StorageTreeNode("leaf4"))
+                              .addChild("leaf2", StorageTreeNode("leaf5")))
+                          << "leaf2"
+                          << (StorageTree(StorageTreeNode("root"))
+                              .addChild("root", StorageTreeNode("leaf1"))
+                              .addChild("leaf1", StorageTreeNode("leaf3")));
 
 }
 
@@ -1346,7 +1346,7 @@ void TStorageTree::TestAutoSetLevel_data()
     QTest::newRow("level2") << (StorageTree()
                                 .setRoot("root")
                                 .addChild("root", "node1"))
-                            << (StorageTree(StorageTreeNode("root", 1))
+                            << (StorageTree().setRoot("root")
                                 .addChild("root", "node1"))
                                .setLevel("root", 1)
                                .setLevel("node1", 2);
@@ -1399,6 +1399,15 @@ void TStorageTree::TestAutoSetLevel_data()
                               .setLevel("leaf4", 3)
                               .setLevel("leaf5", 3);
 
+    QTest::newRow("order2") << (StorageTree())
+                               .addChild("root", "node1")
+                               .addChild(QString(), "root")
+                            << (StorageTree().setRoot("root"))
+                               .addChild("root", "node1")
+                               .addChild(QString(), "root")
+                               .setLevel("root", 1)
+                               .setLevel("node1", 2);
+
 }
 
 void TStorageTree::TestAutoSetLevel()
@@ -1406,6 +1415,7 @@ void TStorageTree::TestAutoSetLevel()
     QFETCH(StorageTree, tree);
     QFETCH(StorageTree, expected);
 
+    tree.autoSetRoot();
     tree.autoSetLevel();
 
     QCOMPARE(tree, expected);
@@ -1491,5 +1501,52 @@ void TStorageTree::TestAutoSetLeaf()
 
     QCOMPARE(tree, expected);
 
+}
+
+void TStorageTree::TestAddChild_data()
+{
+    QTest::addColumn<StorageTree>("tree");
+    QTest::addColumn<QString>("parent1");
+    QTest::addColumn<QString>("child1");
+    QTest::addColumn<QString>("parent2");
+    QTest::addColumn<QString>("child2");
+    QTest::addColumn<StorageTree>("expected");
+
+    QTest::newRow("order1") << StorageTree()
+                            << QString()
+                            << "root"
+                            << "root"
+                            <<"node1"
+                           << (StorageTree().setRoot("root"))
+                              .addChild(QString(), "root")
+                              .addChild("root", "node1");
+
+    QTest::newRow("order2") << StorageTree()
+                            << "root"
+                            << "node1"
+                            << QString()
+                            <<"root"
+                           << (StorageTree().setRoot("root"))
+                              .addChild(QString(), "root")
+                              .addChild("root", "node1");
+
+
+}
+
+void TStorageTree::TestAddChild()
+{
+    QFETCH(StorageTree, tree);
+    QFETCH(QString, parent1);
+    QFETCH(QString, child1);
+    QFETCH(QString, parent2);
+    QFETCH(QString, child2);
+    QFETCH(StorageTree, expected);
+
+    tree.addChild(parent1, child1);
+    tree.addChild(parent2, child2);
+    tree.autoSetRoot();
+    tree.autoSetLevel();
+
+    QCOMPARE(tree, expected);
 }
 

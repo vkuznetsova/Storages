@@ -84,6 +84,9 @@ private slots:
     void TestAutoSetLeaf_data();
     void TestAutoSetLeaf();
 
+    void TestAddChild_data();
+    void TestAddChild();
+
 };
 
 #endif // TSTORAGETREE_H

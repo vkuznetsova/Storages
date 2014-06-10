@@ -86,7 +86,7 @@ public:
                 && parent_ == node.parent_
                 && level_ == node.level_
                 && balance_ == node.balance_
-                && expense_ == node.expense_;
+                && expense_ == node.expense_ ;
     }
 
 private:

@@ -21,7 +21,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
         qDebug() << "Запрос для удаления существующей записи из trees не выполнен";
     }
     checkLastError(queryDeleteFromTrees);\
-    qWarning() << "deleting old tree";
+    //qWarning() << "deleting old tree";
 
     QSqlQuery query(database());
     query.prepare("insert into trees (id, parent, child) values (:id, :parent, :child)");
@@ -41,7 +41,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
                 qDebug()<<"Запрос для таблицы trees не выполнен";
             }
             checkLastError(query);
-            qWarning() << "inserting id: " << tree.id() << " parent: " << parent << " child: " << child;
+            //qWarning() << "inserting id: " << tree.id() << " parent: " << parent << " child: " << child;
         }
     }
     if(!tree.root().id().isNull())
@@ -54,7 +54,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
             qDebug()<<"Запрос для таблицы trees не выполнен";
         }
         checkLastError(query);
-        qWarning() << "inserting id: " << tree.id() << " child: " << tree.root().id();
+        //qWarning() << "inserting id: " << tree.id() << " child: " << tree.root().id();
     }
 
     query.prepare("insert or replace into nodes (id, balance, expense) values (:id, :balance, :expense)");
@@ -70,7 +70,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
             qDebug()<<"Запрос для таблицы nodes не выполнен";
         }
         checkLastError(query);
-        qWarning() << "inserting id: " << child.id() << " balance: " << child.getBalance() << " expense: " << child.getExpence();
+        //qWarning() << "inserting id: " << child.id() << " balance: " << child.getBalance() << " expense: " << child.getExpence();
     }
 
     database().commit();

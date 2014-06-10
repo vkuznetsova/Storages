@@ -99,7 +99,6 @@ StorageTree &StorageTree::addChild(const QString &parent, const StorageTreeNode 
     nodes_[parent].setLeaf(false);
     nodes_.insert(newChild.id(),newChild);
     nodes_[newChild.id()].setLeaf(true);
-    tree_[parent].insert(newChild.id());
     tree_[parent] << newChild.id();
     return *this;
 
@@ -111,7 +110,10 @@ StorageTree &StorageTree::addChild(const QString &parent, const QString &child)
     {
         tree_[parent] << child;
     }
-    tree_[child] = QSet<QString>();
+    if(!tree_.contains(child))
+    {
+        tree_[child] = QSet<QString>();
+    }
 
     nodes_[child] = StorageTreeNode(child, level(parent) + 1);
     nodes_[child].setParent(parent);
@@ -465,7 +467,7 @@ int StorageTree::euclidMetric()
 }
 
 int StorageTree::recursiveAccumBalance(const QString &id)
-{ 
+{
     int balance = nodes_.value(id).getBalance();
     foreach(const QString &child, childrenIDs(id))
     {
@@ -629,10 +631,10 @@ void StorageTree::autoSetLevel()
     {
         return;
     }
-
     foreach (const QString &nodeID, nodes_.keys())
     {
-        int lvl = nodes_.value(nodeID).level();
+        int lvl = this->level(parent(nodeID)) + 1;
+        nodes_[nodeID].setLevel(lvl);
     }
 }
 
@@ -645,7 +647,9 @@ void StorageTree::autoSetLeaf()
 
     foreach (const QString &nodeID, nodes_.keys())
     {
-        bool leaf = nodes_.value(nodeID).isLeaf();
+        bool leaf = this->isLeaf(parent(nodeID));
+        nodes_[nodeID].setLeaf(leaf);
+
     }
 }
 
