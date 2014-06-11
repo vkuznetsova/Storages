@@ -1,9 +1,8 @@
 #include"TableModel.h"
 
-TableModel::TableModel(const StorageTree &tree) :
-    tree_(tree)
+TableModel::TableModel(const StorageTree tree)
 {
-    nodeOrder_ = tree_.order();
+    setTree(tree);
 }
 
 QModelIndex TableModel::index(int row, int column, const QModelIndex &parent) const
@@ -202,5 +201,13 @@ void TableModel::removeNode(QString &parentID)
             return;
         }
     }
+}
+
+void TableModel::setTree(const StorageTree &tree)
+{
+    tree_ = tree;
+    nodeOrder_ = tree_.order();
+
+    emit layoutChanged();
 }
 

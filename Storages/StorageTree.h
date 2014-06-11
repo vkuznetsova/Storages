@@ -19,6 +19,8 @@ class StorageTree
 public:
     StorageTree();
 
+   // StorageTree(const StorageTree &st);
+
     StorageTree(const StorageTreeNode &root);
 
     StorageTree(const QString id);

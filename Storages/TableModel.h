@@ -16,7 +16,7 @@ class TableModel : public QAbstractTableModel
 {
     // QAbstractItemModel interface
 public:
-    TableModel(const StorageTree &tree = StorageTree());
+    TableModel(const StorageTree tree = StorageTree());
 
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
@@ -39,7 +39,10 @@ public:
 
     void removeNode(QString &parentID);
 
+    void setTree(const StorageTree &tree);
+
     QString columnID(const int column) const;
+
 
 private:
    static bool greaterThan(const QPair<QString, QVariant> &pair1,
@@ -47,10 +50,12 @@ private:
    static bool lessThan(const QPair<QString, QVariant> &pair1,
                            const QPair<QString, QVariant> &pair2);
 
+   //вот это дерево и тебе нужно его установить
     StorageTree tree_;
     QVariant recursiveData(const StorageTreeNode &parent, const QModelIndex &index) const;
 
     QStringList nodeOrder_;
+
 };
 
 

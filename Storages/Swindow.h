@@ -34,9 +34,12 @@ public:
 
     void createConnections();
 
+    void createComboBox();
+
 private slots:
     void addNewChild();
     void removeNode();
+    void currentTreeChanged(const int index);
 
 private:
     QTableView *tableView_;

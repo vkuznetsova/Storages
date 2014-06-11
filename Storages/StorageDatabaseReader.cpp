@@ -53,7 +53,7 @@ QList<QString> StorageDatabaseReader::readID()
 {
     QList <QString> ids;
     QSqlQuery queryID(database());
-    queryID.prepare("select distinct id from trees");
+    queryID.prepare("select distinct id from trees order by id asc");
 
     if(!queryID.exec())
     {
@@ -63,7 +63,7 @@ QList<QString> StorageDatabaseReader::readID()
     while(queryID.next())
     {
         ids << queryID.value(0).toString();
-        qDebug()<<"all ids from db.."<<queryID.value(0).toString();
+        //qDebug()<<"all ids from db.."<<queryID.value(0).toString();
     }
     return ids;
 }

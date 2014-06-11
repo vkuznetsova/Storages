@@ -13,6 +13,14 @@ StorageTree::StorageTree() :
 
 }
 
+//StorageTree::StorageTree(const StorageTree &st)
+//{
+//    rootID_ = st.rootID_;
+//    tree_ = st.tree_;
+//    nodes_ = st.nodes_;
+
+//}
+
 StorageTree::StorageTree(const StorageTreeNode &root)
 {
     rootID_ = root.id();
