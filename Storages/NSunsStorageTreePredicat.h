@@ -1,7 +1,7 @@
 #ifndef NSUNSSTORAGETREEPREDICAT_H
 #define NSUNSSTORAGETREEPREDICAT_H
 
-#include"StorageTreePredicat.h"
+#include "StorageTreePredicat.h"
 
 class StorageTree;
 
@@ -18,8 +18,11 @@ public:
     bool check(const StorageTree &tree, const QString &nodeID) const
     {
         if(greater_)
+        {
             return greater_(tree.childrenIDs(nodeID).size(),count_);
-        else {
+        }
+        else
+        {
             return equal_(tree.childrenIDs(nodeID).size(), count_) && !tree.isLeaf(nodeID);
         }
     }

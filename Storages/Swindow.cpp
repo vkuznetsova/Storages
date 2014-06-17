@@ -1,4 +1,4 @@
-#include"Swindow.h"
+#include "Swindow.h"
 
 
 Swindow::Swindow(int argc,
@@ -8,7 +8,6 @@ Swindow::Swindow(int argc,
                  Qt::WindowFlags flags):
     QMainWindow(parent, flags)
 {
-    createComboBox();
     createModel();
     createView();
     createConnections();
@@ -27,10 +26,13 @@ Swindow::~Swindow()
 void Swindow::createModel()
 {
     tableModel_ = new TableModel();
+    reader_ = new StorageDatabaseReader("dataBaseName");
 }
 
 void Swindow::createView()
 {
+    comboBox_ = new QComboBox();
+    comboBox_->addItems(reader_->readID());
     addChildButton_ = new QPushButton("Добавить потомка");
     tableView_ = new QTableView();
     tableView_->setModel(tableModel_);
@@ -64,13 +66,6 @@ void Swindow::createConnections()
             this, SLOT(currentTreeChanged(int)));
 }
 
-void Swindow::createComboBox()
-{
-    comboBox_ = new QComboBox();
-    StorageDatabaseReader reader("dataBaseName");
-    comboBox_->addItems(reader.readID());
-}
-
 void Swindow::addNewChild()
 {
     const QString childID = QInputDialog::getText(this,
@@ -94,4 +89,9 @@ void Swindow::currentTreeChanged(const int index)
     const QString treeID = comboBox_->itemText(index);
     StorageTree tree = reader.read(treeID);
     tableModel_->setTree(tree);
+}
+
+void Swindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    menu_->exec(event->globalPos());
 }

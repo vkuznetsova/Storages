@@ -14,9 +14,9 @@
 
 static int columnBalance_ = 2;
 static int columnExpense_ = 3;
+
 class TableModel : public QAbstractTableModel
 {
-    // QAbstractItemModel interface
 public:
     TableModel(const StorageTree tree = StorageTree());
 
@@ -56,6 +56,8 @@ private:
     QVariant recursiveData(const StorageTreeNode &parent, const QModelIndex &index) const;
 
     QStringList nodeOrder_;
+
+    StorageDatabaseWriter writer_;
 
 };
 

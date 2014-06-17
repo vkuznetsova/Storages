@@ -7,7 +7,6 @@ StorageDatabaseReader::StorageDatabaseReader()
 StorageDatabaseReader::StorageDatabaseReader(const QString &dataBaseName):
     StorageDatabaseInterface(dataBaseName)
 {
-
 }
 
 StorageTree StorageDatabaseReader::read(const QString &idTree)
@@ -18,10 +17,9 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
     }
 
     StorageTree tree = StorageTree(idTree);
-    //qWarning() << "creating tree. id: " << tree.id();
     QSqlQuery query(database());
     query.prepare("select parent, child, balance, expense from nodes inner join trees"
-                   " on nodes.id = trees.child where trees.id = :id");
+                  " on nodes.id = trees.child where trees.id = :id");
     query.bindValue(":id", idTree);
 
     if(!query.exec())
@@ -36,8 +34,6 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
         const int balance = query.value(2).toInt();
         const int expense = query.value(3).toInt();
 
-        //qWarning() << "reading row parent: " << parent << " child: " << child << " balance: " << balance << " expense: " << expense;
-
         tree.addChild(parent, child);
         tree.setBalance(child, balance);
         tree.setExpense(child, expense);
@@ -45,7 +41,6 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
     tree.autoSetRoot();
     tree.autoSetLevel();
 
-    //qWarning() << "autosetting root: " << tree.root().id();
     return tree;
 }
 
@@ -63,7 +58,6 @@ QList<QString> StorageDatabaseReader::readID()
     while(queryID.next())
     {
         ids << queryID.value(0).toString();
-        //qDebug()<<"all ids from db.."<<queryID.value(0).toString();
     }
     return ids;
 }

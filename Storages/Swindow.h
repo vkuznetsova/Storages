@@ -11,7 +11,7 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QContextMenuEvent>
-#include<QAbstractItemView>
+#include <QAbstractItemView>
 #include <QComboBox>
 #include <QDataWidgetMapper>
 
@@ -51,11 +51,11 @@ private:
 
     QComboBox *comboBox_;
 
+    StorageDatabaseReader *reader_;
+
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent* event)
-    {
-        menu_->exec(event->globalPos());
-    }
+    virtual void contextMenuEvent(QContextMenuEvent* event);
+
 
 
 };

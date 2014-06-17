@@ -6,6 +6,11 @@
 
 #include "TableModel.h"
 
+static int headerColumnNode_ = 0;
+static int headerColumnRoot_ = 1;
+static int headerColumnBalance_ = 2;
+static int headerColumnExpense_ = 3;
+
 class TTableModel : public QObject
 {
     Q_OBJECT

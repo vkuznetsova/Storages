@@ -2,7 +2,7 @@
 
 #define STNTOSTRINGFOLD_H
 
-#include"STNFold.h"
+#include "STNFold.h"
 
 class STNToStringFold : public STNFold
 {

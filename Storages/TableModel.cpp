@@ -1,34 +1,43 @@
-#include"TableModel.h"
+#include "TableModel.h"
 
 TableModel::TableModel(const StorageTree tree)
 {
+    writer_ = StorageDatabaseWriter("dataBaseName");
     setTree(tree);
 }
 
 QModelIndex TableModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!hasIndex(row, column, parent)) {
+    if (!hasIndex(row, column, parent))
+    {
         return QModelIndex();
     }
 
-    if (!parent.isValid()){
+    if (!parent.isValid())
+    {
         return createIndex(row, column);
     }
+
+    return QModelIndex();
 }
 
 QModelIndex TableModel::parent(const QModelIndex &child) const
 {
-    if (!child.isValid()) {
+    if (!child.isValid())
+    {
         return QModelIndex();
     }
+
     return QModelIndex();
 }
 
 int TableModel::rowCount(const QModelIndex &parent) const
 {
-    if (!parent.isValid()) {
+    if (!parent.isValid())
+    {
         return tree_.count();
     }
+    return 0;
 }
 
 int TableModel::columnCount(const QModelIndex &parent) const
@@ -50,8 +59,8 @@ QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIn
                 {
                 case 0: return idChild; break;
                 case 1: return tree_.parent(idChild); break;
-                case 2: return tree_.node(idChild).getBalance();break;
-                case 3: return tree_.node(idChild).getExpence();break;
+                case 2: return tree_.node(idChild).getBalance(); break;
+                case 3: return tree_.node(idChild).getExpence(); break;
                 }
             }
             recursiveData(tree_.node(idChild), index);
@@ -110,6 +119,7 @@ void TableModel::addNewChild(const QString &parentID, const QString &childID)
     nodeOrder_ = tree_.order();
     int row =rowCount(QModelIndex());
     insertRow(row);
+    writer_.write(tree_);
     layoutChanged();
 }
 
@@ -203,6 +213,7 @@ void TableModel::removeNode(QString &parentID)
         {
             tree_.removeNode(parentID);
             nodeOrder_ = tree_.order();
+            writer_.write(tree_);
             layoutChanged();
             return;
         }
@@ -213,7 +224,6 @@ void TableModel::setTree(const StorageTree &tree)
 {
     tree_ = tree;
     nodeOrder_ = tree_.order();
-
     emit layoutChanged();
 }
 

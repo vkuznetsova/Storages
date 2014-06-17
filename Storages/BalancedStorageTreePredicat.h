@@ -1,7 +1,7 @@
 #ifndef BALANCEDSTORAGETREEPREDICAT_H
 #define BALANCEDSTORAGETREEPREDICAT_H
 
-#include"StorageTreePredicat.h"
+#include "StorageTreePredicat.h"
 
 class StorageTree;
 

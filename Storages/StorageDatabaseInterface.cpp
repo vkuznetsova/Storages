@@ -8,13 +8,10 @@ StorageDatabaseInterface::StorageDatabaseInterface(const QString &dataBaseName):
     dataBaseName_(dataBaseName)
 {
     open();
-    // createSchema();
 }
 
 StorageDatabaseInterface::~StorageDatabaseInterface()
 {
-//    database().close();
-//    QSqlDatabase::removeDatabase(dataBaseName_);
 }
 
 QSqlDatabase StorageDatabaseInterface::database()

@@ -2,7 +2,7 @@
 
 #define STNTOTALSUM_H
 
-#include"STNSum.h"
+#include "STNSum.h"
 
 class STNTotalSum : public STNSum
 {

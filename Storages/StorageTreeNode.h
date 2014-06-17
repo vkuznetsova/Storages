@@ -2,7 +2,7 @@
 #define STORAGETREENODE_H
 
 #include <QtCore>
-#include"StorageUtils.h"
+#include "StorageUtils.h"
 
 class STNConsumptionMap;
 

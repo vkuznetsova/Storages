@@ -1,7 +1,7 @@
 #ifndef BOOLEANSTORAGETREEPREDICAT_H
 #define BOOLEANSTORAGETREEPREDICAT_H
 
-#include"StorageTreePredicat.h"
+#include "StorageTreePredicat.h"
 
 
 class StorageTree;
