@@ -76,3 +76,30 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
     database().commit();
 }
 
+void StorageDatabaseWriter::updateBalance(const int value, const QString idNode)
+{
+    QSqlQuery queryUpdateBalance(database());
+    queryUpdateBalance.prepare("update nodes set balance = :value where id = :idNode");
+    queryUpdateBalance.bindValue(":value", value);
+    queryUpdateBalance.bindValue(":idNode", idNode);
+    if(!queryUpdateBalance.exec())
+    {
+        qDebug()<<"Запрос для обновления balance в таблице nodes не выполнен";
+    }
+    checkLastError(queryUpdateBalance);
+}
+
+void StorageDatabaseWriter::updateExpense(const int value, const QString idNode)
+{
+    QSqlQuery queryUpdateExpense(database());
+    queryUpdateExpense.prepare("update nodes set expense = :value where id = :idNode");
+    queryUpdateExpense.bindValue(":value", value);
+    queryUpdateExpense.bindValue(":idNode", idNode);
+    if(!queryUpdateExpense.exec())
+    {
+        qDebug()<<"Запрос для обновления expense в таблице nodes не выполнен";
+    }
+    checkLastError(queryUpdateExpense);
+
+}
+

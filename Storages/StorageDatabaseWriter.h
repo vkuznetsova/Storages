@@ -14,6 +14,10 @@ public:
 
     void write(const StorageTree &tree);
 
+    void updateBalance(const int value, const QString idNode);
+
+    void updateExpense(const int value, const QString idNode);
+
 };
 
 #endif // STORAGEDATABASEWRITER_H

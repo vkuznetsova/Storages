@@ -9,6 +9,8 @@
 
 #include "StorageTree.h"
 #include "StorageTreeNode.h"
+#include "StorageDatabaseWriter.h"
+
 
 static int columnBalance_ = 2;
 static int columnExpense_ = 3;
@@ -50,7 +52,6 @@ private:
    static bool lessThan(const QPair<QString, QVariant> &pair1,
                            const QPair<QString, QVariant> &pair2);
 
-   //вот это дерево и тебе нужно его установить
     StorageTree tree_;
     QVariant recursiveData(const StorageTreeNode &parent, const QModelIndex &index) const;
 

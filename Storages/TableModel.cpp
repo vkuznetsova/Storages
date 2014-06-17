@@ -137,12 +137,18 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if(index.isValid() && role == Qt::EditRole)
     {
         const QString id = data(createIndex(index.row(), 0), Qt::DisplayRole).toString();
-        if(index.column() == columnBalance_){
+        if(index.column() == columnBalance_)
+        {
             tree_.setBalance(id, value.toInt());
+            StorageDatabaseWriter writer("dataBaseName");
+            writer.updateBalance(value.toInt(), id);
+
         }
         if(index.column() == columnExpense_)
         {
             tree_.setExpense(id, value.toInt());
+            StorageDatabaseWriter writer("dataBaseName");
+            writer.updateExpense(value.toInt(), id);
         }
         emit dataChanged(index, index);
         return true;
