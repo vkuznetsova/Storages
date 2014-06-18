@@ -5,6 +5,8 @@
 #include <QtCore>
 #include <QList>
 #include <QSet>
+#include <QJsonArray>
+
 #include "StorageTreeNode.h"
 #include "StorageTreeNodeMap.h"
 #include "StorageUtils.h"
