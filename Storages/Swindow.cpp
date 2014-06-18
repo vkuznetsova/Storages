@@ -73,6 +73,11 @@ void Swindow::addNewChild()
                                                   tr("Введите ID потомка"));
     const QModelIndex index = tableView_->currentIndex();
     QString parentID = tableModel_->data(index).toString();
+    if(parentID.isNull() || childID.isNull())
+    {
+        QMessageBox::information(0, "Information", tr("Узел не может быть с пустым id"));
+        return;
+    }
     tableModel_->addNewChild(parentID, childID);
 }
 

@@ -35,7 +35,9 @@ SOURCES += main.cpp \
     TStorageDatabaseInterface.cpp \
     StorageDatabaseInterface.cpp \
     StorageDatabaseWriter.cpp \
-    StorageDatabaseReader.cpp
+    StorageDatabaseReader.cpp \
+    StorageTreeNode.cpp \
+    TStorageTreeNode.cpp
 
 HEADERS += \
     StorageTree.h \
@@ -58,4 +60,5 @@ HEADERS += \
     TStorageDatabaseInterface.h \
     StorageDatabaseInterface.h \
     StorageDatabaseWriter.h \
-    StorageDatabaseReader.h
+    StorageDatabaseReader.h \
+    TStorageTreeNode.h

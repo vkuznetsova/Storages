@@ -2,6 +2,9 @@
 #define STORAGETREENODE_H
 
 #include <QtCore>
+#include <QJsonObject>
+#include <QJsonValue>
+
 #include "StorageUtils.h"
 
 class STNConsumptionMap;
@@ -9,6 +12,7 @@ class STNConsumptionMap;
 class StorageTreeNode
 {
 public:
+
     StorageTreeNode(const QString &id = QString(),
                     const int level = 0,
                     const int expense = 0,
@@ -89,6 +93,8 @@ public:
                 && expense_ == node.expense_ ;
     }
 
+    QJsonObject toJSON() const;
+
 private:
     QString id_;
     QString parent_;
@@ -98,6 +104,7 @@ private:
     int expense_;
 };
 
-#endif // STORAGETREENODE_H
+Q_DECLARE_METATYPE(StorageTreeNode)
 
+#endif // STORAGETREENODE_H
 

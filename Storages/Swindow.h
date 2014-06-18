@@ -14,6 +14,7 @@
 #include <QAbstractItemView>
 #include <QComboBox>
 #include <QDataWidgetMapper>
+#include <QMessageBox>
 
 #include "TableModel.h"
 #include "StorageDatabaseReader.h"

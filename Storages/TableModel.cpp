@@ -55,12 +55,26 @@ QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIn
             QString idChild = children.at(i);
             if(index.row() == i)
             {
-                switch(index.column())
+
+                if(index.column() == columnNode_)
                 {
-                case 0: return idChild; break;
-                case 1: return tree_.parent(idChild); break;
-                case 2: return tree_.node(idChild).getBalance(); break;
-                case 3: return tree_.node(idChild).getExpence(); break;
+                    return idChild;
+                    break;
+                }
+                if(index.column() == columnParent_)
+                {
+                    return tree_.parent(idChild);
+                    break;
+                }
+                if(index.column() == columnBalance_)
+                {
+                    tree_.node(idChild).getBalance();
+                    break;
+                }
+                if(index.column() == columnExpense_)
+                {
+                    return tree_.node(idChild).getExpence();
+                    break;
                 }
             }
             recursiveData(tree_.node(idChild), index);
@@ -83,12 +97,21 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     }
     if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
-        switch(index.column())
+        if(index.column() == columnNode_)
         {
-        case 0: return node.id(); break;
-        case 1: return node.getParent(); break;
-        case 2: return node.getBalance();break;
-        case 3: return node.getExpence();break;
+            return node.id();
+        }
+        if(index.column() == columnParent_)
+        {
+            return node.getParent();
+        }
+        if(index.column() == columnBalance_)
+        {
+            return node.getBalance();
+        }
+        if(index.column() == columnExpense_)
+        {
+            return node.getExpence();
         }
     }
     return QVariant();
@@ -100,12 +123,21 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
     {
         if(orientation == Qt::Horizontal)
         {
-            switch(section)
+            if(section == columnNode_)
             {
-            case 0: return "Потомок";
-            case 1: return "Родитель";
-            case 2: return "Баланс Потомка";
-            case 3: return "Расход";
+                return "Потомок";
+            }
+            if(section == columnParent_)
+            {
+                return "Родитель";
+            }
+            if(section == columnBalance_)
+            {
+                return "Баланс Потомка";
+            }
+            if(section == columnExpense_)
+            {
+                return "Расход";
             }
         }
     }
