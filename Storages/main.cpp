@@ -19,14 +19,17 @@ int main(int argc, char *argv[])
     QTest::qExec(&tStorageTree);
 
 
-    TTableModel tTableModel;
-    QTest::qExec(&tTableModel);
+//    TTableModel tTableModel;
+//    QTest::qExec(&tTableModel);
 
-    TStorageDatabaseInterface tStorageDatabaseInterface;
-    QTest::qExec(&tStorageDatabaseInterface);
+//    TStorageDatabaseInterface tStorageDatabaseInterface;
+//    QTest::qExec(&tStorageDatabaseInterface);
 
-    TStorageTreeNode tStorageTreeNode;
-    QTest::qExec(&tStorageTreeNode);
+//    TStorageTreeNode tStorageTreeNode;
+//    QTest::qExec(&tStorageTreeNode);
+
+    Q_UNUSED(argc)
+    Q_UNUSED(argv)
 
     return 0;
 #endif

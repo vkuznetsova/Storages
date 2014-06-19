@@ -117,6 +117,8 @@ public:
 
     QHash<QString, StorageTreeNode> structureData() const;
 
+    QJsonArray nodesToJSONArray() const;
+
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes,
@@ -125,6 +127,7 @@ protected:
     int level(const QString &node, const QString &find, const int l) const;
 
     QStringList order(const QString &nodeID) const;
+
 
 private:
     QString rootID_;

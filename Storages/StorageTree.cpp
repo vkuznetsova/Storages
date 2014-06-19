@@ -172,6 +172,19 @@ QStringList StorageTree::order(const QString &nodeID) const
     return nodes;
 }
 
+QJsonArray StorageTree::nodesToJSONArray() const
+{
+    QJsonArray array;
+    QJsonObject obj;
+    foreach (const QString childID, nodes_.keys())
+    {
+        StorageTreeNode node = nodes_.value(childID);
+        obj = node.toJSON();
+        array.append(QJsonValue(obj));
+    }
+    return array;
+}
+
 QString StorageTree::parent(const QString &child) const
 {
     return nodes_.value(child).getParent();

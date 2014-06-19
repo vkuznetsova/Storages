@@ -87,6 +87,9 @@ private slots:
     void TestAddChild_data();
     void TestAddChild();
 
+    void TestNodesToJSONArray_data();
+     void TestNodesToJSONArray();
+
 };
 
 #endif // TSTORAGETREE_H

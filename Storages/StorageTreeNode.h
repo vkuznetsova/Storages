@@ -67,6 +67,7 @@ public:
     void expend(const int consumption)
     {
         balance_ = balance_ - expense_;
+        Q_UNUSED(consumption)
     }
 
     int getBalance()const

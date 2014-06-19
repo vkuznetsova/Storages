@@ -740,11 +740,11 @@ void TStorageTree::TestRun_data()
                                .addChild("leaf2", StorageTreeNode("leaf4", 3, 5, 5))
                                .addChild("leaf2", StorageTreeNode("leaf5", 3, 1, 0))
                             << (StorageTree(StorageTreeNode("root", 1, 3, 97)))
-                              .addChild("root", StorageTreeNode("leaf1", 2, 1, 0))
-                              .addChild("root", StorageTreeNode("leaf2", 2, 5, 5))
-                              .addChild("leaf1", StorageTreeNode("leaf3", 3, 10, -5))
-                              .addChild("leaf2", StorageTreeNode("leaf4", 3, 5, 0))
-                              .addChild("leaf2", StorageTreeNode("leaf5", 3, 1, -1));
+                               .addChild("root", StorageTreeNode("leaf1", 2, 1, 0))
+                               .addChild("root", StorageTreeNode("leaf2", 2, 5, 5))
+                               .addChild("leaf1", StorageTreeNode("leaf3", 3, 10, -5))
+                               .addChild("leaf2", StorageTreeNode("leaf4", 3, 5, 0))
+                               .addChild("leaf2", StorageTreeNode("leaf5", 3, 1, -1));
 }
 
 void TStorageTree::TestRun()
@@ -1528,6 +1528,157 @@ void TStorageTree::TestAddChild()
     tree.autoSetLevel();
 
     QCOMPARE(tree, expected);
+}
+
+void TStorageTree::TestNodesToJSONArray_data()
+{
+    QTest::addColumn <StorageTree> ("tree");
+    QTest::addColumn <QJsonArray> ("expected");
+
+    QTest::newRow("empty-tree") << StorageTree()
+                                << QJsonArray();
+
+    QJsonObject json1;
+    json1.insert("id" + QString(":"), QString("root"));
+    json1.insert("balance" + QString(":"), -10);
+    json1.insert("expense" + QString(":"), 5);
+    QJsonArray array;
+    array.append(QJsonValue(json1));
+
+    QTest::newRow("single-root") << (StorageTree("first")
+                                     .setRoot("root"))
+                                    .setBalance("root", -10)
+                                    .setExpense("root", 5)
+                                 << array;
+
+    QJsonObject json;
+    json.insert("id" + QString(":"), QString("root"));
+    json.insert("balance" + QString(":"), -10);
+    json.insert("expense" + QString(":"), 5);
+    QJsonObject json11;
+    json11.insert("id" + QString(":"), QString("node1"));
+    json11.insert("balance" + QString(":"), 0);
+    json11.insert("expense" + QString(":"), 10);
+    QJsonArray array1;
+    array1.append(QJsonValue(json));
+    array1.append(QJsonValue(json11));
+
+    QTest::newRow("level2") << (StorageTree("second")
+                                .setRoot("root"))
+                               .addChild("root", "node1")
+                               .setBalance("root", -10)
+                               .setExpense("root", 5)
+                               .setBalance("node1", 0)
+                               .setExpense("node1", 10)
+                            << array1;
+
+    QJsonObject json211;
+    json211.insert("id" + QString(":"), QString("root"));
+    json211.insert("balance" + QString(":"), -10);
+    json211.insert("expense" + QString(":"), 5);
+    QJsonObject json212;
+    json212.insert("id" + QString(":"), QString("node1"));
+    json212.insert("balance" + QString(":"), 0);
+    json212.insert("expense" + QString(":"), 10);
+    QJsonObject json213;
+    json213.insert("id" + QString(":"), QString("node2"));
+    json213.insert("balance" + QString(":"), 50);
+    json213.insert("expense" + QString(":"), 50);
+    QJsonArray array2;
+    array2.append(QJsonValue(json211));
+    array2.append(QJsonValue(json212));
+    array2.append(QJsonValue(json213));
+
+    QTest::newRow("level2-1") << (StorageTree("second1")
+                                  .setRoot("root"))
+                                 .addChild("root", "node1")
+                                 .addChild("root", "node2")
+                                 .setBalance("root", -10)
+                                 .setExpense("root", 5)
+                                 .setBalance("node1", 0)
+                                 .setExpense("node1", 10)
+                                 .setBalance("node2", 50)
+                                 .setExpense("node2", 50)
+                              << array2;
+
+    QJsonObject json311;
+    json311.insert("id" + QString(":"), QString("root"));
+    json311.insert("balance" + QString(":"), -10);
+    json311.insert("expense" + QString(":"), 5);
+    QJsonObject json312;
+    json312.insert("id" + QString(":"), QString("node1"));
+    json312.insert("balance" + QString(":"), 0);
+    json312.insert("expense" + QString(":"), 10);
+    QJsonObject json313;
+    json313.insert("id" + QString(":"), QString("node2"));
+    json313.insert("balance" + QString(":"), 50);
+    json313.insert("expense" + QString(":"), 50);
+    QJsonObject json314;
+    json314.insert("id" + QString(":"), QString("leaf1"));
+    json314.insert("balance" + QString(":"), 1);
+    json314.insert("expense" + QString(":"), 500);
+    QJsonArray array3;
+    array3.append(QJsonValue(json311));
+    array3.append(QJsonValue(json312));
+    array3.append(QJsonValue(json313));
+    array3.append(QJsonValue(json314));
+
+    QTest::newRow("level3") << (StorageTree("third")
+                                .setRoot("root"))
+                               .addChild("root", "node1")
+                               .addChild("root", "node2")
+                               .addChild("node1", "leaf1")
+                               .setBalance("root", -10)
+                               .setExpense("root", 5)
+                               .setBalance("node1", 0)
+                               .setExpense("node1", 10)
+                               .setBalance("node2", 50)
+                               .setExpense("node2", 50)
+                               .setBalance("leaf1", 1)
+                               .setExpense("leaf1", 500)
+                            << array3;
+
+
+    QJsonObject json315;
+    json315.insert("id" + QString(":"), QString("leaf2"));
+    json315.insert("balance" + QString(":"), 10);
+    json315.insert("expense" + QString(":"), 500);
+    QJsonArray array31;
+    array31.append(QJsonValue(json311));
+    array31.append(QJsonValue(json312));
+    array31.append(QJsonValue(json313));
+    array31.append(QJsonValue(json314));
+    array31.append(QJsonValue(json315));
+
+    QTest::newRow("level3-1") << (StorageTree("third")
+                                  .setRoot("root"))
+                                 .addChild("root", "node1")
+                                 .addChild("root", "node2")
+                                 .addChild("node1", "leaf1")
+                                 .addChild("node1", "leaf2")
+                                 .setBalance("root", -10)
+                                 .setExpense("root", 5)
+                                 .setBalance("node1", 0)
+                                 .setExpense("node1", 10)
+                                 .setBalance("node2", 50)
+                                 .setExpense("node2", 50)
+                                 .setBalance("leaf1", 1)
+                                 .setExpense("leaf1", 500)
+                                 .setBalance("leaf2", 10)
+                                 .setExpense("leaf2", 500)
+                              << array31;
+
+}
+
+void TStorageTree::TestNodesToJSONArray()
+{
+    QFETCH(StorageTree, tree);
+    QFETCH(QJsonArray, expected);
+
+    const QJsonArray actual = tree.nodesToJSONArray();
+
+    QCOMPARE(actual, expected);
+
 }
 
 

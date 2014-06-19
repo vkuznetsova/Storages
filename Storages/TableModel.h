@@ -16,7 +16,6 @@ static int columnParent_ = 1;
 static int columnBalance_ = 2;
 static int columnExpense_ = 3;
 
-
 class TableModel : public QAbstractTableModel
 {
 public:
@@ -61,8 +60,7 @@ private:
 
     StorageDatabaseWriter writer_;
 
+
 };
-
-
 
 #endif // TABLEMODEL_H
