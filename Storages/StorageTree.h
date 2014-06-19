@@ -119,6 +119,12 @@ public:
 
     QJsonArray nodesToJSONArray() const;
 
+    QJsonObject edgeToJSON(const QString &from, const QString &to) const;
+
+    QJsonArray edgesToJSONArray() const;
+
+    QJsonObject toJSON() const;
+
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes,

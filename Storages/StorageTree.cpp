@@ -185,6 +185,64 @@ QJsonArray StorageTree::nodesToJSONArray() const
     return array;
 }
 
+QJsonObject StorageTree::edgeToJSON(const QString &from, const QString &to) const
+{
+    QJsonObject innerObj;
+    innerObj.insert("from" + QString(":"), from);
+    innerObj.insert("to" + QString(":"), to);
+    return innerObj;
+}
+
+QJsonArray StorageTree::edgesToJSONArray() const
+{
+    QJsonArray array;
+    QJsonObject obj;
+    QString from;
+    QString to;
+    if(nodes_.isEmpty())
+    {
+        from = QString();
+        to = QString();
+        obj = edgeToJSON(from, to);
+        array.append(QJsonValue(obj));
+    }
+    if(nodes_.size() == 1)
+    {
+        from = root().id();
+        to = QString();
+        obj = edgeToJSON(from, to);
+        array.append(QJsonValue(obj));
+    }
+    else
+    {
+        foreach (const QString &childID, nodes_.keys())
+        {
+            if(childID == root().id())
+            {
+                continue;
+            }
+            else
+            {
+                from = parent(childID);
+                to = childID;
+            }
+            obj = edgeToJSON(from, to);
+            array.append(QJsonValue(obj));
+        }
+    }
+    return array;
+}
+
+QJsonObject StorageTree::toJSON() const
+{
+    QJsonObject obj;
+    QJsonArray array;
+    array = edgesToJSONArray();
+    obj.insert("id" + QString(":"), QString(id()));
+    obj.insert("edges" + QString(":"), array);
+   return obj;
+}
+
 QString StorageTree::parent(const QString &child) const
 {
     return nodes_.value(child).getParent();

@@ -88,7 +88,16 @@ private slots:
     void TestAddChild();
 
     void TestNodesToJSONArray_data();
-     void TestNodesToJSONArray();
+    void TestNodesToJSONArray();
+
+    void TestEdgeToJSON_data();
+    void TestEdgeToJSON();
+
+    void TestEdgesToJSONArray_data();
+    void TestEdgesToJSONArray();
+
+    void TestToJSON_data();
+    void TestToJSON();
 
 };
 
