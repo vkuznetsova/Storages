@@ -37,14 +37,13 @@ bool StorageDatabaseInterface::open()
     return true;
 }
 
-
 void StorageDatabaseInterface::createSchema()
 {
     QSqlQuery query(database());
-    QString createTableTrees = "create table if not exists trees ( id varchar not null,"
-            " parent varchar, child varchar, primary key(id, child));";
-    QString createTableNodes = " create table if not exists nodes (id varchar primary key not null,"
-            " balance integer, expense integer);";
+    QString createTableTrees = "CREATE TABLE IF NOT EXISTS trees ( id VARCHAR NOT NULL,"
+            " parent VARCHAR, child VARCHAR, PRIMARY KEY(id, child));";
+    QString createTableNodes = " CREATE TABLE IF NOT EXISTS nodes (id VARCHAR PRIMARY KEY NOT NULL,"
+            " balance INTEGER, expense INTEGER);";
     if(!query.exec(createTableTrees))
     {
         qDebug()<< "Таблицу Trees создать невозможно";

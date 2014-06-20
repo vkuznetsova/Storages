@@ -35,8 +35,6 @@ public:
 
     void createConnections();
 
-    void createComboBox();
-
 private slots:
     void addNewChild();
     void removeNode();

@@ -224,7 +224,6 @@ void TStorageDatabaseInterface::TestReWrite()
     StorageDatabaseWriter writer(dataBaseName);
     writer.write(tree);
     StorageDatabaseReader reader(dataBaseName);
-    const StorageTree actual = reader.read(tree.id());
     writer.write(newTree);
     const StorageTree actualTree = reader.read(newTree.id());
 

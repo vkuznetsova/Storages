@@ -94,6 +94,8 @@ public:
                 && expense_ == node.expense_ ;
     }
 
+    bool operator <=(const StorageTreeNode &node) const;
+
     QJsonObject toJSON() const;
 
 private:

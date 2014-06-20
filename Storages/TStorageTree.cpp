@@ -1535,8 +1535,14 @@ void TStorageTree::TestNodesToJSONArray_data()
     QTest::addColumn <StorageTree> ("tree");
     QTest::addColumn <QJsonArray> ("expected");
 
+    QJsonObject jsonInner;
+    jsonInner.insert("id" + QString(":"), QString());
+    jsonInner.insert("balance" + QString(":"), 0);
+    jsonInner.insert("expense" + QString(":"), 0);
+    QJsonArray arr;
+    arr.append(jsonInner);
     QTest::newRow("empty-tree") << StorageTree()
-                                << QJsonArray();
+                                << arr;
 
     QJsonObject json1;
     json1.insert("id" + QString(":"), QString("root"));
@@ -1676,7 +1682,6 @@ void TStorageTree::TestNodesToJSONArray()
     QFETCH(QJsonArray, expected);
 
     const QJsonArray actual = tree.nodesToJSONArray();
-
     QCOMPARE(actual, expected);
 
 }
@@ -1700,10 +1705,10 @@ void TStorageTree::TestEdgeToJSON_data()
     jsonInner1.insert("from" + QString(":"), QString("root"));
     jsonInner1.insert("to" + QString(":"), QString());
     QTest::newRow("single-root") << StorageTree("id1")
-                                   .setRoot("root")
-                                << "root"
-                                << QString()
-                                << jsonInner1;
+                                    .setRoot("root")
+                                 << "root"
+                                 << QString()
+                                 << jsonInner1;
 
     QJsonObject jsonInner12;
     jsonInner12.insert("from" + QString(":"), QString("root"));
@@ -1711,20 +1716,20 @@ void TStorageTree::TestEdgeToJSON_data()
     QTest::newRow("level2") << (StorageTree("second")
                                 .setRoot("root"))
                                .addChild("root", "node1")
-                             << "root"
-                             << "node1"
-                             << jsonInner12;
+                            << "root"
+                            << "node1"
+                            << jsonInner12;
 
     QJsonObject jsonInner121;
     jsonInner121.insert("from" + QString(":"), QString("root"));
     jsonInner121.insert("to" + QString(":"), QString("node2"));
     QTest::newRow("level2-1") << (StorageTree("second")
-                                .setRoot("root"))
-                               .addChild("root", "node1")
-                                .addChild("root", "node2")
-                             << "root"
-                             << "node2"
-                             << jsonInner121;
+                                  .setRoot("root"))
+                                 .addChild("root", "node1")
+                                 .addChild("root", "node2")
+                              << "root"
+                              << "node2"
+                              << jsonInner121;
 
 }
 
@@ -1760,7 +1765,7 @@ void TStorageTree::TestEdgesToJSONArray_data()
     QJsonArray array1;
     array1.append(QJsonValue(json1));
     QTest::newRow("single-root") << StorageTree().setRoot("root")
-                                << array1;
+                                 << array1;
 
     QJsonObject json2;
     json2.insert("from" + QString(":"), QString("root"));
@@ -1770,7 +1775,7 @@ void TStorageTree::TestEdgesToJSONArray_data()
     QTest::newRow("level2") << (StorageTree("second")
                                 .setRoot("root"))
                                .addChild("root", "node1")
-                             << array2;
+                            << array2;
 
     QJsonObject json21;
     json21.insert("from" + QString(":"), QString("root"));
@@ -1852,6 +1857,12 @@ void TStorageTree::TestToJSON_data()
     QTest::addColumn <StorageTree> ("tree");
     QTest::addColumn <QJsonObject> ("expected");
 
+    QJsonObject innerjsonNodes;
+    innerjsonNodes.insert("id" + QString(":"), QString());
+    innerjsonNodes.insert("balance" + QString(":"), 0);
+    innerjsonNodes.insert("expense" + QString(":"), 0);
+    QJsonArray arrayNodes;
+    arrayNodes.append(QJsonValue(innerjsonNodes));
     QJsonObject innerjson;
     innerjson.insert("from" + QString(":"), QString());
     innerjson.insert("to" + QString(":"), QString());
@@ -1860,9 +1871,16 @@ void TStorageTree::TestToJSON_data()
     QJsonObject json;
     json.insert("id" + QString(":"), QString("id"));
     json.insert("edges" + QString(":"), array);
+    json.insert("nodes" + QString(":"), arrayNodes);
     QTest::newRow("empty - tree") << StorageTree("id")
                                   << json;
 
+    QJsonObject innerjsonNodes1;
+    innerjsonNodes1.insert("id" + QString(":"), QString("root"));
+    innerjsonNodes1.insert("balance" + QString(":"), 5);
+    innerjsonNodes1.insert("expense" + QString(":"), 5);
+    QJsonArray arrayNodes1;
+    arrayNodes1.append(QJsonValue(innerjsonNodes1));
     QJsonObject innerjson1;
     innerjson1.insert("from" + QString(":"), QString("root"));
     innerjson1.insert("to" + QString(":"), QString());
@@ -1871,92 +1889,12 @@ void TStorageTree::TestToJSON_data()
     QJsonObject json1;
     json1.insert("id" + QString(":"), QString("id1"));
     json1.insert("edges" + QString(":"), array1);
-    QTest::newRow("single-root") << StorageTree("id1").setRoot("root")
-                                << json1;
-
-    QJsonObject innerjson2;
-    innerjson2.insert("from" + QString(":"), QString("root"));
-    innerjson2.insert("to" + QString(":"), QString("node1"));
-    QJsonArray array2;
-    array2.append(QJsonValue(innerjson2));
-    QJsonObject json2;
-    json2.insert("id" + QString(":"), QString("second"));
-    json2.insert("edges" + QString(":"), array2);
-    QTest::newRow("level2") << (StorageTree("second")
-                                .setRoot("root"))
-                               .addChild("root", "node1")
-                             << json2;
-
-    QJsonObject innerjson21;
-    innerjson21.insert("from" + QString(":"), QString("root"));
-    innerjson21.insert("to" + QString(":"), QString("node1"));
-    QJsonObject innerjson211;
-    innerjson211.insert("from" + QString(":"), QString("root"));
-    innerjson211.insert("to" + QString(":"), QString("node2"));
-    QJsonArray array21;
-    array21.append(QJsonValue(innerjson21));
-    array21.append(QJsonValue(innerjson211));
-    QJsonObject json21;
-    json21.insert("id" + QString(":"), QString("second1"));
-    json21.insert("edges" + QString(":"), array21);
-    QTest::newRow("level2-1") << (StorageTree("second1")
-                                  .setRoot("root"))
-                                 .addChild("root", "node1")
-                                 .addChild("root", "node2")
-                              << json21;
-
-    QJsonObject innerjson3;
-    innerjson3.insert("from" + QString(":"), QString("root"));
-    innerjson3.insert("to" + QString(":"), QString("node1"));
-    QJsonObject innerjson31;
-    innerjson31.insert("from" + QString(":"), QString("root"));
-    innerjson31.insert("to" + QString(":"), QString("node2"));
-    QJsonObject innerjson32;
-    innerjson32.insert("from" + QString(":"), QString("node1"));
-    innerjson32.insert("to" + QString(":"), QString("leaf1"));
-    QJsonArray array3;
-    array3.append(QJsonValue(innerjson3));
-    array3.append(QJsonValue(innerjson31));
-    array3.append(QJsonValue(innerjson32));\
-    QJsonObject json3;
-    json3.insert("id" + QString(":"), QString("third"));
-    json3.insert("edges" + QString(":"), array3);
-    QTest::newRow("level3") << (StorageTree("third")
-                                .setRoot("root"))
-                               .addChild("root", "node1")
-                               .addChild("root", "node2")
-                               .addChild("node1", "leaf1")
-                            << json3;
-
-
-    QJsonObject innerjson311;
-    innerjson311.insert("from" + QString(":"), QString("node1"));
-    innerjson311.insert("to" + QString(":"), QString("leaf2"));
-    QJsonArray array31;
-    array31.append(QJsonValue(innerjson3));
-    array31.append(QJsonValue(innerjson31));
-    array31.append(QJsonValue(innerjson32));
-    array31.append(QJsonValue(innerjson311));
-    QJsonObject json31;
-    json31.insert("id" + QString(":"), QString("third"));
-    json31.insert("edges" + QString(":"), array31);
-    QTest::newRow("level3-1") << (StorageTree("third")
-                                  .setRoot("root"))
-                                 .addChild("root", "node1")
-                                 .addChild("root", "node2")
-                                 .addChild("node1", "leaf1")
-                                 .addChild("node1", "leaf2")
-                                 .setBalance("root", -10)
-                                 .setExpense("root", 5)
-                                 .setBalance("node1", 0)
-                                 .setExpense("node1", 10)
-                                 .setBalance("node2", 50)
-                                 .setExpense("node2", 50)
-                                 .setBalance("leaf1", 1)
-                                 .setExpense("leaf1", 500)
-                                 .setBalance("leaf2", 10)
-                                 .setExpense("leaf2", 500)
-                              << json31;
+    json1.insert("nodes" + QString(":"), arrayNodes1);
+    QTest::newRow("single-root") << StorageTree("id1")
+                                    .setRoot("root")
+                                    .setBalance("root", 5)
+                                    .setExpense("root", 5)
+                                 << json1;
 }
 
 void TStorageTree::TestToJSON()

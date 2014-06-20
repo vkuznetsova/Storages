@@ -176,11 +176,21 @@ QJsonArray StorageTree::nodesToJSONArray() const
 {
     QJsonArray array;
     QJsonObject obj;
-    foreach (const QString childID, nodes_.keys())
+    QHash<QString, StorageTreeNode> data = structureData();
+    if(data.values().isEmpty())
     {
-        StorageTreeNode node = nodes_.value(childID);
-        obj = node.toJSON();
+        obj.insert("id" + QString(":"), QString());
+        obj.insert("balance" + QString(":"), 0);
+        obj.insert("expense" + QString(":"), 0);
         array.append(QJsonValue(obj));
+    }
+    else
+    {
+        foreach(const StorageTreeNode &child, data.values())
+        {
+            obj = child.toJSON();
+            array.append(QJsonValue(obj));
+        }
     }
     return array;
 }
@@ -237,10 +247,18 @@ QJsonObject StorageTree::toJSON() const
 {
     QJsonObject obj;
     QJsonArray array;
+    QJsonArray arrayNodes;
     array = edgesToJSONArray();
+    arrayNodes = nodesToJSONArray();
     obj.insert("id" + QString(":"), QString(id()));
     obj.insert("edges" + QString(":"), array);
-   return obj;
+    obj.insert("nodes" + QString(":"), arrayNodes);
+    return obj;
+}
+
+void StorageTree::readFromJSONFile(const QString &fileName)
+{
+
 }
 
 QString StorageTree::parent(const QString &child) const

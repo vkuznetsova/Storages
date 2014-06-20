@@ -11,7 +11,12 @@
 int main(int argc, char *argv[])
 {
     StorageDatabaseReader reader("dataBaseName");
-    reader.readID();
+    QStringList listId = reader.readID();
+    for(int i = 0; i < listId.size(); i++)
+    {
+        QString idTree = listId.at(i);
+        reader.writeToFile(idTree);
+    }
 
 
 #ifdef TESTS

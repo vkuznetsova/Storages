@@ -6,7 +6,8 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
-#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "StorageTree.h"
 

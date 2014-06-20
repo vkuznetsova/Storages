@@ -13,7 +13,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
 {
     QSqlQuery queryDeleteFromTrees(database());
     database().transaction();
-    queryDeleteFromTrees.prepare("delete from trees where id = :id");
+    queryDeleteFromTrees.prepare("DELETE FROM trees WHERE id = :id");
     queryDeleteFromTrees.bindValue(":id", tree.id());
     if(!queryDeleteFromTrees.exec())
     {
@@ -22,7 +22,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
     checkLastError(queryDeleteFromTrees);\
 
     QSqlQuery query(database());
-    query.prepare("insert into trees (id, parent, child) values (:id, :parent, :child)");
+    query.prepare("INSERT INTO trees (id, parent, child) VALUES (:id, :parent, :child)");
     checkLastError(query);
 
     const QHash<QString, QSet<QString> > structure = tree.structure();
@@ -53,7 +53,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
         checkLastError(query);
     }
 
-    query.prepare("insert or replace into nodes (id, balance, expense) values (:id, :balance, :expense)");
+    query.prepare("INSERT OR REPLACE INTO nodes (id, balance, expense) VALUES (:id, :balance, :expense)");
     checkLastError(query);
     QHash<QString, StorageTreeNode> structureData = tree.structureData();
     foreach(const StorageTreeNode &child, structureData.values())
@@ -74,7 +74,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
 void StorageDatabaseWriter::updateBalance(const int value, const QString idNode)
 {
     QSqlQuery queryUpdateBalance(database());
-    queryUpdateBalance.prepare("update nodes set balance = :value where id = :idNode");
+    queryUpdateBalance.prepare("UPDATE nodes SET balance = :value WHERE id = :idNode");
     queryUpdateBalance.bindValue(":value", value);
     queryUpdateBalance.bindValue(":idNode", idNode);
     if(!queryUpdateBalance.exec())
@@ -87,7 +87,7 @@ void StorageDatabaseWriter::updateBalance(const int value, const QString idNode)
 void StorageDatabaseWriter::updateExpense(const int value, const QString idNode)
 {
     QSqlQuery queryUpdateExpense(database());
-    queryUpdateExpense.prepare("update nodes set expense = :value where id = :idNode");
+    queryUpdateExpense.prepare("UPDATE nodes SET expense = :value WHERE id = :idNode");
     queryUpdateExpense.bindValue(":value", value);
     queryUpdateExpense.bindValue(":idNode", idNode);
     if(!queryUpdateExpense.exec())

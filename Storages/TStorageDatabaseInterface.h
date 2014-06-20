@@ -23,6 +23,8 @@ private slots:
 
     void TestReWrite_data();
     void TestReWrite();
+
+
 };
 
 #endif // TSTORAGEDATABASEINTERFACE_H

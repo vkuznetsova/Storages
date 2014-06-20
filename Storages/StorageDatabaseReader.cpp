@@ -18,8 +18,8 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
 
     StorageTree tree = StorageTree(idTree);
     QSqlQuery query(database());
-    query.prepare("select parent, child, balance, expense from nodes inner join trees"
-                  " on nodes.id = trees.child where trees.id = :id");
+    query.prepare("SELECT parent, child, balance, expense FROM nodes INNER JOIN trees"
+                  " ON nodes.id = trees.child WHERE trees.id = :id");
     query.bindValue(":id", idTree);
 
     if(!query.exec())
@@ -48,7 +48,7 @@ QList<QString> StorageDatabaseReader::readID()
 {
     QList <QString> ids;
     QSqlQuery queryID(database());
-    queryID.prepare("select distinct id from trees order by id asc");
+    queryID.prepare("SELECT DISTINCT id FROM trees ORDER BY id ASC");
 
     if(!queryID.exec())
     {
@@ -60,4 +60,22 @@ QList<QString> StorageDatabaseReader::readID()
         ids << queryID.value(0).toString();
     }
     return ids;
+}
+
+void StorageDatabaseReader::writeToFile(const QString &idTree)
+{
+    StorageDatabaseReader reader("dataBaseName");
+    StorageTree tree = reader.read(idTree);
+    QJsonObject jsonGraph = tree.toJSON();
+    QJsonArray array;
+    array.append(QJsonValue(jsonGraph));
+    QJsonDocument doc = QJsonDocument(array);
+    QByteArray data = doc.toJson();
+    QFile file("file.json");
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        qDebug()<<"Ошибка открытия файла для записи..";
+    }
+    file.write(data);
+    file.close();
 }

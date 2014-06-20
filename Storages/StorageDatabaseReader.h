@@ -3,6 +3,7 @@
 #define STORAGEDATABASEREADER_H
 
 #include <QSqlRecord>
+#include <QFile>
 
 #include "StorageTree.h"
 #include "StorageDatabaseInterface.h"
@@ -15,8 +16,9 @@ public:
 
     StorageTree read(const QString &idTree);
 
-
     QList<QString> readID();
+
+    void writeToFile(const QString &idTree);
 
 };
 
