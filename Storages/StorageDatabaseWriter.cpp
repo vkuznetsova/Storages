@@ -97,4 +97,3 @@ void StorageDatabaseWriter::updateExpense(const int value, const QString idNode)
     checkLastError(queryUpdateExpense);
 
 }
-

@@ -19,6 +19,16 @@ int main(int argc, char *argv[])
     }
 
     StorageTree().readFromJSONFile("file.json");
+    StorageDatabaseWriter writer("dataBaseName1");
+    for(int i = 0; i < listId.size(); i++)
+    {
+        QString idTree = listId.at(i);
+        StorageTree tree = reader.read(idTree);
+        QJsonObject obj = tree.toJSON();
+        StorageTree jsonTree = StorageTree(idTree, obj);
+        writer.write(jsonTree);
+    }
+
 #ifdef TESTS
 //    TStorageTree tStorageTree;
 //    QTest::qExec(&tStorageTree);

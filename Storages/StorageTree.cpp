@@ -334,7 +334,6 @@ void StorageTree::readFromJSONFile(const QString &fileName)
             QString value = obj[obj.keys().at(i)].toString();
             line += listData + value;
         }
-
     }
 }
 
