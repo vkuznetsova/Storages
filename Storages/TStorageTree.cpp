@@ -1905,7 +1905,6 @@ void TStorageTree::TestToJSON()
     const QJsonObject actual = tree.toJSON();
 
     QCOMPARE(actual, expected);
-
 }
 
 

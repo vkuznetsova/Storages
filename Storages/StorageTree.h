@@ -125,6 +125,8 @@ public:
 
     QJsonObject toJSON() const;
 
+    void readFromJSONFile(const QString &fileName);
+
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes,

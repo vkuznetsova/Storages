@@ -25,6 +25,11 @@ StorageTree::StorageTree(const QString id) :
 {
 }
 
+StorageTree::StorageTree(const QString &graphID, const QJsonObject &object)
+{
+    id_ = graphID;
+}
+
 QString StorageTree::id() const
 {
     return id_;
@@ -258,7 +263,38 @@ QJsonObject StorageTree::toJSON() const
 
 void StorageTree::readFromJSONFile(const QString &fileName)
 {
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return;
+    }
+    QByteArray data = file.readAll();
+    QJsonDocument doc1;
+    QJsonDocument doc = doc1.fromJson(data);
+    QJsonArray array = doc.array();
+    QJsonObject obj = array.last().toObject();
+    QString line;
+    for(int i = 0; i < obj.keys().size(); i++)
+    {
+        if(obj[obj.keys().at(i)].isArray())
+        {
+            QJsonArray arr = obj[obj.keys().at(i)].toArray();
+            for(int j = 0; j < arr.size(); j++)
+            {
+                QVariantMap map = arr[j].toObject().toVariantMap();
+                foreach (const QString &it, map.keys()) {
+                    line += it + map.value(it).toString();
+                }
+            }
+        }
+        else
+        {
+            QString listData = obj.keys().at(i);
+            QString value = obj[obj.keys().at(i)].toString();
+            line += listData + value;
+        }
 
+    }
 }
 
 QString StorageTree::parent(const QString &child) const

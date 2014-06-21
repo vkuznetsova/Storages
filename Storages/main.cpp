@@ -18,10 +18,10 @@ int main(int argc, char *argv[])
         reader.writeToFile(idTree);
     }
 
-
+    StorageTree().readFromJSONFile("file.json");
 #ifdef TESTS
-    TStorageTree tStorageTree;
-    QTest::qExec(&tStorageTree);
+//    TStorageTree tStorageTree;
+//    QTest::qExec(&tStorageTree);
 
 
 //    TTableModel tTableModel;
