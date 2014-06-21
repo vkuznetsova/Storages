@@ -28,6 +28,45 @@ StorageTree::StorageTree(const QString id) :
 StorageTree::StorageTree(const QString &graphID, const QJsonObject &object)
 {
     id_ = graphID;
+    QString parent;
+    QString child;
+    QString idNode;
+    for(int i = 0; i < object.keys().size(); i++)
+    {
+        if(object[object.keys().at(i)].isArray())
+        {
+            QJsonArray arr = object[object.keys().at(i)].toArray();
+            for(int j = 0; j < arr.size(); j++)
+            {
+                QVariantMap map = arr[j].toObject().toVariantMap();
+                foreach (const QString &it, map.keys())
+                {
+                    if(it == "from:")
+                    {
+                        parent =  map.value(it).toString();
+                    }
+                    if(it == "to:")
+                    {
+                        child = map.value(it).toString();
+                    }
+                    addChild(parent, child);
+                    if(it == "id:")
+                    {
+                        idNode = map.value(it).toString();
+                    }
+                    if(it == "balance:")
+                    {
+                        setBalance(idNode, map.value(it).toInt());
+                    }
+                    if(it == "expense:")
+                    {
+                        setExpense(idNode, map.value(it).toInt());
+                    }
+                }
+            }
+        }
+
+    }
 }
 
 QString StorageTree::id() const
@@ -274,6 +313,7 @@ void StorageTree::readFromJSONFile(const QString &fileName)
     QJsonArray array = doc.array();
     QJsonObject obj = array.last().toObject();
     QString line;
+
     for(int i = 0; i < obj.keys().size(); i++)
     {
         if(obj[obj.keys().at(i)].isArray())
@@ -282,7 +322,8 @@ void StorageTree::readFromJSONFile(const QString &fileName)
             for(int j = 0; j < arr.size(); j++)
             {
                 QVariantMap map = arr[j].toObject().toVariantMap();
-                foreach (const QString &it, map.keys()) {
+                foreach (const QString &it, map.keys())
+                {
                     line += it + map.value(it).toString();
                 }
             }

@@ -25,6 +25,8 @@ public:
 
     StorageTree(const QString id);
 
+    StorageTree(const QString &graphID, const QJsonObject &object);
+
     QString id()const;
 
     void setID(const QString &idTrees);
