@@ -243,7 +243,7 @@ QJsonArray StorageTree::nodesToJSONArray() const
     return array;
 }
 
-QJsonObject StorageTree::edgeToJSON(const QString &from, const QString &to) const
+QJsonObject StorageTree::edgeToJSON(const QString &from, const QString &to)
 {
     QJsonObject edge;
     edge.insert(fromKey, from);

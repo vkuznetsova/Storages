@@ -121,7 +121,7 @@ public:
 
     QJsonArray nodesToJSONArray() const;
 
-    QJsonObject edgeToJSON(const QString &from, const QString &to) const;
+    static QJsonObject edgeToJSON(const QString &from, const QString &to);
 
     QJsonArray edgesToJSONArray() const;
 

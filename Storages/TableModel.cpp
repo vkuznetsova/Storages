@@ -1,5 +1,10 @@
 #include "TableModel.h"
 
+ const int TableModel::columnNode = 0;
+ const int TableModel::columnParent = 1;
+ const int TableModel::columnBalance = 2;
+ const int TableModel::columnExpense = 3;
+
 TableModel::TableModel(const StorageTree tree)
 {
     writer_ = StorageDatabaseWriter("dataBaseName");
@@ -56,22 +61,22 @@ QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIn
             if(index.row() == i)
             {
 
-                if(index.column() == columnNode_)
+                if(index.column() == columnNode)
                 {
                     return idChild;
                     break;
                 }
-                if(index.column() == columnParent_)
+                if(index.column() == columnParent)
                 {
                     return tree_.parent(idChild);
                     break;
                 }
-                if(index.column() == columnBalance_)
+                if(index.column() == columnBalance)
                 {
                     tree_.node(idChild).getBalance();
                     break;
                 }
-                if(index.column() == columnExpense_)
+                if(index.column() == columnExpense)
                 {
                     return tree_.node(idChild).getExpence();
                     break;
@@ -91,25 +96,24 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     if (role == Qt::BackgroundRole && node.getBalance() < 0) {
-        int row = index.row();
         QColor color = Qt::red;
         return QBrush(color);
     }
     if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
-        if(index.column() == columnNode_)
+        if(index.column() == columnNode)
         {
             return node.id();
         }
-        if(index.column() == columnParent_)
+        if(index.column() == columnParent)
         {
             return node.getParent();
         }
-        if(index.column() == columnBalance_)
+        if(index.column() == columnBalance)
         {
             return node.getBalance();
         }
-        if(index.column() == columnExpense_)
+        if(index.column() == columnExpense)
         {
             return node.getExpence();
         }
@@ -123,19 +127,19 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
     {
         if(orientation == Qt::Horizontal)
         {
-            if(section == columnNode_)
+            if(section == columnNode)
             {
                 return "Потомок";
             }
-            if(section == columnParent_)
+            if(section == columnParent)
             {
                 return "Родитель";
             }
-            if(section == columnBalance_)
+            if(section == columnBalance)
             {
                 return "Баланс Потомка";
             }
-            if(section == columnExpense_)
+            if(section == columnExpense)
             {
                 return "Расход";
             }
@@ -169,7 +173,7 @@ QString TableModel::columnID(const int column) const
 Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if(index.isValid() && index.column() == columnBalance_ || index.column() == columnExpense_)
+    if(index.isValid() && (index.column() == columnBalance || index.column() == columnExpense))
         flags |= Qt::ItemIsEditable;
     return flags;
 }
@@ -179,14 +183,14 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if(index.isValid() && role == Qt::EditRole)
     {
         const QString id = data(createIndex(index.row(), 0), Qt::DisplayRole).toString();
-        if(index.column() == columnBalance_)
+        if(index.column() == columnBalance)
         {
             tree_.setBalance(id, value.toInt());
             StorageDatabaseWriter writer("dataBaseName");
             writer.updateBalance(value.toInt(), id);
 
         }
-        if(index.column() == columnExpense_)
+        if(index.column() == columnExpense)
         {
             tree_.setExpense(id, value.toInt());
             StorageDatabaseWriter writer("dataBaseName");

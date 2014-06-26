@@ -11,11 +11,6 @@
 #include "StorageTreeNode.h"
 #include "StorageDatabaseWriter.h"
 
-static int columnNode_ = 0;
-static int columnParent_ = 1;
-static int columnBalance_ = 2;
-static int columnExpense_ = 3;
-
 class TableModel : public QAbstractTableModel
 {
 public:
@@ -46,7 +41,10 @@ public:
 
     QString columnID(const int column) const;
 
-
+    static const int columnNode;
+    static const int columnParent;
+    static const int columnBalance;
+    static const int columnExpense;
 private:
    static bool greaterThan(const QPair<QString, QVariant> &pair1,
                            const QPair<QString, QVariant> &pair2);

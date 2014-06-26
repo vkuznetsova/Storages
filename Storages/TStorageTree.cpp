@@ -1688,7 +1688,6 @@ void TStorageTree::TestNodesToJSONArray()
 
 void TStorageTree::TestEdgeToJSON_data()
 {
-    QTest::addColumn <StorageTree> ("tree");
     QTest::addColumn <QString> ("parent");
     QTest::addColumn <QString> ("child");
     QTest::addColumn <QJsonObject> ("expected");
@@ -1696,38 +1695,28 @@ void TStorageTree::TestEdgeToJSON_data()
     QJsonObject jsonInner;
     jsonInner.insert(StorageTree::fromKey, QString());
     jsonInner.insert(StorageTree::toKey, QString());
-    QTest::newRow("empty-tree") << StorageTree("id0")
-                                << QString()
+    QTest::newRow("empty-tree") << QString()
                                 << QString()
                                 << jsonInner;
 
     QJsonObject jsonInner1;
     jsonInner1.insert(StorageTree::fromKey, QString("root"));
     jsonInner1.insert(StorageTree::toKey, QString());
-    QTest::newRow("single-root") << StorageTree("id1")
-                                    .setRoot("root")
-                                 << "root"
+    QTest::newRow("single-root") << "root"
                                  << QString()
                                  << jsonInner1;
 
     QJsonObject jsonInner12;
     jsonInner12.insert(StorageTree::fromKey, QString("root"));
     jsonInner12.insert(StorageTree::toKey, QString("node1"));
-    QTest::newRow("level2") << (StorageTree("second")
-                                .setRoot("root"))
-                               .addChild("root", "node1")
-                            << "root"
+    QTest::newRow("level2") << "root"
                             << "node1"
                             << jsonInner12;
 
     QJsonObject jsonInner121;
     jsonInner121.insert(StorageTree::fromKey, QString("root"));
     jsonInner121.insert(StorageTree::toKey, QString("node2"));
-    QTest::newRow("level2-1") << (StorageTree("second")
-                                  .setRoot("root"))
-                                 .addChild("root", "node1")
-                                 .addChild("root", "node2")
-                              << "root"
+    QTest::newRow("level2-1") << "root"
                               << "node2"
                               << jsonInner121;
 
@@ -1735,12 +1724,11 @@ void TStorageTree::TestEdgeToJSON_data()
 
 void TStorageTree::TestEdgeToJSON()
 {
-    QFETCH(StorageTree, tree);
     QFETCH(QString, parent);
     QFETCH(QString, child);
     QFETCH(QJsonObject, expected);
 
-    const QJsonObject actual = tree.edgeToJSON(parent, child);
+    const QJsonObject actual = StorageTree::edgeToJSON(parent, child);
 
     QCOMPARE(actual, expected);
 

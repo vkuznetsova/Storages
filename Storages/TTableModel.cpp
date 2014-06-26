@@ -14,10 +14,10 @@ void TTableModel::TestColumnCount()
 void TTableModel::TestHorizontalHeader()
 {
     TableModel model;
-    QCOMPARE(model.headerData(headerColumnNode_, Qt::Horizontal), QVariant("Потомок"));
-    QCOMPARE(model.headerData(headerColumnRoot_, Qt::Horizontal), QVariant("Родитель"));
-    QCOMPARE(model.headerData(headerColumnBalance_, Qt::Horizontal), QVariant("Баланс Потомка"));
-    QCOMPARE(model.headerData(headerColumnExpense_, Qt::Horizontal), QVariant("Расход"));
+    QCOMPARE(model.headerData(TTableModel::headerColumnNode, Qt::Horizontal), QVariant("Потомок"));
+    QCOMPARE(model.headerData(TTableModel::headerColumnRoot, Qt::Horizontal), QVariant("Родитель"));
+    QCOMPARE(model.headerData(TTableModel::headerColumnBalance, Qt::Horizontal), QVariant("Баланс Потомка"));
+    QCOMPARE(model.headerData(TTableModel::headerColumnExpense, Qt::Horizontal), QVariant("Расход"));
 }
 
 void TTableModel::TestRowCount_data()
