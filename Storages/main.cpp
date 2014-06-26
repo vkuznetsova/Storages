@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
 //    TStorageDatabaseInterface tStorageDatabaseInterface;
 //    QTest::qExec(&tStorageDatabaseInterface);
 
-    TStorageTreeNode tStorageTreeNode;
-    QTest::qExec(&tStorageTreeNode);
+//    TStorageTreeNode tStorageTreeNode;
+//    QTest::qExec(&tStorageTreeNode);
 
     Q_UNUSED(argc)
     Q_UNUSED(argv)
