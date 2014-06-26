@@ -49,15 +49,18 @@ StorageTree::StorageTree(const QString &graphID, const QJsonObject &object)
                     if(it == fromKey)
                     {
                         parent =  map.value(it).toString();
+                        qDebug()<<"parent"<<parent;
                     }
                     if(it == toKey)
                     {
                         child = map.value(it).toString();
+                        qDebug()<<"child"<<child;
                     }
                     addChild(parent, child);
                     if(it == StorageTreeNode::idKey)
                     {
                         idNode = map.value(it).toString();
+                        qDebug()<<"idNode"<<idNode;
                     }
                     if(it == StorageTreeNode::balanceKey)
                     {
@@ -257,22 +260,22 @@ QJsonArray StorageTree::edgesToJSONArray() const
     QJsonObject obj;
     QString from;
     QString to;
-    if(nodes_.isEmpty())
-    {
-        from = QString();
-        to = QString();
-        obj = edgeToJSON(from, to);
-        array.append(QJsonValue(obj));
-    }
-    if(nodes_.size() == 1)
-    {
-        from = root().id();
-        to = QString();
-        obj = edgeToJSON(from, to);
-        array.append(QJsonValue(obj));
-    }
-    else
-    {
+//    if(nodes_.isEmpty())
+//    {
+//        from = QString();
+//        to = QString();
+//        obj = edgeToJSON(from, to);
+//        array.append(QJsonValue(obj));
+//    }
+//    if(nodes_.size() == 1)
+//    {
+//        from = root().id();
+//        to = QString();
+//        obj = edgeToJSON(from, to);
+//        array.append(QJsonValue(obj));
+//    }
+//    else
+//    {
         foreach (const QString &childID, nodes_.keys())
         {
             if(childID == root().id())
@@ -287,7 +290,7 @@ QJsonArray StorageTree::edgesToJSONArray() const
             obj = edgeToJSON(from, to);
             array.append(QJsonValue(obj));
         }
-    }
+   // }
     return array;
 }
 

@@ -99,6 +99,9 @@ private slots:
     void TestToJSON_data();
     void TestToJSON();
 
+    void TestStorageTree_data();
+    void TestStorageTree();
+
 };
 
 #endif // TSTORAGETREE_H
