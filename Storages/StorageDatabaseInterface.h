@@ -11,6 +11,7 @@
 
 #include "StorageTree.h"
 
+
 class StorageDatabaseInterface
 {
 public:
@@ -24,6 +25,7 @@ public:
     QSqlDatabase database();
 
     bool open();
+
 
 protected:
     void checkLastError(const QSqlQuery &query);

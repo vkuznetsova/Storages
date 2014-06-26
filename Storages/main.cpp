@@ -10,28 +10,36 @@
 
 int main(int argc, char *argv[])
 {
-    StorageDatabaseReader reader("dataBaseName");
-    QStringList listId = reader.readID();
-    for(int i = 0; i < listId.size(); i++)
-    {
-        QString idTree = listId.at(i);
-        reader.writeToFile(idTree);
-    }
+//    StorageDatabaseReader reader("dataBaseName");
+//    QStringList listId = reader.readID();
+//    for(int i = 0; i < listId.size(); i++)
+//    {
+//        QString idTree = listId.at(i);
+//        reader.writeToFile(idTree, "file");
+//    }
 
-    StorageTree().readFromJSONFile("file.json");
-    StorageDatabaseWriter writer("dataBaseName1");
-    for(int i = 0; i < listId.size(); i++)
-    {
-        QString idTree = listId.at(i);
-        StorageTree tree = reader.read(idTree);
-        QJsonObject obj = tree.toJSON();
-        StorageTree jsonTree = StorageTree(idTree, obj);
-        writer.write(jsonTree);
-    }
-
+//    StorageTree().readFromJSONFile("file");
+//    StorageDatabaseWriter writer("dataBaseName1");
+//    for(int i = 0; i < listId.size(); i++)
+//    {
+//        QString idTree = listId.at(i);
+//        StorageTree tree = reader.read(idTree);
+//        reader.writeToFile(idTree, "file2");
+//        QJsonObject obj = tree.toJSON();
+//        StorageTree jsonTree = StorageTree(idTree, obj);
+//        writer.write(jsonTree);
+//    }
+//    StorageDatabaseReader reader1("dataBaseName1");
+//    listId = reader1.readID();
+//    for(int i = 0; i < listId.size(); i++)
+//    {
+//        QString idTree = listId.at(i);
+//        reader1.writeToFile(idTree, "file2");
+//    }
+//    StorageTree().readFromJSONFile("file2");
 #ifdef TESTS
-//    TStorageTree tStorageTree;
-//    QTest::qExec(&tStorageTree);
+    TStorageTree tStorageTree;
+    QTest::qExec(&tStorageTree);
 
 
 //    TTableModel tTableModel;
@@ -40,8 +48,8 @@ int main(int argc, char *argv[])
 //    TStorageDatabaseInterface tStorageDatabaseInterface;
 //    QTest::qExec(&tStorageDatabaseInterface);
 
-//    TStorageTreeNode tStorageTreeNode;
-//    QTest::qExec(&tStorageTreeNode);
+    TStorageTreeNode tStorageTreeNode;
+    QTest::qExec(&tStorageTreeNode);
 
     Q_UNUSED(argc)
     Q_UNUSED(argv)

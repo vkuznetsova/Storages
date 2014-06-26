@@ -129,6 +129,11 @@ public:
 
     void readFromJSONFile(const QString &fileName);
 
+    static const QString fromKey;
+    static const QString toKey;
+    static const QString idKey;
+    static const QString edgesKey;
+    static const QString nodesKey;
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes,

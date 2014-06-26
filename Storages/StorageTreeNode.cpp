@@ -1,20 +1,14 @@
 #include "StorageTreeNode.h"
 
-bool StorageTreeNode::operator <=(const StorageTreeNode &node) const
-{
-    return id_ <= node.id_
-            && parent_ <= node.parent_
-            && level_ <= node.level_
-            && balance_ <= node.balance_
-            && expense_ <= node.expense_ ;
-}
+const QString StorageTreeNode::idKey = "id";
+const QString StorageTreeNode::balanceKey = "balance";
+const QString StorageTreeNode::expenseKey = "expense";
 
 QJsonObject StorageTreeNode::toJSON() const
 {
     QJsonObject json;
-    json.insert("id" + QString(":"),id());
-    json.insert("balance" + QString(":"), getBalance());
-    json.insert("expense" + QString(":"), getExpence());
+    json.insert(idKey,id());
+    json.insert(balanceKey, getBalance());
+    json.insert(expenseKey, getExpence());
     return json;
 }
-

@@ -52,7 +52,7 @@ QList<QString> StorageDatabaseReader::readID()
 
     if(!queryID.exec())
     {
-        qDebug()<<"Запрос для выборки всех id деревьев не выполнен.....";
+        qWarning()<<"Запрос для выборки всех id деревьев не выполнен.....";
     }
     checkLastError(queryID);
     while(queryID.next())
@@ -62,8 +62,15 @@ QList<QString> StorageDatabaseReader::readID()
     return ids;
 }
 
-void StorageDatabaseReader::writeToFile(const QString &idTree)
+void StorageDatabaseReader::writeToFile(const QString &idTree, const QString &fileName)
 {
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        qWarning() << QObject::tr("Ошибка открытия файла для записи..");
+        return;
+    }
+
     StorageDatabaseReader reader("dataBaseName");
     StorageTree tree = reader.read(idTree);
     QJsonObject jsonGraph = tree.toJSON();
@@ -71,11 +78,7 @@ void StorageDatabaseReader::writeToFile(const QString &idTree)
     array.append(QJsonValue(jsonGraph));
     QJsonDocument doc = QJsonDocument(array);
     QByteArray data = doc.toJson();
-    QFile file("file.json");
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        qDebug()<<"Ошибка открытия файла для записи..";
-    }
+
     file.write(data);
     file.close();
 }

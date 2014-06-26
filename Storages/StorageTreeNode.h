@@ -7,6 +7,7 @@
 
 #include "StorageUtils.h"
 
+
 class STNConsumptionMap;
 
 class StorageTreeNode
@@ -94,9 +95,11 @@ public:
                 && expense_ == node.expense_ ;
     }
 
-    bool operator <=(const StorageTreeNode &node) const;
-
     QJsonObject toJSON() const;
+
+    static const QString idKey;
+    static const QString balanceKey;
+    static const QString expenseKey;
 
 private:
     QString id_;
