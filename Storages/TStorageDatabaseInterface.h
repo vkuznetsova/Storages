@@ -24,6 +24,8 @@ private slots:
     void TestReWrite_data();
     void TestReWrite();
 
+    void TestWriteToFile_data();
+    void TestWriteToFile();
 
 };
 

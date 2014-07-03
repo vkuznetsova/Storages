@@ -62,7 +62,7 @@ QList<QString> StorageDatabaseReader::readID()
     return ids;
 }
 
-void StorageDatabaseReader::writeToFile(const QString &idTree, const QString &fileName)
+void StorageDatabaseReader::writeToFile(const QString &fileName)
 {
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly))
@@ -72,13 +72,16 @@ void StorageDatabaseReader::writeToFile(const QString &idTree, const QString &fi
     }
 
     StorageDatabaseReader reader("dataBaseName");
-    StorageTree tree = reader.read(idTree);
-    QJsonObject jsonGraph = tree.toJSON();
-    QJsonArray array;
-    array.append(QJsonValue(jsonGraph));
-    QJsonDocument doc = QJsonDocument(array);
-    QByteArray data = doc.toJson();
-
-    file.write(data);
+    QList <QString> allID = reader.readID();
+    for(int i = 0; i < allID.count(); i++)
+    {
+        StorageTree tree = reader.read(allID[i]);
+        QJsonObject jsonGraph = tree.toJSON();
+        QJsonArray array;
+        array.append(QJsonValue(jsonGraph));
+        QJsonDocument doc = QJsonDocument(array);
+        QByteArray data = doc.toJson();
+        file.write(data);
+    }
     file.close();
 }

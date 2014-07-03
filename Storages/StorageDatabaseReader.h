@@ -18,7 +18,7 @@ public:
 
     QList<QString> readID();
 
-    void writeToFile(const QString &idTree, const QString &name);
+    void writeToFile(const QString &name);
 
 };
 
