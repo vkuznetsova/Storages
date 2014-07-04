@@ -18,6 +18,8 @@ public:
 
     void updateExpense(const int value, const QString idNode);
 
+    void readFromJSONFile(const QString &fileName);
+
 };
 
 #endif // STORAGEDATABASEWRITER_H

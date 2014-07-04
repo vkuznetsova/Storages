@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
     //    }
     //    StorageTree().readFromJSONFile("file2");
 #ifdef TESTS
-//        TStorageTree tStorageTree;
-//        QTest::qExec(&tStorageTree);
+        TStorageTree tStorageTree;
+        QTest::qExec(&tStorageTree);
 
 
     //    TTableModel tTableModel;

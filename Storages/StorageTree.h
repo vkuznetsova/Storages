@@ -127,8 +127,6 @@ public:
 
     QJsonObject toJSON() const;
 
-    void readFromJSONFile(const QString &fileName);
-
     static const QString fromKey;
     static const QString toKey;
     static const QString idKey;

@@ -2102,8 +2102,6 @@ void TStorageTree::TestStorageTree()
     actual.autoSetRoot();
     actual.autoSetLeaf();
     actual.autoSetLevel();
-   // qDebug()<<"expected"<<expected.toJSON();
-    //qDebug()<<"actual"<<actual.toJSON();
     QCOMPARE(actual, expected);
 }
 

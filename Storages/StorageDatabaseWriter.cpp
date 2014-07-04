@@ -26,7 +26,6 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
     checkLastError(query);
 
     const QHash<QString, QSet<QString> > structure = tree.structure();
-
     foreach(const QString &parent, structure.keys())
     {
         foreach(const QString &child, structure.value(parent))
@@ -95,5 +94,54 @@ void StorageDatabaseWriter::updateExpense(const int value, const QString idNode)
         qDebug()<<"Запрос для обновления expense в таблице nodes не выполнен";
     }
     checkLastError(queryUpdateExpense);
+
+}
+
+void StorageDatabaseWriter::readFromJSONFile(const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return;
+    }
+    QByteArray data = file.readAll();
+    QJsonDocument doc1;
+    QJsonDocument doc = doc1.fromJson(data);
+    QJsonArray array = doc.array();
+    QJsonObject obj;
+    StorageTree tree;
+
+    //QJsonObject obj = array.last().toObject();
+    for(int i = 0; i < array.size(); i++)
+    {
+        obj = array[i].toObject();
+        const QString idTree = obj.value(StorageTree::idKey).toString();
+        tree = StorageTree(idTree, obj);
+        qDebug()<<"obj"<<obj;
+        qDebug()<<"tree"<<tree.toJSON();
+        StorageDatabaseWriter::write(tree);
+    }
+    //    QString line;
+    //    for(int i = 0; i < obj.keys().size(); i++)
+    //    {
+    //        if(obj[obj.keys().at(i)].isArray())
+    //        {
+    //            QJsonArray arr = obj[obj.keys().at(i)].toArray();
+    //            for(int j = 0; j < arr.size(); j++)
+    //            {
+    //                QVariantMap map = arr[j].toObject().toVariantMap();
+    //                foreach (const QString &it, map.keys())
+    //                {
+    //                    line += it +  map.value(it).toString();
+    //                }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            QString listData = obj.keys().at(i);
+    //            QString value = obj[obj.keys().at(i)].toString();
+    //            line += listData + value;
+    //        }
+    //    }
 
 }

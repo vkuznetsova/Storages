@@ -48,8 +48,7 @@ QList<QString> StorageDatabaseReader::readID()
 {
     QList <QString> ids;
     QSqlQuery queryID(database());
-    queryID.prepare("SELECT DISTINCT id FROM trees ORDER BY id ASC");
-
+    queryID.prepare("select distinct id from trees order by id asc");
     if(!queryID.exec())
     {
         qWarning()<<"Запрос для выборки всех id деревьев не выполнен.....";
@@ -70,16 +69,14 @@ void StorageDatabaseReader::writeToFile(const QString &fileName)
         qWarning() << QObject::tr("Ошибка открытия файла для записи..");
         return;
     }
-
-    StorageDatabaseReader reader("dataBaseName");
-    QList <QString> allID = reader.readID();
+    QList <QString> allID = StorageDatabaseReader::readID();
     for(int i = 0; i < allID.count(); i++)
     {
-        StorageTree tree = reader.read(allID[i]);
+        StorageTree tree = StorageDatabaseReader::read(allID[i]);
         QJsonObject jsonGraph = tree.toJSON();
-        QJsonArray array;
-        array.append(QJsonValue(jsonGraph));
-        QJsonDocument doc = QJsonDocument(array);
+//        QJsonArray array;
+//        array.append(jsonGraph);
+        QJsonDocument doc = QJsonDocument(jsonGraph);
         QByteArray data = doc.toJson();
         file.write(data);
     }
