@@ -3,6 +3,7 @@
 const QString StorageTreeNode::idKey = "id";
 const QString StorageTreeNode::balanceKey = "balance";
 const QString StorageTreeNode::expenseKey = "expense";
+const QString StorageTreeNode::deliveryTimeKey = "deliveryTime";
 
 bool StorageTreeNode::operator >=(const StorageTreeNode &node) const
 {
@@ -17,5 +18,6 @@ QJsonObject StorageTreeNode::toJSON() const
     json.insert(idKey,id());
     json.insert(balanceKey, getBalance());
     json.insert(expenseKey, getExpence());
+    json.insert(deliveryTimeKey, getDeliveryTime());
     return json;
 }

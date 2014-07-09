@@ -1,9 +1,10 @@
 #include "TableModel.h"
 
- const int TableModel::columnNode = 0;
- const int TableModel::columnParent = 1;
- const int TableModel::columnBalance = 2;
- const int TableModel::columnExpense = 3;
+const int TableModel::columnNode = 0;
+const int TableModel::columnParent = 1;
+const int TableModel::columnBalance = 2;
+const int TableModel::columnExpense = 3;
+const int TableModel::columnDeliveryTime = 4;
 
 TableModel::TableModel(const StorageTree tree)
 {
@@ -47,7 +48,7 @@ int TableModel::rowCount(const QModelIndex &parent) const
 
 int TableModel::columnCount(const QModelIndex &parent) const
 {
-    return 4;
+    return 5;
 }
 
 QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIndex &index) const
@@ -79,6 +80,11 @@ QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIn
                 if(index.column() == columnExpense)
                 {
                     return tree_.node(idChild).getExpence();
+                    break;
+                }
+                if(index.column() == columnDeliveryTime)
+                {
+                    return tree_.node(idChild).getDeliveryTime();
                     break;
                 }
             }
@@ -117,6 +123,10 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         {
             return node.getExpence();
         }
+        if(index.column() == columnDeliveryTime)
+        {
+            return node.getDeliveryTime();
+        }
     }
     return QVariant();
 }
@@ -142,6 +152,10 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
             if(section == columnExpense)
             {
                 return "Расход";
+            }
+            if(section == columnDeliveryTime)
+            {
+                return "Время доставки";
             }
         }
     }
@@ -173,7 +187,7 @@ QString TableModel::columnID(const int column) const
 Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if(index.isValid() && (index.column() == columnBalance || index.column() == columnExpense))
+    if(index.isValid() && (index.column() == columnBalance || index.column() == columnExpense || index.column() == columnDeliveryTime))
         flags |= Qt::ItemIsEditable;
     return flags;
 }
@@ -188,13 +202,25 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
             tree_.setBalance(id, value.toInt());
             StorageDatabaseWriter writer("dataBaseName");
             writer.updateBalance(value.toInt(), id);
-
         }
         if(index.column() == columnExpense)
         {
             tree_.setExpense(id, value.toInt());
             StorageDatabaseWriter writer("dataBaseName");
             writer.updateExpense(value.toInt(), id);
+        }
+        if(index.column() == columnDeliveryTime)
+        {
+            if(value < 0)
+            {
+                return false;
+            }
+            else
+            {
+                tree_.setDeliveryTime(id, value.toInt());
+                StorageDatabaseWriter writer("dataBaseName");
+                writer.updateDeliveryTime(value.toInt(), id);
+            }
         }
         emit dataChanged(index, index);
         return true;

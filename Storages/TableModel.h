@@ -45,6 +45,7 @@ public:
     static const int columnParent;
     static const int columnBalance;
     static const int columnExpense;
+    static const int columnDeliveryTime;
 private:
    static bool greaterThan(const QPair<QString, QVariant> &pair1,
                            const QPair<QString, QVariant> &pair2);

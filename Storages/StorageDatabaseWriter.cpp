@@ -11,6 +11,7 @@ StorageDatabaseWriter::StorageDatabaseWriter(const QString &dataBaseName):
 
 void StorageDatabaseWriter::write(const StorageTree &tree)
 {
+
     QSqlQuery queryDeleteFromTrees(database());
     database().transaction();
     queryDeleteFromTrees.prepare("DELETE FROM trees WHERE id = :id");
@@ -19,7 +20,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
     {
         qDebug() << "Запрос для удаления существующей записи из trees не выполнен";
     }
-    checkLastError(queryDeleteFromTrees);\
+    checkLastError(queryDeleteFromTrees);
 
     QSqlQuery query(database());
     query.prepare("INSERT INTO trees (id, parent, child) VALUES (:id, :parent, :child)");
@@ -52,7 +53,7 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
         checkLastError(query);
     }
 
-    query.prepare("INSERT OR REPLACE INTO nodes (id, balance, expense) VALUES (:id, :balance, :expense)");
+    query.prepare("INSERT OR REPLACE INTO nodes (id, balance, expense, deliveryTime) VALUES (:id, :balance, :expense, :deliveryTime)");
     checkLastError(query);
     QHash<QString, StorageTreeNode> structureData = tree.structureData();
     foreach(const StorageTreeNode &child, structureData.values())
@@ -60,33 +61,46 @@ void StorageDatabaseWriter::write(const StorageTree &tree)
         query.bindValue(":id", child.id());
         query.bindValue(":balance", child.getBalance());
         query.bindValue(":expense", child.getExpence());
+        query.bindValue(":deliveryTime", child.getDeliveryTime());
         if(!query.exec())
         {
             qDebug()<<"Запрос для таблицы nodes не выполнен";
         }
         checkLastError(query);
     }
-
     database().commit();
 }
 
 void StorageDatabaseWriter::updateBalance(const int value, const QString idNode)
 {
-    QSqlQuery queryUpdateBalance(database());
-    queryUpdateBalance.prepare("UPDATE nodes SET balance = :value WHERE id = :idNode");
-    queryUpdateBalance.bindValue(":value", value);
-    queryUpdateBalance.bindValue(":idNode", idNode);
-    if(!queryUpdateBalance.exec())
+    QSqlQuery queryUpdateDeliveryTime(database());
+    queryUpdateDeliveryTime.prepare("UPDATE nodes SET balance = :value WHERE id = :idNode");
+    queryUpdateDeliveryTime.bindValue(":value", value);
+    queryUpdateDeliveryTime.bindValue(":idNode", idNode);
+    if(!queryUpdateDeliveryTime.exec())
     {
         qDebug()<<"Запрос для обновления balance в таблице nodes не выполнен";
     }
-    checkLastError(queryUpdateBalance);
+    checkLastError(queryUpdateDeliveryTime);
 }
 
 void StorageDatabaseWriter::updateExpense(const int value, const QString idNode)
 {
     QSqlQuery queryUpdateExpense(database());
     queryUpdateExpense.prepare("UPDATE nodes SET expense = :value WHERE id = :idNode");
+    queryUpdateExpense.bindValue(":value", value);
+    queryUpdateExpense.bindValue(":idNode", idNode);
+    if(!queryUpdateExpense.exec())
+    {
+        qDebug()<<"Запрос для обновления expense в таблице nodes не выполнен";
+    }
+    checkLastError(queryUpdateExpense);
+}
+
+void StorageDatabaseWriter::updateDeliveryTime(const int value, const QString idNode)
+{
+    QSqlQuery queryUpdateExpense(database());
+    queryUpdateExpense.prepare("UPDATE nodes SET deliveryTime = :value WHERE id = :idNode");
     queryUpdateExpense.bindValue(":value", value);
     queryUpdateExpense.bindValue(":idNode", idNode);
     if(!queryUpdateExpense.exec())
@@ -105,43 +119,8 @@ void StorageDatabaseWriter::readFromJSONFile(const QString &fileName)
         return;
     }
     QByteArray data = file.readAll();
-    QJsonDocument doc1;
-    QJsonDocument doc = doc1.fromJson(data);
-    QJsonArray array = doc.array();
-    QJsonObject obj;
+    QJsonDocument doc = doc.fromJson(data);
+    QJsonObject obj = doc.object();
+    qDebug()<<obj;
     StorageTree tree;
-
-    //QJsonObject obj = array.last().toObject();
-    for(int i = 0; i < array.size(); i++)
-    {
-        obj = array[i].toObject();
-        const QString idTree = obj.value(StorageTree::idKey).toString();
-        tree = StorageTree(idTree, obj);
-        qDebug()<<"obj"<<obj;
-        qDebug()<<"tree"<<tree.toJSON();
-        StorageDatabaseWriter::write(tree);
-    }
-    //    QString line;
-    //    for(int i = 0; i < obj.keys().size(); i++)
-    //    {
-    //        if(obj[obj.keys().at(i)].isArray())
-    //        {
-    //            QJsonArray arr = obj[obj.keys().at(i)].toArray();
-    //            for(int j = 0; j < arr.size(); j++)
-    //            {
-    //                QVariantMap map = arr[j].toObject().toVariantMap();
-    //                foreach (const QString &it, map.keys())
-    //                {
-    //                    line += it +  map.value(it).toString();
-    //                }
-    //            }
-    //        }
-    //        else
-    //        {
-    //            QString listData = obj.keys().at(i);
-    //            QString value = obj[obj.keys().at(i)].toString();
-    //            line += listData + value;
-    //        }
-    //    }
-
 }

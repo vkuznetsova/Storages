@@ -18,7 +18,7 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
 
     StorageTree tree = StorageTree(idTree);
     QSqlQuery query(database());
-    query.prepare("SELECT parent, child, balance, expense FROM nodes INNER JOIN trees"
+    query.prepare("SELECT parent, child, balance, expense, deliveryTime FROM nodes INNER JOIN trees"
                   " ON nodes.id = trees.child WHERE trees.id = :id");
     query.bindValue(":id", idTree);
 
@@ -33,10 +33,12 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
         const QString child = query.value(1).toString();
         const int balance = query.value(2).toInt();
         const int expense = query.value(3).toInt();
+        const int deliveryTime = query.value(4).toInt();
 
         tree.addChild(parent, child);
         tree.setBalance(child, balance);
         tree.setExpense(child, expense);
+        tree.setDeliveryTime(child, deliveryTime);
     }
     tree.autoSetRoot();
     tree.autoSetLevel();
@@ -70,15 +72,20 @@ void StorageDatabaseReader::writeToFile(const QString &fileName)
         return;
     }
     QList <QString> allID = StorageDatabaseReader::readID();
+    QJsonObject obj;
+    QJsonArray nodes;
+    QJsonArray graphs;
     for(int i = 0; i < allID.count(); i++)
     {
         StorageTree tree = StorageDatabaseReader::read(allID[i]);
         QJsonObject jsonGraph = tree.toJSON();
-//        QJsonArray array;
-//        array.append(jsonGraph);
-        QJsonDocument doc = QJsonDocument(jsonGraph);
-        QByteArray data = doc.toJson();
-        file.write(data);
+        nodes.append(jsonGraph.value(StorageTree::nodesKey));
+        graphs.append(jsonGraph.value(StorageTree::graphsKey));
     }
+    obj.insert(StorageTree::nodesKey, nodes);
+    obj.insert(StorageTree::graphsKey, graphs);
+    QJsonDocument doc = QJsonDocument(obj);
+    QByteArray data = doc.toJson();
+    file.write(data);
     file.close();
 }

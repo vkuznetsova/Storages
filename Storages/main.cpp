@@ -10,8 +10,18 @@
 
 int main(int argc, char *argv[])
 {
-    StorageDatabaseReader reader("dataBaseName");
-   // reader.writeToFile("file");
+//    if(QFile::exists("dataBaseName"))
+//    {
+//        QFile::remove("dataBaseName");
+//    }
+//    StorageDatabaseWriter writer("dataBaseName");
+//    for(int i = 1; i < 16; i++)
+//    {
+//        StorageTree tree = StorageTree::generateTree(i);
+//        tree.setID("idTree" + QString::number(i));
+//        writer.write(tree);
+//    }
+    // reader.writeToFile("file");
 
     //    StorageTree().readFromJSONFile("file");
     //    StorageDatabaseWriter writer("dataBaseName1");
@@ -33,18 +43,18 @@ int main(int argc, char *argv[])
     //    }
     //    StorageTree().readFromJSONFile("file2");
 #ifdef TESTS
-        TStorageTree tStorageTree;
-        QTest::qExec(&tStorageTree);
+    //        TStorageTree tStorageTree;
+    //        QTest::qExec(&tStorageTree);
 
 
-    //    TTableModel tTableModel;
-    //    QTest::qExec(&tTableModel);
+//    TTableModel tTableModel;
+//    QTest::qExec(&tTableModel);
 
-        TStorageDatabaseInterface tStorageDatabaseInterface;
-        QTest::qExec(&tStorageDatabaseInterface);
+            TStorageDatabaseInterface tStorageDatabaseInterface;
+            QTest::qExec(&tStorageDatabaseInterface);
 
-//        TStorageTreeNode tStorageTreeNode;
-//        QTest::qExec(&tStorageTreeNode);
+    //        TStorageTreeNode tStorageTreeNode;
+    //        QTest::qExec(&tStorageTreeNode);
 
     Q_UNUSED(argc)
     Q_UNUSED(argv)

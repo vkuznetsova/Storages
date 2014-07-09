@@ -18,6 +18,8 @@ public:
 
     void updateExpense(const int value, const QString idNode);
 
+    void updateDeliveryTime(const int value, const QString idNode);
+
     void readFromJSONFile(const QString &fileName);
 
 };

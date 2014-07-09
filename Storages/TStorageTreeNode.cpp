@@ -14,6 +14,7 @@ void TStorageTreeNode::TestToJSON_data()
     json1.insert(StorageTreeNode::idKey, QString(""));
     json1.insert(StorageTreeNode::balanceKey, 0);
     json1.insert(StorageTreeNode::expenseKey, 0);
+    json1.insert(StorageTreeNode::deliveryTimeKey, 0);
 
     QTest::newRow("empty-node") << StorageTreeNode()
                                 << json1;
@@ -22,16 +23,18 @@ void TStorageTreeNode::TestToJSON_data()
     json2.insert(StorageTreeNode::idKey, QString("node1"));
     json2.insert(StorageTreeNode::balanceKey, 10);
     json2.insert(StorageTreeNode::expenseKey, 2);
+    json2.insert(StorageTreeNode::deliveryTimeKey, 15);
 
-    QTest::newRow("one-node") << StorageTreeNode("node1", 1, 2, 10)
+    QTest::newRow("one-node") << StorageTreeNode("node1", 1, 2, 10, 15)
                                 << json2;
 
     QJsonObject json3;
     json3.insert(StorageTreeNode::idKey, QString("root"));
     json3.insert(StorageTreeNode::balanceKey, -10);
     json3.insert(StorageTreeNode::expenseKey, 2);
+    json3.insert(StorageTreeNode::deliveryTimeKey, 3);
 
-    QTest::newRow("one-node-1") << StorageTreeNode("root", 1, 2, -10)
+    QTest::newRow("one-node-1") << StorageTreeNode("root", 1, 2, -10, 3)
                                 << json3;
 
 }

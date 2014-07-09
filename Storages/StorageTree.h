@@ -109,6 +109,8 @@ public:
 
     StorageTree &setExpense(const QString &nodeID, const int expense);
 
+    StorageTree &setDeliveryTime(const QString &nodeID, const int deliveryTime);
+
     void autoSetRoot();
 
     void autoSetLevel();
@@ -132,6 +134,7 @@ public:
     static const QString idKey;
     static const QString edgesKey;
     static const QString nodesKey;
+    static const QString graphsKey;
 
 protected:
     StorageTree(const QString &rootID, const QHash<QString, StorageTreeNode> &nodes,

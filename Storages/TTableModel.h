@@ -17,6 +17,7 @@ public:
     static const int headerColumnRoot = 1;
     static const int headerColumnBalance = 2;
     static const int headerColumnExpense = 3;
+    static const int headerColumnDeliveryTime = 4;
 
 private slots:
     void TestColumnCount();

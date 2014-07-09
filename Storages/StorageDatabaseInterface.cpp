@@ -43,13 +43,11 @@ void StorageDatabaseInterface::createSchema()
     QString createTableTrees = "CREATE TABLE IF NOT EXISTS trees ( id VARCHAR NOT NULL,"
             " parent VARCHAR, child VARCHAR, PRIMARY KEY(id, child));";
     QString createTableNodes = " CREATE TABLE IF NOT EXISTS nodes (id VARCHAR PRIMARY KEY NOT NULL,"
-            " balance INTEGER, expense INTEGER);";
+            " balance INTEGER, expense INTEGER, deliveryTime INTEGER);";
     if(!query.exec(createTableTrees))
     {
         qDebug()<< "Таблицу Trees создать невозможно";
     }
-    checkLastError(query);
-
     if(!query.exec(createTableNodes))
     {
         qDebug()<< "Таблицу Nodes создать невозможно";

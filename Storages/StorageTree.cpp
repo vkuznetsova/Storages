@@ -11,6 +11,7 @@ const QString StorageTree::toKey = "to";
 const QString StorageTree::idKey = "id";
 const QString StorageTree::edgesKey = "edges";
 const QString StorageTree::nodesKey = "nodes";
+const QString StorageTree::graphsKey = "graphs";
 
 StorageTree::StorageTree() :
     rootID_()
@@ -272,13 +273,15 @@ QJsonArray StorageTree::edgesToJSONArray() const
 QJsonObject StorageTree::toJSON() const
 {
     QJsonObject obj;
+    QJsonObject innerObj;
     QJsonArray edges;
     QJsonArray nodes;
     edges = edgesToJSONArray();
     nodes = nodesToJSONArray();
-    obj.insert(idKey, id());
-    obj.insert(edgesKey, edges);
+    innerObj.insert(idKey, id());
+    innerObj.insert(edgesKey, edges);
     obj.insert(nodesKey, nodes);
+    obj.insert(graphsKey, innerObj);
     return obj;
 }
 
@@ -676,6 +679,12 @@ StorageTree &StorageTree::setBalance(const QString &nodeID, const int balance)
 StorageTree &StorageTree::setExpense(const QString &nodeID, const int expense)
 {
     nodes_[nodeID].setExpence(expense);
+    return *this;
+}
+
+StorageTree &StorageTree::setDeliveryTime(const QString &nodeID, const int deliveryTime)
+{
+    nodes_[nodeID].setDeliveryTime(deliveryTime);
     return *this;
 }
 

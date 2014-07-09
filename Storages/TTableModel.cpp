@@ -8,7 +8,7 @@ TTableModel::TTableModel()
 void TTableModel::TestColumnCount()
 {
     TableModel model;
-    QCOMPARE(model.columnCount(QModelIndex()), 4);
+    QCOMPARE(model.columnCount(QModelIndex()), 5);
 }
 
 void TTableModel::TestHorizontalHeader()
@@ -18,6 +18,7 @@ void TTableModel::TestHorizontalHeader()
     QCOMPARE(model.headerData(TTableModel::headerColumnRoot, Qt::Horizontal), QVariant("Родитель"));
     QCOMPARE(model.headerData(TTableModel::headerColumnBalance, Qt::Horizontal), QVariant("Баланс Потомка"));
     QCOMPARE(model.headerData(TTableModel::headerColumnExpense, Qt::Horizontal), QVariant("Расход"));
+    QCOMPARE(model.headerData(TTableModel::headerColumnDeliveryTime, Qt::Horizontal), QVariant("Время доставки"));
 }
 
 void TTableModel::TestRowCount_data()
@@ -79,15 +80,24 @@ void TTableModel::TestRowData_data()
                                   << 1
                                   << QVariant(QString());
 
-    QTest::newRow("single-tree3") << StorageTree(StorageTreeNode("root", 1, 1, 10))
+    QTest::newRow("single-tree3") << StorageTree(StorageTreeNode("root", 1, 1, 10,6))
                                   << 0
                                   << 2
                                   << QVariant(10);
-    QTest::newRow("level1") << (StorageTree(StorageTreeNode("root", 1, 3, -100)))
+    QTest::newRow("single-tree4") << StorageTree(StorageTreeNode("root", 1, 1, 10,6))
+                                  << 0
+                                  << 4
+                                  << QVariant(6);
+    QTest::newRow("level1") << (StorageTree(StorageTreeNode("root", 1, 3, -100, 3)))
                                .addChild("root", StorageTreeNode("leaf1", 2, 1, -1))
                             << 1
                             << 0
                             << QVariant("leaf1");
+    QTest::newRow("level1-1") << (StorageTree(StorageTreeNode("root", 1, 3, -100, 3)))
+                               .addChild("root", StorageTreeNode("leaf1", 2, 1, -1, 2))
+                            << 1
+                            << 4
+                            << QVariant(2);
 }
 
 void TTableModel::TestRowData()

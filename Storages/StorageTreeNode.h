@@ -1,4 +1,5 @@
 #ifndef STORAGETREENODE_H
+
 #define STORAGETREENODE_H
 
 #include <QtCore>
@@ -17,11 +18,12 @@ public:
     StorageTreeNode(const QString &id = QString(),
                     const int level = 0,
                     const int expense = 0,
-                    int balance = 0) :
+                    int balance = 0,  int deliveryTime = 0) :
         id_(id),
         level_(level),
         balance_(balance),
-        expense_(expense)
+        expense_(expense),
+        deliveryTime_(deliveryTime)
     {
     }
 
@@ -86,6 +88,16 @@ public:
         return expense_;
     }
 
+    void setDeliveryTime(const int deliveryTime)
+    {
+        deliveryTime_ = deliveryTime;
+    }
+
+    int getDeliveryTime() const
+    {
+        return deliveryTime_;
+    }
+
     bool operator ==(const StorageTreeNode &node) const
     {
         return id_ == node.id_
@@ -101,6 +113,7 @@ public:
     static const QString idKey;
     static const QString balanceKey;
     static const QString expenseKey;
+    static const QString deliveryTimeKey;
 
 private:
     QString id_;
@@ -109,6 +122,7 @@ private:
     int level_;
     int balance_;
     int expense_;
+    int deliveryTime_;
 };
 
 Q_DECLARE_METATYPE(StorageTreeNode)
