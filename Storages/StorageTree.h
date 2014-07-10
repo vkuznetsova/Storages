@@ -61,6 +61,8 @@ public:
 
     bool operator ==(const StorageTree &tree) const;
 
+    bool operator <(const StorageTree &tree) const;
+
     bool isLeaf(const QString &node) const;
 
     bool isBoolean();

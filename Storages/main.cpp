@@ -43,15 +43,15 @@ int main(int argc, char *argv[])
     //    }
     //    StorageTree().readFromJSONFile("file2");
 #ifdef TESTS
-    //        TStorageTree tStorageTree;
-    //        QTest::qExec(&tStorageTree);
+//            TStorageTree tStorageTree;
+//            QTest::qExec(&tStorageTree);
 
 
 //    TTableModel tTableModel;
 //    QTest::qExec(&tTableModel);
 
-            TStorageDatabaseInterface tStorageDatabaseInterface;
-            QTest::qExec(&tStorageDatabaseInterface);
+    TStorageDatabaseInterface tStorageDatabaseInterface;
+    QTest::qExec(&tStorageDatabaseInterface);
 
     //        TStorageTreeNode tStorageTreeNode;
     //        QTest::qExec(&tStorageTreeNode);

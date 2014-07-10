@@ -121,6 +121,13 @@ void StorageDatabaseWriter::readFromJSONFile(const QString &fileName)
     QByteArray data = file.readAll();
     QJsonDocument doc = doc.fromJson(data);
     QJsonObject obj = doc.object();
-    qDebug()<<obj;
+    QJsonArray graphsIds = obj.value(StorageTree::graphsKey).toArray();
     StorageTree tree;
+    for(int i = 0; i < graphsIds.size(); i++)
+    {
+        QJsonObject edges = graphsIds[i].toObject();
+        QString idTree = edges.value(StorageTree::idKey).toString();
+        tree = StorageTree(idTree, obj);
+       // qDebug()<<tree.toJSON()<<endl;
+    }
 }

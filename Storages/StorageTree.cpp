@@ -48,6 +48,7 @@ StorageTree::StorageTree(const QString &graphID, const QJsonObject &object)
         const QJsonObject node = nodes.at(i).toObject();
         const int balance = node.value(StorageTreeNode::balanceKey).toInt();
         const int expense = node.value(StorageTreeNode::expenseKey).toInt();
+        const int deliveryTime = node.value(StorageTreeNode::deliveryTimeKey).toInt();
         const QString idNode = node.value(StorageTreeNode::idKey).toString();
         nodes_[idNode] = StorageTreeNode(idNode, level(parent(idNode)) + 1);
         if(!parent(idNode).isNull())
@@ -60,6 +61,7 @@ StorageTree::StorageTree(const QString &graphID, const QJsonObject &object)
         }
         this->setBalance(idNode, balance);
         this->setExpense(idNode, expense);
+        this->setDeliveryTime(idNode, deliveryTime);
         QHash<QString, QSet<QString> > structData = structure();
         foreach(const QString &parent, structData.keys())
         {
@@ -275,13 +277,15 @@ QJsonObject StorageTree::toJSON() const
     QJsonObject obj;
     QJsonObject innerObj;
     QJsonArray edges;
+    QJsonArray graphs;
     QJsonArray nodes;
     edges = edgesToJSONArray();
     nodes = nodesToJSONArray();
     innerObj.insert(idKey, id());
     innerObj.insert(edgesKey, edges);
+    graphs.append(innerObj);
     obj.insert(nodesKey, nodes);
-    obj.insert(graphsKey, innerObj);
+    obj.insert(graphsKey, graphs);
     return obj;
 }
 
@@ -296,6 +300,11 @@ bool StorageTree::operator ==(const StorageTree &tree) const
             && rootID_ == tree.rootID_
             && nodes_ == tree.nodes_
             && tree_ == tree.tree_;
+}
+
+bool StorageTree::operator <(const StorageTree &tree) const
+{
+    return id_ < tree.id_;
 }
 
 void StorageTree::recursiveSubTree(const StorageTreeNode &parentNode, StorageTree &tree) const

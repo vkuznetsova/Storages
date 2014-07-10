@@ -48,7 +48,7 @@ StorageTree StorageDatabaseReader::read(const QString &idTree)
 
 QList<QString> StorageDatabaseReader::readID()
 {
-    QList <QString> ids;
+    QList<QString> ids;
     QSqlQuery queryID(database());
     queryID.prepare("select distinct id from trees order by id asc");
     if(!queryID.exec())
@@ -71,16 +71,26 @@ void StorageDatabaseReader::writeToFile(const QString &fileName)
         qWarning() << QObject::tr("Ошибка открытия файла для записи..");
         return;
     }
-    QList <QString> allID = StorageDatabaseReader::readID();
+    QList<QString> allID = StorageDatabaseReader::readID();
     QJsonObject obj;
     QJsonArray nodes;
     QJsonArray graphs;
+    QHash<QString, QJsonValue> nodesHash;
     for(int i = 0; i < allID.count(); i++)
     {
         StorageTree tree = StorageDatabaseReader::read(allID[i]);
         QJsonObject jsonGraph = tree.toJSON();
-        nodes.append(jsonGraph.value(StorageTree::nodesKey));
+        QJsonArray nodeArray = jsonGraph.value(StorageTree::nodesKey).toArray();
+        for(int j = 0; j < nodeArray.size(); j++)
+        {
+            const QJsonObject node = nodeArray[j].toObject();
+            nodesHash.insert(node.value(StorageTreeNode::idKey).toString(), QJsonValue(node));
+        }
         graphs.append(jsonGraph.value(StorageTree::graphsKey));
+    }
+    foreach (const QString &nodeID, nodesHash.keys())
+    {
+        nodes.append(nodesHash.value(nodeID));
     }
     obj.insert(StorageTree::nodesKey, nodes);
     obj.insert(StorageTree::graphsKey, graphs);

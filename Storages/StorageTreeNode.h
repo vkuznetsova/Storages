@@ -107,7 +107,7 @@ public:
                 && expense_ == node.expense_ ;
     }
 
-    bool operator >= (const StorageTreeNode &node) const;
+    bool operator < (const StorageTreeNode &node) const;
     QJsonObject toJSON() const;
 
     static const QString idKey;
