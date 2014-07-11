@@ -27,7 +27,7 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
             const QString from = node.getParent();
             const QString to = node.id();
             const int volumeOrder = deliveryTime * expense;
-            if((i - deliveryTime < 0))
+            if((i - deliveryTime) < 0)
             {
                 continue;
             }
@@ -35,13 +35,9 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
             orderPlan = OrderPlan().insertInc(i - deliveryTime, order);
             orderTable.insertInc(storage, orderPlan);
         }
-        if(order.deliveryTime() == order.orderTime() + deliveryTime)
+        if(order.deliveryTime() == node.getDeliveryTime() + order.orderTime())
         {
-            currentBalance += order.volumeOrder();
+            node.setBalance(currentBalance + order.volumeOrder());
         }
-        node.setBalance(currentBalance);
-        qDebug()<<orderTable.keys()<<orderPlan.keys()
-                << order.deliveryTime()<<order.orderTime()
-                <<order.volumeOrder()<<order.from()<<order.to();
     }
 }
