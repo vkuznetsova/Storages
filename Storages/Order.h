@@ -8,23 +8,23 @@ class Order
 {
 public:
     Order();
-    Order(const int deliveryTime = 0, const int orderTime = 0,
-          const int volumeOrder = 0, const QString &from = QString(), const QString &to = QString());
+    Order(const int deliveryTime,
+          const int orderTime,
+          const int volumeOrder,
+          const QString &from,
+          const QString &to);
 
-    void setDeliveryTime(const int deliveryTime);
-    int getDeliveryTime() const;
+    int deliveryTime() const;
 
-    void setOrderTime(const int orderTime);
-    int getOrderTime() const;
+    int orderTime() const;
 
-    void setVolumeOrder(const int volumeOrder);
-    int getVolumeOrder() const;
+    int volumeOrder() const;
 
-    void setFrom(const QString &from = QString());
-    QString getFrom();
+    QString from() const;
 
-    void setTo(const QString &to = QString());
-    QString getTo();
+    QString to() const;
+
+    bool operator ==(const Order &order) const;
 
 private:
     int deliveryTime_;
@@ -33,5 +33,31 @@ private:
     QString from_;
     QString to_;
 };
+
+class OrderPlan : public QHash<int, Order>
+{
+public:
+    OrderPlan& insertInc(const int time,
+                         const Order &order)
+    {
+        insert(time, order);
+        return *this;
+    }
+};
+
+class TreeOrderTable : public QHash<QString, OrderPlan>
+{
+public:
+    TreeOrderTable& insertInc(const QString &storage,
+                         const OrderPlan &plan)
+    {
+        insert(storage, plan);
+        return *this;
+    }
+};
+
+Q_DECLARE_METATYPE(Order)
+Q_DECLARE_METATYPE(OrderPlan)
+Q_DECLARE_METATYPE(TreeOrderTable)
 
 #endif // ORDER_H
