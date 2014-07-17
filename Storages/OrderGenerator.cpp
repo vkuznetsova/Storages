@@ -58,7 +58,7 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
                        <<"orderDate"<<orderDate
                       <<"volumeOrder"<<order.volumeOrder();
 
-                currentBalance = volumeOrder;
+                currentBalance += volumeOrder;
                 qWarning()<<"currentBalance"<<currentBalance;
             }
             //            else
@@ -76,6 +76,20 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
             //                orderPlan = OrderPlan().insertInc(i - deliveryTime, order);
             //            }
         }
+        else
+        {
+            from = node.getParent();
+            to = node.id();
+            int deliveryDate = i;
+            int orderDate = i - deliveryTime;
+            order = Order(deliveryDate, orderDate, 0, from, to);
+            orderPlan = orderPlan.insertInc(i - deliveryTime, order);
+            qWarning()<<"from"<<from
+                     <<"to"<<to
+                    <<"deliveryDate"<<deliveryDate
+                   <<"orderDate"<<orderDate
+                  <<"volumeOrder"<<order.volumeOrder();
+        }
         volumeOrder = 0;
         if(order.deliveryTime() == node.getDeliveryTime() + order.orderTime())
         {
@@ -84,7 +98,9 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
             qWarning()<<"balance"<<node.getBalance()
                      <<"currentBalance"<<currentBalance;
         }
+        qWarning()<<"the end day number"<<i;
         currentBalance -= expense;
+        qWarning()<<currentBalance;
     }
     if(orderPlan.keys().size() == 0)
     {

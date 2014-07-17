@@ -143,35 +143,35 @@ void TOrderGenerator::TestCalcOrderPlan_data()
 //                          .insertInc(4, Order(5, 4, 5, QString(), "s1"))
 //                          .insertInc(5, Order(6, 5, 5, QString(), "s1"))));
 
-//    QTest::newRow("single11")
-//            << TreeOrderTable()
-//            << (StorageTree().setRoot("s1")
-//                .setBalance("s1", 9)
-//                .setExpense("s1", 5)
-//                .setDeliveryTime("s1", 2))
-//            << "s1"
-//            << 6
-//            << (TreeOrderTable()
-//               .insertInc("s1", OrderPlan()
-//                          .insertInc(1, Order(3, 1, 10, QString(), "s1"))
-//                          .insertInc(2, Order(4, 2, 0, QString(), "s1"))
-//                          .insertInc(3, Order(5, 3, 0, QString(), "s1"))
-//                          .insertInc(4, Order(6, 4, 10, QString(), "s1"))));
-
-    QTest::newRow("single12")
+    QTest::newRow("single11")
             << TreeOrderTable()
             << (StorageTree().setRoot("s1")
-                .setBalance("s1", 13)
+                .setBalance("s1", 9)
                 .setExpense("s1", 5)
                 .setDeliveryTime("s1", 2))
             << "s1"
             << 6
             << (TreeOrderTable()
                .insertInc("s1", OrderPlan()
-                          .insertInc(1, Order(3, 1, 7, QString(), "s1"))
+                          .insertInc(1, Order(3, 1, 10, QString(), "s1"))
                           .insertInc(2, Order(4, 2, 0, QString(), "s1"))
-                          .insertInc(3, Order(5, 3, 10, QString(), "s1"))
-                          .insertInc(4, Order(6, 4, 0, QString(), "s1"))));
+                          .insertInc(3, Order(5, 3, 0, QString(), "s1"))
+                          .insertInc(4, Order(6, 4, 10, QString(), "s1"))));
+
+//    QTest::newRow("single12")
+//            << TreeOrderTable()
+//            << (StorageTree().setRoot("s1")
+//                .setBalance("s1", 13)
+//                .setExpense("s1", 5)
+//                .setDeliveryTime("s1", 2))
+//            << "s1"
+//            << 6
+//            << (TreeOrderTable()
+//               .insertInc("s1", OrderPlan()
+//                          .insertInc(1, Order(3, 1, 7, QString(), "s1"))
+//                          .insertInc(2, Order(4, 2, 0, QString(), "s1"))
+//                          .insertInc(3, Order(5, 3, 10, QString(), "s1"))
+//                          .insertInc(4, Order(6, 4, 0, QString(), "s1"))));
 
 //    QTest::newRow("two-nodes1")
 //            << (TreeOrderTable()
