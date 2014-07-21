@@ -20,6 +20,7 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
                       << orderTable.value(stor).value(it).to();
         }
     }
+
     if(storage.isNull())
     {
         return;
@@ -54,59 +55,67 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
         if(currentBalance == 0 || currentBalance < expense)
         {
             qWarning()<<"order"<< currentBalance;
-            QStringList children = tree.childrenIDs(storage);
-            if(children.size() == 0)
+            from = node.getParent();
+            to = node.id();
+            volumeOrder = deliveryTime * expense - currentBalance;
+            int deliveryDate = i;
+            int orderDate = deliveryDate - deliveryTime;
+            qWarning()<<"data of children";
+            foreach (const QString &stor, orderTable.keys())
             {
-                qWarning()<<"is leaf"<< children.size();
-                from = node.getParent();
-                to = node.id();
-                volumeOrder = deliveryTime * expense - currentBalance;
-                int deliveryDate = i;
-                int orderDate = i - deliveryTime;
-                order = Order(deliveryDate, orderDate, volumeOrder, from, to);
-                orderPlan = orderPlan.insertInc(i - deliveryTime, order);
-                qWarning()<<"from"<<from
-                         <<"to"<<to
-                        <<"deliveryDate"<<deliveryDate
-                       <<"orderDate"<<orderDate
-                      <<"volumeOrder"<<order.volumeOrder();
-                countOrder++;
-                currentBalance += volumeOrder;
-                qWarning()<<"currentBalance"<<currentBalance;
-            }
-            else
-            {
-                qWarning()<<"children = "<< children.size();
-                int volumeOrderChild = 0;
-                for(int j = 0; j < children.size(); j++)
+                foreach (const int it, orderTable.value(stor).keys())
                 {
-                    qWarning()<< children[j];
-                    qWarning()<< "order of children"
-                              << orderTable.keys()
-                              << orderPlan.keys()
-                              << order.deliveryTime()
-                              << order.orderTime()
-                              << order.volumeOrder()
-                              << order.from()
-                              << order.to();
-                    from = node.getParent();
-                    to = node.id();
-                    volumeOrderChild = orderTable.value(children[j]).value(i).volumeOrder();
+                    if(deliveryDate == orderTable.value(stor).value(it).orderTime())
+                    {
+                        volumeOrder += orderTable.value(stor).value(it).volumeOrder();
+                        qWarning()<< orderTable.value(stor).value(it).deliveryTime()
+                                  << orderTable.value(stor).value(it).orderTime()
+                                  << orderTable.value(stor).value(it).volumeOrder()
+                                  << orderTable.value(stor).value(it).from()
+                                  << orderTable.value(stor).value(it).to()
+                                  << volumeOrder;
+                        currentBalance = currentBalance - orderTable.value(stor).value(it).volumeOrder();
+                    }
                 }
-                volumeOrder = deliveryTime * expense + volumeOrderChild - currentBalance;
-                currentBalance = volumeOrder;
-                order = Order(i, i - deliveryTime, volumeOrder, from, to);
-                orderPlan = OrderPlan().insertInc(i - deliveryTime, order);
             }
+            order = Order(deliveryDate, orderDate, volumeOrder, from, to);
+            orderPlan = orderPlan.insertInc(orderDate, order);
+            qWarning()<<"from"<<from
+                     <<"to"<<to
+                    <<"deliveryDate"<<deliveryDate
+                   <<"orderDate"<<orderDate
+                  <<"volumeOrder"<<order.volumeOrder();
+            countOrder++;
+            currentBalance += volumeOrder;
+            qWarning()<<"currentBalance"<<currentBalance;
         }
         else
         {
             from = node.getParent();
             to = node.id();
             int deliveryDate = i;
-            int orderDate = i - deliveryTime;
+            int orderDate = deliveryDate - deliveryTime;
+            qWarning()<<"data of children";
+            foreach (const QString &stor, orderTable.keys())
+            {
+                foreach (const int it, orderTable.value(stor).keys())
+                {
+                    if(deliveryDate == orderTable.value(stor).value(it).orderTime())
+                    {
+                        volumeOrder += orderTable.value(stor).value(it).volumeOrder();
+                        qWarning()<< orderTable.value(stor).value(it).deliveryTime()
+                                  << orderTable.value(stor).value(it).orderTime()
+                                  << orderTable.value(stor).value(it).volumeOrder()
+                                  << orderTable.value(stor).value(it).from()
+                                  << orderTable.value(stor).value(it).to()
+                                  << volumeOrder;
+                        currentBalance = currentBalance - orderTable.value(stor).value(it).volumeOrder();
+                        countOrder++;
+                    }
+                }
+            }
             order = Order(deliveryDate, orderDate, 0, from, to);
-            orderPlan = orderPlan.insertInc(i - deliveryTime, order);
+            orderPlan = orderPlan.insertInc(orderDate, order);
             qWarning()<<"from"<<from
                      <<"to"<<to
                     <<"deliveryDate"<<deliveryDate
@@ -123,9 +132,9 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
             qWarning()<<"balance"<<node.getBalance()
                      <<"currentBalance"<<currentBalance;
         }
-        qWarning()<<"the end day number"<<i;
         currentBalance -= expense;
-        qWarning()<<currentBalance;
+        qWarning()<<"the end day number"<<i;
+        qWarning()<<"balance in the end day"<<currentBalance;
     }
     if(countOrder == 0)
     {
