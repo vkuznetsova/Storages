@@ -27,6 +27,7 @@ void Swindow::createModel()
 {
     tableModel_ = new TableModel();
     reader_ = new StorageDatabaseReader("dataBaseName");
+    tableModelOrder_ = new TableModelOrder();
 }
 
 void Swindow::createView()
@@ -39,6 +40,12 @@ void Swindow::createView()
     tableView_->setEditTriggers(QAbstractItemView::DoubleClicked);
     tableView_->setSortingEnabled(true);
     tabWgt_ = new QTabWidget();
+    spBox_ = new QSpinBox();
+    spBox_->setMinimum(1);
+    enterCountDay_ = new QPushButton("Рассчитать план заказов");
+
+    QTableView *viewOrder = new QTableView();
+    viewOrder->setModel(tableModelOrder_);
 
     menu_ = new QMenu(this);
 
@@ -47,10 +54,21 @@ void Swindow::createView()
     mainLayout->addWidget(comboBox_);
     mainLayout->addWidget(tableView_);
 
+    QVBoxLayout *vbLayout = new QVBoxLayout();
+    vbLayout->addWidget(spBox_);
+    vbLayout->addWidget(enterCountDay_);
+    vbLayout->addWidget(viewOrder);
+
     QWidget *centralWidget = new QWidget();
     centralWidget->setLayout(mainLayout);
 
+    QWidget *wgt = new QWidget();
+    wgt->setLayout(vbLayout);
+
     setCentralWidget(centralWidget);
+    tabWgt_->addTab(centralWidget, "Склады");
+    tabWgt_->addTab(wgt, "Расчет плана закупок");
+    setCentralWidget(tabWgt_);
 }
 
 void Swindow::createConnections()

@@ -15,9 +15,12 @@
 #include <QComboBox>
 #include <QDataWidgetMapper>
 #include <QMessageBox>
+#include <QSpinBox>
+#include <QHBoxLayout>
 
 #include "TableModel.h"
 #include "StorageDatabaseReader.h"
+#include "TableModelOrder.h"
 
 class Swindow:public QMainWindow
 {
@@ -42,9 +45,16 @@ private slots:
 
 private:
     QTableView *tableView_;
+
     TableModel *tableModel_;
 
+    TableModelOrder *tableModelOrder_;
+
     QPushButton *addChildButton_;
+
+    QPushButton *enterCountDay_;
+
+    QSpinBox *spBox_;
 
     QMenu *menu_;
 
