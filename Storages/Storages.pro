@@ -40,7 +40,9 @@ SOURCES += main.cpp \
     TStorageTreeNode.cpp \
     Order.cpp \
     OrderGenerator.cpp \
-    TOrderGenerator.cpp
+    TOrderGenerator.cpp \
+    TableModelOrder.cpp \
+    TTableModelOrder.cpp
 
 HEADERS += \
     StorageTree.h \
@@ -67,4 +69,6 @@ HEADERS += \
     TStorageTreeNode.h \
     Order.h \
     OrderGenerator.h \
-    TOrderGenerator.h
+    TOrderGenerator.h \
+    TableModelOrder.h \
+    TTableModelOrder.h

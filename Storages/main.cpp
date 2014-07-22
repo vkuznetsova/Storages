@@ -6,6 +6,7 @@
 #include "TStorageDatabaseInterface.h"
 #include "TStorageTreeNode.h"
 #include "TOrderGenerator.h"
+#include "TTableModelOrder.h"
 
 #include "Swindow.h"
 
@@ -57,8 +58,11 @@ int main(int argc, char *argv[])
     //        TStorageTreeNode tStorageTreeNode;
     //        QTest::qExec(&tStorageTreeNode);
 
-    TOrderGenerator tOrderGenerator;
-    QTest::qExec(&tOrderGenerator);
+//    TOrderGenerator tOrderGenerator;
+//    QTest::qExec(&tOrderGenerator);
+
+    TTableModelOrder tTableModelOrder;
+    QTest::qExec(&tTableModelOrder);
 
     Q_UNUSED(argc)
     Q_UNUSED(argv)

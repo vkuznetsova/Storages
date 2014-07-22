@@ -52,6 +52,8 @@ private:
 
     StorageDatabaseReader *reader_;
 
+    QTabWidget *tabWgt_;
+
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
 

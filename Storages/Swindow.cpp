@@ -38,6 +38,7 @@ void Swindow::createView()
     tableView_->setModel(tableModel_);
     tableView_->setEditTriggers(QAbstractItemView::DoubleClicked);
     tableView_->setSortingEnabled(true);
+    tabWgt_ = new QTabWidget();
 
     menu_ = new QMenu(this);
 

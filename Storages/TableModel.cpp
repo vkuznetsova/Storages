@@ -61,7 +61,6 @@ QVariant TableModel::recursiveData(const StorageTreeNode &parent, const QModelIn
             QString idChild = children.at(i);
             if(index.row() == i)
             {
-
                 if(index.column() == columnNode)
                 {
                     return idChild;

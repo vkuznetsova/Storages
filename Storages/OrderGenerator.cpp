@@ -8,19 +8,6 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
                                    const StorageTree &tree,
                                    const QString &storage, const int days)
 {
-    qWarning()<< "input:";
-    foreach (const QString &stor, orderTable.keys())
-    {
-        foreach (const int it, orderTable.value(stor).keys())
-        {
-            qWarning()<< orderTable.value(stor).value(it).deliveryTime()
-                      << orderTable.value(stor).value(it).orderTime()
-                      << orderTable.value(stor).value(it).volumeOrder()
-                      << orderTable.value(stor).value(it).from()
-                      << orderTable.value(stor).value(it).to();
-        }
-    }
-
     if(storage.isNull())
     {
         return;
