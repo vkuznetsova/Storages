@@ -52,7 +52,8 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
             {
                 foreach (const int it, orderTable.value(stor).keys())
                 {
-                    if(deliveryDate == orderTable.value(stor).value(it).orderTime())
+                    if(deliveryDate == orderTable.value(stor).value(it).orderTime()
+                            && orderTable.value(stor).value(it).from() == storage)
                     {
                         volumeOrder += orderTable.value(stor).value(it).volumeOrder();
                         qWarning()<< orderTable.value(stor).value(it).deliveryTime()
@@ -129,4 +130,18 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
         return;
     }
     orderTable.insertInc(storage, orderPlan);
+}
+
+void OrderGenerator::calcOrderPlans(TreeOrderTable &orderTable,
+                                    const StorageTree &tree,
+                                    const int days)
+{
+    QList<QString> nodes = tree.walkUpTree();
+    qWarning()<<"nodes"<<nodes;
+    for(int i = 0; i < nodes.size(); i++)
+    {
+        qWarning()<<"nodes[i]"<<nodes[i];
+        calcOrderPlan(orderTable, tree, nodes[i], days);
+    }
+
 }

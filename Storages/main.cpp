@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
     //    }
     //    StorageTree().readFromJSONFile("file2");
 #ifdef TESTS
-            TStorageTree tStorageTree;
-            QTest::qExec(&tStorageTree);
+//            TStorageTree tStorageTree;
+//            QTest::qExec(&tStorageTree);
 
 
 //    TTableModel tTableModel;
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
     //        TStorageTreeNode tStorageTreeNode;
     //        QTest::qExec(&tStorageTreeNode);
 
-//    TOrderGenerator tOrderGenerator;
-//    QTest::qExec(&tOrderGenerator);
+    TOrderGenerator tOrderGenerator;
+    QTest::qExec(&tOrderGenerator);
 
 //    TTableModelOrder tTableModelOrder;
 //    QTest::qExec(&tTableModelOrder);

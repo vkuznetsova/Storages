@@ -17,6 +17,9 @@ private slots:
 
     void TestCalcOrderPlan_data();
     void TestCalcOrderPlan();
+
+    void TestCalcOrderPlans_data();
+    void TestCalcOrderPlans();
 };
 
 #endif // TORDERGENERATOR_H

@@ -345,6 +345,39 @@ void TOrderGenerator::TestCalcOrderPlan_data()
                            .insertInc(1, Order(6, 1, 50, "s1", "s2"))
                            .insertInc(2, Order(7, 2, 0, "s1", "s2"))));
 
+    QTest::newRow("two-nodes8")
+            << (TreeOrderTable()
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(2, 1, 5, "s1", "s2"))
+                           .insertInc(2, Order(3, 2, 5, "s1", "s2"))
+                           .insertInc(3, Order(4, 3, 5, "s1", "s2"))
+                           .insertInc(4, Order(5, 4, 5, "s1", "s2"))
+                           .insertInc(5, Order(6, 5, 5, "s1", "s2"))
+                           .insertInc(6, Order(7, 6, 5, "s1", "s2"))))
+            << (StorageTree().setRoot("s1")
+                .addChild("s1", "s2"))
+               .setBalance("s1", 100)
+               .setExpense("s1", 1)
+               .setDeliveryTime("s1", 3)
+               .setBalance("s2", 0)
+               .setExpense("s2", 5)
+               .setDeliveryTime("s2", 1)
+            << "s1"
+            << 7
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(4, 1, 0, QString(), "s1"))
+                           .insertInc(2, Order(5, 2, 0, QString(), "s1"))
+                           .insertInc(3, Order(6, 3, 0, QString(), "s1"))
+                           .insertInc(4, Order(7, 4, 0, QString(), "s1")))
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(2, 1, 5, "s1", "s2"))
+                           .insertInc(2, Order(3, 2, 5, "s1", "s2"))
+                           .insertInc(3, Order(4, 3, 5, "s1", "s2"))
+                           .insertInc(4, Order(5, 4, 5, "s1", "s2"))
+                           .insertInc(5, Order(6, 5, 5, "s1", "s2"))
+                           .insertInc(6, Order(7, 6, 5, "s1", "s2"))));
+
     QTest::newRow("three-nodes1")
             << (TreeOrderTable()
                 .insertInc("s2", OrderPlan()
@@ -447,4 +480,99 @@ void TOrderGenerator::TestCalcOrderPlan()
     OrderGenerator::calcOrderPlan(orderTable, tree, storage, days);
 
     QCOMPARE(orderTable, expected);
+}
+
+void TOrderGenerator::TestCalcOrderPlans_data()
+{
+    QTest::addColumn<TreeOrderTable>("orderTable");
+    QTest::addColumn<StorageTree>("tree");
+    QTest::addColumn<int>("days");
+    QTest::addColumn<TreeOrderTable>("expected");
+
+    QTest::newRow("empty") << TreeOrderTable()
+                           << StorageTree()
+                           << 1
+                           << TreeOrderTable();
+
+    QTest::newRow("single")
+            << TreeOrderTable()
+            << (StorageTree().setRoot("s1")
+                .setBalance("s1", 0)
+                .setExpense("s1", 1)
+                .setDeliveryTime("s1", 0))
+            << 1
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(1, 1, 0, QString(), "s1"))));
+
+    QTest::newRow("two-nodes")
+            << TreeOrderTable()
+            << (StorageTree().setRoot("s1")
+                .addChild("s1", "s2"))
+               .setBalance("s1", 0)
+               .setExpense("s1", 1)
+               .setDeliveryTime("s1", 3)
+               .setBalance("s2", 0)
+               .setExpense("s2", 10)
+               .setDeliveryTime("s2", 5)
+            << 7
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(4, 1, 3, QString(), "s1"))
+                           .insertInc(2, Order(5, 2, 0, QString(), "s1"))
+                           .insertInc(3, Order(6, 3, 0, QString(), "s1"))
+                           .insertInc(4, Order(7, 4, 3, QString(), "s1")))
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(6, 1, 50, "s1", "s2"))
+                           .insertInc(2, Order(7, 2, 0, "s1", "s2"))));
+
+    QTest::newRow("three-nodes")
+            << TreeOrderTable()
+            << (StorageTree().setRoot("s1")
+                .addChild("s1", "s2")
+                .addChild("s1", "s3"))
+               .setBalance("s1", 100)
+               .setExpense("s1", 1)
+               .setDeliveryTime("s1", 3)
+               .setBalance("s2", 0)
+               .setExpense("s2", 10)
+               .setDeliveryTime("s2", 1)
+               .setBalance("s3", 0)
+               .setExpense("s3", 5)
+               .setDeliveryTime("s3", 1)
+            << 7
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(4, 1, 0, QString(), "s1"))
+                           .insertInc(2, Order(5, 2, 0, QString(), "s1"))
+                           .insertInc(3, Order(6, 3, 0, QString(), "s1"))
+                           .insertInc(4, Order(7, 4, 0, QString(), "s1")))
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(2, 1, 10, "s1", "s2"))
+                           .insertInc(2, Order(3, 2, 10, "s1", "s2"))
+                           .insertInc(3, Order(4, 3, 10, "s1", "s2"))
+                           .insertInc(4, Order(5, 4, 10, "s1", "s2"))
+                           .insertInc(5, Order(6, 5, 10, "s1", "s2"))
+                           .insertInc(6, Order(7, 6, 10, "s1", "s2")))
+                .insertInc("s3", OrderPlan()
+                           .insertInc(1, Order(2, 1, 5, "s1", "s3"))
+                           .insertInc(2, Order(3, 2, 5, "s1", "s3"))
+                           .insertInc(3, Order(4, 3, 5, "s1", "s3"))
+                           .insertInc(4, Order(5, 4, 5, "s1", "s3"))
+                           .insertInc(5, Order(6, 5, 5, "s1", "s3"))
+                           .insertInc(6, Order(7, 6, 5, "s1", "s3"))));
+
+}
+
+void TOrderGenerator::TestCalcOrderPlans()
+{
+    QFETCH(TreeOrderTable, orderTable);
+    QFETCH(StorageTree, tree);
+    QFETCH(int, days);
+    QFETCH(TreeOrderTable, expected);
+
+    OrderGenerator::calcOrderPlans(orderTable, tree, days);
+
+    QCOMPARE(orderTable, expected);
+
 }

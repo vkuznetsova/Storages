@@ -9,12 +9,12 @@ class OrderGenerator
 {
 public:
     OrderGenerator();
-
-    //после вызова метода в orderTable должен появиться OrderPlan для storage
     static void calcOrderPlan(TreeOrderTable &orderTable,
                               const StorageTree &tree,
                               const QString &storage,
                               const int days);
+
+    static void calcOrderPlans(TreeOrderTable &orderTable, const StorageTree &tree, const int days);
 };
 
 #endif // ORDERGENERATOR_H
