@@ -99,3 +99,4 @@ void StorageDatabaseReader::writeToFile(const QString &fileName)
     file.write(data);
     file.close();
 }
+

@@ -102,6 +102,8 @@ private slots:
     void TestStorageTree_data();
     void TestStorageTree();
 
+    void TestWalkUpTree_data();
+    void TestWalkUpTree();
 };
 
 #endif // TSTORAGETREE_H

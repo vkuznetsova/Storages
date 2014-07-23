@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
     //    }
     //    StorageTree().readFromJSONFile("file2");
 #ifdef TESTS
-//            TStorageTree tStorageTree;
-//            QTest::qExec(&tStorageTree);
+            TStorageTree tStorageTree;
+            QTest::qExec(&tStorageTree);
 
 
 //    TTableModel tTableModel;
@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
 //    TOrderGenerator tOrderGenerator;
 //    QTest::qExec(&tOrderGenerator);
 
-    TTableModelOrder tTableModelOrder;
-    QTest::qExec(&tTableModelOrder);
+//    TTableModelOrder tTableModelOrder;
+//    QTest::qExec(&tTableModelOrder);
 
     Q_UNUSED(argc)
     Q_UNUSED(argv)

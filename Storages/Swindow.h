@@ -21,6 +21,7 @@
 #include "TableModel.h"
 #include "StorageDatabaseReader.h"
 #include "TableModelOrder.h"
+#include "OrderGenerator.h"
 
 class Swindow:public QMainWindow
 {
@@ -42,6 +43,7 @@ private slots:
     void addNewChild();
     void removeNode();
     void currentTreeChanged(const int index);
+    void getOrder(const int index);
 
 private:
     QTableView *tableView_;

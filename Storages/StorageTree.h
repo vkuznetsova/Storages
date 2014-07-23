@@ -131,6 +131,8 @@ public:
 
     QJsonObject toJSON() const;
 
+    QList<QString> walkUpTree() const;
+
     static const QString fromKey;
     static const QString toKey;
     static const QString idKey;
@@ -145,6 +147,8 @@ protected:
     int level(const QString &node, const QString &find, const int l) const;
 
     QStringList order(const QString &nodeID) const;
+
+    QList<QString> walkUpTree(const QString &nodeID) const;
 
 
 private:

@@ -4,6 +4,7 @@ const int TableModelOrder::columnFrom = 0;
 const int TableModelOrder::columnTo = 1;
 const int TableModelOrder::columnOrderDate = 2;
 const int TableModelOrder::columnDeliveryDate = 3;
+
 TableModelOrder::TableModelOrder()
 {
 }

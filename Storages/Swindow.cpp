@@ -56,6 +56,7 @@ void Swindow::createView()
 
     QVBoxLayout *vbLayout = new QVBoxLayout();
     vbLayout->addWidget(spBox_);
+    vbLayout->addWidget(comboBox_);
     vbLayout->addWidget(enterCountDay_);
     vbLayout->addWidget(viewOrder);
 
@@ -83,6 +84,8 @@ void Swindow::createConnections()
 
     connect(comboBox_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(currentTreeChanged(int)));
+    connect(spBox_, SIGNAL(valueChanged(int)), this, SLOT(getOrder(int)));
+
 }
 
 void Swindow::addNewChild()
@@ -113,6 +116,11 @@ void Swindow::currentTreeChanged(const int index)
     const QString treeID = comboBox_->itemText(index);
     StorageTree tree = reader.read(treeID);
     tableModel_->setTree(tree);
+}
+
+void Swindow::getOrder(const int index)
+{
+
 }
 
 void Swindow::contextMenuEvent(QContextMenuEvent *event)

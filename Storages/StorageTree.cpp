@@ -221,6 +221,36 @@ QStringList StorageTree::order(const QString &nodeID) const
 
     return nodes;
 }
+QList<QString> StorageTree::walkUpTree() const
+{
+    if(this->nodes_.isEmpty())
+    {
+        return QList<QString>();
+    }
+    else
+    {
+        return walkUpTree(rootID_);
+    }
+}
+
+QList<QString> StorageTree::walkUpTree(const QString &nodeID) const
+{
+    QList<QString> nodes;
+    if(childrenIDs(nodeID).isEmpty())
+    {
+        nodes<< nodeID;
+    }
+    else
+    {
+        foreach(const QString childID, childrenIDs(nodeID))
+        {
+            nodes << walkUpTree(childID);
+        }
+        nodes << nodeID;
+    }
+    return nodes;
+
+}
 
 QJsonArray StorageTree::nodesToJSONArray() const
 {
