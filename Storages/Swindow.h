@@ -17,6 +17,7 @@
 #include <QMessageBox>
 #include <QSpinBox>
 #include <QHBoxLayout>
+#include <QProgressBar>
 
 #include "TableModel.h"
 #include "StorageDatabaseReader.h"
@@ -43,7 +44,8 @@ private slots:
     void addNewChild();
     void removeNode();
     void currentTreeChanged(const int index);
-    void getOrder(const int index);
+    void calcOrderPlans();
+    void currentTreeChangedForOrder(const int index);
 
 private:
     QTableView *tableView_;
@@ -54,13 +56,14 @@ private:
 
     QPushButton *addChildButton_;
 
-    QPushButton *enterCountDay_;
+    QPushButton *calcOrderPlansButton_;
 
     QSpinBox *spBox_;
 
     QMenu *menu_;
 
     QComboBox *comboBox_;
+    QComboBox *comboBoxOrder_;
 
     StorageDatabaseReader *reader_;
 

@@ -48,6 +48,7 @@ int TableModel::rowCount(const QModelIndex &parent) const
 
 int TableModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return 5;
 }
 
@@ -97,7 +98,8 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 {
     const QString nodeID = nodeOrder_.value(index.row());
     const StorageTreeNode node = tree_.node(nodeID);
-    if (!index.isValid()) {
+    if (!index.isValid())
+    {
         return QVariant();
     }
     if (role == Qt::BackgroundRole && node.getBalance() < 0) {
@@ -287,4 +289,3 @@ void TableModel::setTree(const StorageTree &tree)
     nodeOrder_ = tree_.order();
     emit layoutChanged();
 }
-

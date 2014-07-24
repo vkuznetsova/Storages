@@ -16,6 +16,13 @@ Swindow::Swindow(int argc,
     {
         currentTreeChanged(0);
     }
+    if(comboBoxOrder_->count() > 0)
+    {
+        currentTreeChanged(0);
+    }
+    Q_UNUSED(argc)
+    Q_UNUSED(argv)
+    Q_UNUSED(app)
 }
 
 Swindow::~Swindow()
@@ -33,7 +40,9 @@ void Swindow::createModel()
 void Swindow::createView()
 {
     comboBox_ = new QComboBox();
+    comboBoxOrder_ = new QComboBox();
     comboBox_->addItems(reader_->readID());
+    comboBoxOrder_->addItems(reader_->readID());
     addChildButton_ = new QPushButton("Добавить потомка");
     tableView_ = new QTableView();
     tableView_->setModel(tableModel_);
@@ -42,10 +51,11 @@ void Swindow::createView()
     tabWgt_ = new QTabWidget();
     spBox_ = new QSpinBox();
     spBox_->setMinimum(1);
-    enterCountDay_ = new QPushButton("Рассчитать план заказов");
+    calcOrderPlansButton_ = new QPushButton("Рассчитать план заказов");
 
     QTableView *viewOrder = new QTableView();
     viewOrder->setModel(tableModelOrder_);
+    viewOrder->setSortingEnabled(true);
 
     menu_ = new QMenu(this);
 
@@ -56,8 +66,8 @@ void Swindow::createView()
 
     QVBoxLayout *vbLayout = new QVBoxLayout();
     vbLayout->addWidget(spBox_);
-    vbLayout->addWidget(comboBox_);
-    vbLayout->addWidget(enterCountDay_);
+    vbLayout->addWidget(comboBoxOrder_);
+    vbLayout->addWidget(calcOrderPlansButton_);
     vbLayout->addWidget(viewOrder);
 
     QWidget *centralWidget = new QWidget();
@@ -84,7 +94,11 @@ void Swindow::createConnections()
 
     connect(comboBox_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(currentTreeChanged(int)));
-    connect(spBox_, SIGNAL(valueChanged(int)), this, SLOT(getOrder(int)));
+
+    connect(calcOrderPlansButton_, SIGNAL(clicked()), this, SLOT(calcOrderPlans()));
+
+    connect(comboBoxOrder_, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(currentTreeChangedForOrder(int)));
 
 }
 
@@ -118,9 +132,21 @@ void Swindow::currentTreeChanged(const int index)
     tableModel_->setTree(tree);
 }
 
-void Swindow::getOrder(const int index)
+void Swindow::calcOrderPlans()
 {
+    TreeOrderTable orderTable;
+    int days = spBox_->value();
+    QString idTree = comboBoxOrder_->itemText(comboBoxOrder_->currentIndex());
+    const StorageTree tree = reader_->read(idTree);
+    tableModelOrder_->calcOrderPlans(orderTable, tree, days);
+    tableModelOrder_->setOrderTable(orderTable);
+}
 
+void Swindow::currentTreeChangedForOrder(const int index)
+{
+    StorageDatabaseReader reader("dataBaseName");
+    const QString treeID = comboBox_->itemText(index);
+    StorageTree tree = reader.read(treeID);
 }
 
 void Swindow::contextMenuEvent(QContextMenuEvent *event)

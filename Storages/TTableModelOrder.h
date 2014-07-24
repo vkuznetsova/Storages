@@ -21,6 +21,9 @@ private slots:
     void TestColumnCount();
 
     void TestHorizontalHeader();
+
+    void TestRowCount_data();
+    void TestRowCount();
 };
 
 #endif // TTABLEMODELORDER_H
