@@ -27,11 +27,11 @@ public:
 
     void setOrderTable(const TreeOrderTable &orderTable);
 
-    virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder);
+     QString rowID(const int row) const;
 
-    QString rowID(const int row) const;
+     QString columnID(const int column) const;
 
-    QString columnID(const int column) const;
+    // virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
 
     static const int columnFrom;
     static const int columnTo;
@@ -39,16 +39,18 @@ public:
     static const int columnDeliveryDate;
 
 private:
-    static bool greaterThan(const QPair<QString, QVariant> &pair1,
-                            const QPair<QString, QVariant> &pair2);
-    static bool lessThan(const QPair<QString, QVariant> &pair1,
-                            const QPair<QString, QVariant> &pair2);
+
+//    static bool greaterThan(const QPair<QString, QVariant> &pair1,
+//                            const QPair<QString, QVariant> &pair2);
+//    static bool lessThan(const QPair<QString, QVariant> &pair1,
+//                            const QPair<QString, QVariant> &pair2);
 
     StorageDatabaseReader reader_;
 
     TreeOrderTable orderTable_;
 
-    QList<QString> nodes_;
+   // QStringList nodes_;
+
 };
 
 #endif // TABLEMODELORDER_H

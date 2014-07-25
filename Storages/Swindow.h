@@ -69,6 +69,8 @@ private:
 
     QTabWidget *tabWgt_;
 
+    QTableView *viewOrder_;
+
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
 

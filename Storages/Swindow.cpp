@@ -53,9 +53,9 @@ void Swindow::createView()
     spBox_->setMinimum(1);
     calcOrderPlansButton_ = new QPushButton("Рассчитать план заказов");
 
-    QTableView *viewOrder = new QTableView();
-    viewOrder->setModel(tableModelOrder_);
-    viewOrder->setSortingEnabled(true);
+    viewOrder_ = new QTableView();
+    viewOrder_->setModel(tableModelOrder_);
+    viewOrder_->setSortingEnabled(true);
 
     menu_ = new QMenu(this);
 
@@ -68,7 +68,7 @@ void Swindow::createView()
     vbLayout->addWidget(spBox_);
     vbLayout->addWidget(comboBoxOrder_);
     vbLayout->addWidget(calcOrderPlansButton_);
-    vbLayout->addWidget(viewOrder);
+    vbLayout->addWidget(viewOrder_);
 
     QWidget *centralWidget = new QWidget();
     centralWidget->setLayout(mainLayout);
@@ -95,7 +95,8 @@ void Swindow::createConnections()
     connect(comboBox_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(currentTreeChanged(int)));
 
-    connect(calcOrderPlansButton_, SIGNAL(clicked()), this, SLOT(calcOrderPlans()));
+    connect(calcOrderPlansButton_, SIGNAL(clicked()),
+            this, SLOT(calcOrderPlans()));
 
     connect(comboBoxOrder_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(currentTreeChangedForOrder(int)));

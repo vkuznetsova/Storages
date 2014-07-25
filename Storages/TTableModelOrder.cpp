@@ -96,3 +96,51 @@ void TTableModelOrder::TestRowCount()
     QCOMPARE(model.rowCount(QModelIndex()), rowCount);
 
 }
+
+//void TTableModelOrder::TestSort_data()
+//{
+//    QTest::addColumn<TreeOrderTable>("orderTable");
+//    QTest::addColumn<int>("column");
+//    QTest::addColumn <Qt::SortOrder>("order");
+//    QTest::addColumn <QStringList >("data");
+
+//    QTest::newRow("empty")<< TreeOrderTable()
+//                          << 0
+//                          << Qt::AscendingOrder
+//                          << QStringList();
+
+//    QTest::newRow("single")<< (TreeOrderTable()
+//                               .insertInc("s1", OrderPlan()
+//                                          .insertInc(1, Order(1, 1, 0, QString(), "s1"))))
+//                           << 1
+//                           << Qt::AscendingOrder
+//                           << (QStringList()<< QString()<< "s1");
+
+//}
+
+//void TTableModelOrder::TestSort()
+//{
+//    QFETCH(TreeOrderTable, orderTable);
+//    QFETCH(int, column);
+//    QFETCH(Qt::SortOrder, order);
+//    QFETCH(QStringList, data);
+
+//    TableModelOrder modelOrder(orderTable);
+//    modelOrder.sort(column, order);
+
+//    QStringList modelDataOrder;
+//    for(int i = 0; i < modelDataOrder.count(); i++)
+//    {
+//        QStringList rowData;
+//        rowData << modelOrder.data(modelOrder.index(i, 0)).toString();
+
+//        modelDataOrder << rowData.join(" ;");
+//    }
+
+//    const QStringList actual = modelDataOrder;
+//    const QStringList expected = data;
+
+//    QCOMPARE(actual, expected);
+//}
+
+Q_DECLARE_METATYPE(Qt::SortOrder)

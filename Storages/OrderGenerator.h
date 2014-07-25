@@ -14,7 +14,9 @@ public:
                               const QString &storage,
                               const int days);
 
-    static void calcOrderPlans(TreeOrderTable &orderTable, const StorageTree &tree, const int days);
+    static void calcOrderPlans(TreeOrderTable &orderTable,
+                               const StorageTree &tree,
+                               const int days);
 };
 
 #endif // ORDERGENERATOR_H
