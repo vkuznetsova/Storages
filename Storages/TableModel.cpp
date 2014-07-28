@@ -102,7 +102,8 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     {
         return QVariant();
     }
-    if (role == Qt::BackgroundRole && node.getBalance() < 0) {
+    if (role == Qt::BackgroundRole && node.getBalance() < 0)
+    {
         QColor color = Qt::red;
         return QBrush(color);
     }

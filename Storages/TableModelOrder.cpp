@@ -57,29 +57,23 @@ QVariant TableModelOrder::data(const QModelIndex &index, int role) const
     {
         return QVariant();
     }
-    const int row = index.row();
-    const int day = row / orderTable_.numStorages + 1;
-    const int storageIndex = row % orderTable_.numStorages;
-    QList<QString> storages = orderTable_.keys();
-    qSort(storages.begin(), storages.end());
-    QString storage = storages[storageIndex];
     if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
         if(index.column() == columnFrom)
         {
-            return orderTable_.value(storage).value(day).from();
+            return orders_[index.row()].from();
         }
         if(index.column() == columnTo)
         {
-            return orderTable_.value(storage).value(day).to();
+           return orders_[index.row()].to();
         }
         if(index.column() == columnDeliveryDate)
         {
-            return orderTable_.value(storage).value(day).deliveryTime();
+            return orders_[index.row()].deliveryTime();
         }
         if(index.column() == columnOrderDate)
         {
-            return orderTable_.value(storage).value(day).orderTime();
+            return orders_[index.row()].orderTime();
         }
     }
     return QVariant();
@@ -122,7 +116,7 @@ void TableModelOrder::setOrderTable(const TreeOrderTable &orderTable)
 {
     orderTable_ = orderTable;
     orders_ = TreeOrderTable().toList(orderTable);
-    emit layoutChanged();
+    layoutChanged();
 }
 
 void TableModelOrder::sort(int column, Qt::SortOrder order)
@@ -157,6 +151,11 @@ Order TableModelOrder::rowID(const int row) const
                         orders_.at(row).to(),
                         orders_.at(row).orderTime(),
                         orders_.at(row).deliveryTime());
+    qWarning()<< "rowID";
+    qWarning()<< orders_.at(row).from()
+              << orders_.at(row).to()
+              << orders_.at(row).orderTime()
+              << orders_.at(row).deliveryTime();
     return order;
 }
 
