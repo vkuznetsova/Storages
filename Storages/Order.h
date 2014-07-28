@@ -14,6 +14,11 @@ public:
           const QString &from,
           const QString &to);
 
+    Order(const QString &from,
+          const QString &to,
+          const int orderTime,
+          const int deliveryTime);
+
     int deliveryTime() const;
 
     int orderTime() const;
@@ -58,6 +63,7 @@ public:
         rowCount += plan.keys().count();
         return *this;
     }
+    QList<Order> toList(const TreeOrderTable &orderTable) const;
 };
 
 Q_DECLARE_METATYPE(Order)

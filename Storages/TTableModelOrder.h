@@ -25,8 +25,8 @@ private slots:
     void TestRowCount_data();
     void TestRowCount();
 
-//    void TestSort_data();
-//    void TestSort();
+    void TestSort_data();
+    void TestSort();
 };
 
 #endif // TTABLEMODELORDER_H

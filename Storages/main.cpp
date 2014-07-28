@@ -23,27 +23,6 @@ int main(int argc, char *argv[])
 //        tree.setID("idTree" + QString::number(i));
 //        writer.write(tree);
 //    }
-    // reader.writeToFile("file");
-
-    //    StorageTree().readFromJSONFile("file");
-    //    StorageDatabaseWriter writer("dataBaseName1");
-    //    for(int i = 0; i < listId.size(); i++)
-    //    {
-    //        QString idTree = listId.at(i);
-    //        StorageTree tree = reader.read(idTree);
-    //        reader.writeToFile(idTree, "file2");
-    //        QJsonObject obj = tree.toJSON();
-    //        StorageTree jsonTree = StorageTree(idTree, obj);
-    //        writer.write(jsonTree);
-    //    }
-    //    StorageDatabaseReader reader1("dataBaseName1");
-    //    listId = reader1.readID();
-    //    for(int i = 0; i < listId.size(); i++)
-    //    {
-    //        QString idTree = listId.at(i);
-    //        reader1.writeToFile(idTree, "file2");
-    //    }
-    //    StorageTree().readFromJSONFile("file2");
 #ifdef TESTS
 //            TStorageTree tStorageTree;
 //            QTest::qExec(&tStorageTree);

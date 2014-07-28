@@ -97,50 +97,80 @@ void TTableModelOrder::TestRowCount()
 
 }
 
-//void TTableModelOrder::TestSort_data()
-//{
-//    QTest::addColumn<TreeOrderTable>("orderTable");
-//    QTest::addColumn<int>("column");
-//    QTest::addColumn <Qt::SortOrder>("order");
-//    QTest::addColumn <QStringList >("data");
+void TTableModelOrder::TestSort_data()
+{
+    QTest::addColumn <TreeOrderTable> ("orderTable");
+    QTest::addColumn <int> ("column");
+    QTest::addColumn <Qt::SortOrder>("order");
+    QTest::addColumn <QList<Order> >("data");
 
-//    QTest::newRow("empty")<< TreeOrderTable()
-//                          << 0
-//                          << Qt::AscendingOrder
-//                          << QStringList();
+    QTest::newRow("empty-tree") << TreeOrderTable()
+                                << 0
+                                << Qt::AscendingOrder
+                                << QList<Order>();
 
-//    QTest::newRow("single")<< (TreeOrderTable()
-//                               .insertInc("s1", OrderPlan()
-//                                          .insertInc(1, Order(1, 1, 0, QString(), "s1"))))
-//                           << 1
-//                           << Qt::AscendingOrder
-//                           << (QStringList()<< QString()<< "s1");
+    QTest::newRow("single")<< (TreeOrderTable()
+                               .insertInc("s1", OrderPlan()
+                                          .insertInc(1, Order(1, 1, 0, QString(), "s1"))))
+                           << 1
+                           << Qt::AscendingOrder
+                           << (QList<Order>()
+                               << Order(1, 1, 0, QString(), "s1"));
 
-//}
+    QTest::newRow("two1")
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(2, 1, 2, QString(), "s1")))
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(3, 2, 1, "s1", "s2"))))
+            << 2
+            << Qt::AscendingOrder
+            << (QList<Order>()
+                << Order(2, 1, 2, QString(), "s1")
+                << Order(3, 2, 1, "s1", "s2"));
 
-//void TTableModelOrder::TestSort()
-//{
-//    QFETCH(TreeOrderTable, orderTable);
-//    QFETCH(int, column);
-//    QFETCH(Qt::SortOrder, order);
-//    QFETCH(QStringList, data);
+    QTest::newRow("two2")
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(2, 1, 2, QString(), "s1")))
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(3, 2, 1, "s1", "s2"))))
+            << 1
+            << Qt::AscendingOrder
+            << (QList<Order>()
+                << Order(2, 1, 2, QString(), "s1")
+                << Order(3, 2, 1, "s1", "s2"));
 
-//    TableModelOrder modelOrder(orderTable);
-//    modelOrder.sort(column, order);
+    QTest::newRow("three1")
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(2, 1, 1, QString(), "s1"))
+                           .insertInc(2, Order(3, 2, 5, QString(), "s1"))
+                           .insertInc(3, Order(4, 3, 5, QString(), "s1"))))
+            << 3
+            << Qt::DescendingOrder
+            << (QList<Order>()
+                << Order(4, 3, 5, QString(), "s1")
+                << Order(3, 2, 5, QString(), "s1")
+                << Order(2, 1, 1, QString(), "s1"));
 
-//    QStringList modelDataOrder;
-//    for(int i = 0; i < modelDataOrder.count(); i++)
-//    {
-//        QStringList rowData;
-//        rowData << modelOrder.data(modelOrder.index(i, 0)).toString();
+}
 
-//        modelDataOrder << rowData.join(" ;");
-//    }
+void TTableModelOrder::TestSort()
+{
+    QFETCH(TreeOrderTable, orderTable);
+    QFETCH(int, column);
+    QFETCH(Qt::SortOrder, order);
+    QFETCH(QList<Order>, data);
 
-//    const QStringList actual = modelDataOrder;
-//    const QStringList expected = data;
+    TableModelOrder modelOrder(orderTable);
+    modelOrder.sort(column, order);
 
-//    QCOMPARE(actual, expected);
-//}
+    QList<Order> rowData = TreeOrderTable().toList(orderTable);
+    const QList<Order> actual = rowData;
+    const QList<Order> expected = data;
 
+    QCOMPARE(actual, expected);
+
+}
 Q_DECLARE_METATYPE(Qt::SortOrder)

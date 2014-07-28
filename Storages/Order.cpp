@@ -14,6 +14,14 @@ Order::Order(const int deliveryTime, const int orderTime, const int volumeOrder,
 {
 }
 
+Order::Order(const QString &from, const QString &to, const int orderTime, const int deliveryTime)
+{
+    from_ = from;
+    to_ = to;
+    orderTime_ = orderTime;
+    deliveryTime_ = deliveryTime;
+}
+
 int Order::deliveryTime() const
 {
     return deliveryTime_;
@@ -46,4 +54,19 @@ bool Order::operator ==(const Order &order) const
             && volumeOrder_ == order.volumeOrder_
             && from_ == order.from_
             && to_ == order.to_;
+}
+
+
+QList<Order> TreeOrderTable::toList(const TreeOrderTable &orderTable) const
+{
+    QList<Order> listOrders;
+    foreach (const QString &stor, orderTable.keys())
+    {
+        foreach (const int day, orderTable.value(stor).keys())
+        {
+            listOrders<<orderTable.value(stor).value(day);
+        }
+    }
+
+    return listOrders;
 }

@@ -63,7 +63,7 @@ QVariant TableModelOrder::data(const QModelIndex &index, int role) const
     QList<QString> storages = orderTable_.keys();
     qSort(storages.begin(), storages.end());
     QString storage = storages[storageIndex];
-    if(role == Qt::DisplayRole)
+    if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
         if(index.column() == columnFrom)
         {
@@ -82,7 +82,6 @@ QVariant TableModelOrder::data(const QModelIndex &index, int role) const
             return orderTable_.value(storage).value(day).orderTime();
         }
     }
-
     return QVariant();
 }
 
@@ -116,57 +115,89 @@ QVariant TableModelOrder::headerData(int section, Qt::Orientation orientation, i
 void TableModelOrder::calcOrderPlans(TreeOrderTable &orderTable, const StorageTree &tree, const int days)
 {
     OrderGenerator::calcOrderPlans(orderTable, tree, days);
-    layoutChanged();
+    emit layoutChanged();
 }
 
 void TableModelOrder::setOrderTable(const TreeOrderTable &orderTable)
 {
     orderTable_ = orderTable;
+    orders_ = TreeOrderTable().toList(orderTable);
     emit layoutChanged();
 }
 
-//QString TableModelOrder::rowID(const int row) const
-//{
-//    return nodes_.at(row);
-//}
+void TableModelOrder::sort(int column, Qt::SortOrder order)
+{
+    QList< QPair<Order, QVariant> > modelOrder;
 
-//QString TableModelOrder::columnID(const int column) const
-//{
-//    return nodes_.at(column);
-//}
+    for(int i = 0; i < rowCount(); i++)
+    {
+        modelOrder << QPair<Order, QVariant>(rowID(i), data(index(i, column), Qt::EditRole));
+    }
+    if(order == Qt::AscendingOrder)
+    {
+        std::sort(modelOrder.begin(), modelOrder.end(), greaterThan);
+    }
+    else
+    {
+        std::sort(modelOrder.begin(), modelOrder.end(), lessThan);
+    }
 
-//void TableModelOrder::sort(int column, Qt::SortOrder order)
-//{
-//    QList< QPair<QString, QVariant> > modelDataOrder;
-//    for(int i = 0; i < rowCount(); i++)
-//    {
-//        modelDataOrder << QPair<QString, QVariant>(rowID(i), data(index(i, column), Qt::EditRole));
-//    }
-//    if(order == Qt::AscendingOrder)
-//    {
-//        std::sort(modelDataOrder.begin(), modelDataOrder.end(), greaterThan);
-//    }
-//    else
-//    {
-//        std::sort(modelDataOrder.begin(), modelDataOrder.end(), lessThan);
-//    }
+    orders_.clear();
 
-//    nodes_.clear();
+    for(int i = 0; i < modelOrder.size(); i++)
+    {
+        orders_ << modelOrder.at(i).first;
+    }
+    emit layoutChanged();
+}
 
-//    for(int i = 0; i < modelDataOrder.size(); i++)
-//    {
-//        nodes_ << modelDataOrder.at(i).first;
-//    }
-//    emit layoutChanged();
+Order TableModelOrder::rowID(const int row) const
+{
+    Order order = Order(orders_.at(row).from(),
+                        orders_.at(row).to(),
+                        orders_.at(row).orderTime(),
+                        orders_.at(row).deliveryTime());
+    return order;
+}
 
-//}
+Order TableModelOrder::columnID(const int column) const
+{
+    Order order = Order(orders_.at(column).from(),
+                        orders_.at(column).to(),
+                        orders_.at(column).orderTime(),
+                        orders_.at(column).deliveryTime());
+    return order;
+}
 
-//bool TableModelOrder::greaterThan(const QPair<QString, QVariant> &pair1, const QPair<QString, QVariant> &pair2)
-//{
-//    return pair1.second > pair2.second;
-//}
+bool TableModelOrder::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    Q_UNUSED(value)
+    if(index.isValid() && role == Qt::EditRole)
+    {
+        emit dataChanged(index, index);
+        return true;
+    }
+    return false;
+}
 
-//bool TableModelOrder::lessThan(const QPair<QString, QVariant> &pair1, const QPair<QString, QVariant> &pair2)
-//{
-//    return pair1.second < pair2.second;
-//}
+Qt::ItemFlags TableModelOrder::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    if(index.isValid())
+    {
+        flags |= Qt::ItemIsEditable;
+    }
+    return flags;
+}
+
+bool TableModelOrder::greaterThan(const QPair<Order, QVariant> &pair1,
+                                  const QPair<Order, QVariant> &pair2)
+{
+    return pair1.second > pair2.second;
+}
+
+bool TableModelOrder::lessThan(const QPair<Order, QVariant> &pair1,
+                               const QPair<Order, QVariant> &pair2)
+{
+    return pair1.second < pair2.second;
+}

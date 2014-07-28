@@ -43,19 +43,21 @@ void Swindow::createView()
     comboBoxOrder_ = new QComboBox();
     comboBox_->addItems(reader_->readID());
     comboBoxOrder_->addItems(reader_->readID());
+
     addChildButton_ = new QPushButton("Добавить потомка");
+    calcOrderPlansButton_ = new QPushButton("Рассчитать план заказов");
+
     tableView_ = new QTableView();
     tableView_->setModel(tableModel_);
     tableView_->setEditTriggers(QAbstractItemView::DoubleClicked);
     tableView_->setSortingEnabled(true);
-    tabWgt_ = new QTabWidget();
-    spBox_ = new QSpinBox();
-    spBox_->setMinimum(1);
-    calcOrderPlansButton_ = new QPushButton("Рассчитать план заказов");
-
     viewOrder_ = new QTableView();
     viewOrder_->setModel(tableModelOrder_);
     viewOrder_->setSortingEnabled(true);
+
+    tabWgt_ = new QTabWidget();
+    spBox_ = new QSpinBox();
+    spBox_->setMinimum(1);
 
     menu_ = new QMenu(this);
 
@@ -100,7 +102,6 @@ void Swindow::createConnections()
 
     connect(comboBoxOrder_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(currentTreeChangedForOrder(int)));
-
 }
 
 void Swindow::addNewChild()
