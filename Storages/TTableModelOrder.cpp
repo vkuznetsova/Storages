@@ -7,7 +7,7 @@ TTableModelOrder::TTableModelOrder()
 void TTableModelOrder::TestColumnCount()
 {
     TableModelOrder modelOrder;
-    QCOMPARE(modelOrder.columnCount(QModelIndex()), 4);
+    QCOMPARE(modelOrder.columnCount(QModelIndex()), 5);
 }
 
 void TTableModelOrder::TestHorizontalHeader()
@@ -17,6 +17,7 @@ void TTableModelOrder::TestHorizontalHeader()
     QCOMPARE(modelOrder.headerData(TTableModelOrder::headerColumnTo, Qt::Horizontal), QVariant("Куда"));
     QCOMPARE(modelOrder.headerData(TTableModelOrder::headerColumnOrderDate, Qt::Horizontal), QVariant("Дата заказа"));
     QCOMPARE(modelOrder.headerData(TTableModelOrder::headerColumnDeliveryDate, Qt::Horizontal), QVariant("Дата доставки"));
+    QCOMPARE(modelOrder.headerData(TTableModelOrder::headerColumnVolumeOrder, Qt::Horizontal), QVariant("Объем заказа"));
 }
 
 void TTableModelOrder::TestRowCount_data()
@@ -154,6 +155,19 @@ void TTableModelOrder::TestSort_data()
                 << Order(3, 2, 5, QString(), "s1")
                 << Order(2, 1, 1, QString(), "s1"));
 
+    QTest::newRow("three2")
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(2, 1, 1, QString(), "s1"))
+                           .insertInc(2, Order(3, 2, 5, QString(), "s1"))
+                           .insertInc(3, Order(4, 3, 5, QString(), "s1"))))
+            << 4
+            << Qt::DescendingOrder
+            << (QList<Order>()
+                << Order(4, 3, 5, QString(), "s1")
+                << Order(3, 2, 5, QString(), "s1")
+                << Order(2, 1, 1, QString(), "s1"));
+
 }
 
 void TTableModelOrder::TestSort()
@@ -233,7 +247,8 @@ void TTableModelOrder::TestWriteOrdersToFile()
         modelData = rowData.at(i).from() + QString(";")
                 + rowData.at(i).to() + QString(";")
                 + QString::number(rowData.at(i).orderTime()) + QString(";")
-                + QString::number(rowData.at(i).deliveryTime()) + QString(";");
+                + QString::number(rowData.at(i).deliveryTime()) + QString(";")
+                + QString::number(rowData.at(i).volumeOrder()) + QString(";");
         modelData += QString("\n");
         dataForWriting = dataForWriting.append(modelData);
     }

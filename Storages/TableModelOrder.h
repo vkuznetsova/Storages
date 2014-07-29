@@ -43,6 +43,7 @@ public:
     static const int columnTo;
     static const int columnOrderDate;
     static const int columnDeliveryDate;
+    static const int columnVolumeOrder;
 
 private:
 

@@ -16,6 +16,7 @@ public:
     static const int headerColumnTo = 1;
     static const int headerColumnOrderDate = 2;
     static const int headerColumnDeliveryDate = 3;
+    static const int headerColumnVolumeOrder = 4;
 
 private slots:
     void TestColumnCount();

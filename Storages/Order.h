@@ -17,7 +17,8 @@ public:
     Order(const QString &from,
           const QString &to,
           const int orderTime,
-          const int deliveryTime);
+          const int deliveryTime,
+          const int volumeOrder);
 
     int deliveryTime() const;
 
@@ -63,6 +64,7 @@ public:
         rowCount += plan.keys().count();
         return *this;
     }
+
     QList<Order> toList(const TreeOrderTable &orderTable) const;
 };
 

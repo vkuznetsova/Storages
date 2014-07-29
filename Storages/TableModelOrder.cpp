@@ -4,6 +4,7 @@ const int TableModelOrder::columnFrom = 0;
 const int TableModelOrder::columnTo = 1;
 const int TableModelOrder::columnOrderDate = 2;
 const int TableModelOrder::columnDeliveryDate = 3;
+const int TableModelOrder::columnVolumeOrder = 4;
 
 TableModelOrder::TableModelOrder(const TreeOrderTable orderTable)
 {
@@ -48,12 +49,16 @@ int TableModelOrder::rowCount(const QModelIndex &parent) const
 int TableModelOrder::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return 4;
+    return 5;
 }
 
 QVariant TableModelOrder::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
+    {
+        return QVariant();
+    }
+    if(orders_[index.row()].volumeOrder() == 0)
     {
         return QVariant();
     }
@@ -74,6 +79,10 @@ QVariant TableModelOrder::data(const QModelIndex &index, int role) const
         if(index.column() == columnOrderDate)
         {
             return orders_[index.row()].orderTime();
+        }
+        if(index.column() == columnVolumeOrder)
+        {
+            return orders_[index.row()].volumeOrder();
         }
     }
     return QVariant();
@@ -100,6 +109,10 @@ QVariant TableModelOrder::headerData(int section, Qt::Orientation orientation, i
             if(section == columnDeliveryDate)
             {
                 return "Дата доставки";
+            }
+            if(section == columnVolumeOrder)
+            {
+                return "Объем заказа";
             }
         }
     }
@@ -150,7 +163,8 @@ Order TableModelOrder::rowID(const int row) const
     Order order = Order(orders_.at(row).from(),
                         orders_.at(row).to(),
                         orders_.at(row).orderTime(),
-                        orders_.at(row).deliveryTime());
+                        orders_.at(row).deliveryTime(),
+                        orders_.at(row).volumeOrder());
     return order;
 }
 
@@ -159,7 +173,8 @@ Order TableModelOrder::columnID(const int column) const
     Order order = Order(orders_.at(column).from(),
                         orders_.at(column).to(),
                         orders_.at(column).orderTime(),
-                        orders_.at(column).deliveryTime());
+                        orders_.at(column).deliveryTime(),
+                        orders_.at(column).volumeOrder());
     return order;
 }
 
@@ -198,7 +213,8 @@ void TableModelOrder::writeOrdersToFile(const QString &fileName) const
     {
         data = orders_[i].from() + QString(";") + orders_[i].to() + QString(";")
                 + QString::number(orders_[i].orderTime()) + QString(";")
-                + QString::number(orders_[i].deliveryTime()) + QString(";");
+                + QString::number(orders_[i].deliveryTime()) + QString(";")
+                + QString::number(orders_[i].volumeOrder()) + QString(";");
         data += QString("\n");
         QByteArray dataForWriting = QByteArray().append(data);
         file.write(dataForWriting);

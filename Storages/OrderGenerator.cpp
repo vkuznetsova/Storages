@@ -126,7 +126,7 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
     }
     if(countOrder == 0)
     {
-        //qWarning()<<"not exist order"<<orderPlan.keys().size();
+//        qWarning()<<"not exist order"<<orderPlan.keys().size();
         return;
     }
     orderTable.insertInc(storage, orderPlan);
