@@ -65,7 +65,7 @@ QVariant TableModelOrder::data(const QModelIndex &index, int role) const
         }
         if(index.column() == columnTo)
         {
-           return orders_[index.row()].to();
+            return orders_[index.row()].to();
         }
         if(index.column() == columnDeliveryDate)
         {
@@ -151,11 +151,6 @@ Order TableModelOrder::rowID(const int row) const
                         orders_.at(row).to(),
                         orders_.at(row).orderTime(),
                         orders_.at(row).deliveryTime());
-    qWarning()<< "rowID";
-    qWarning()<< orders_.at(row).from()
-              << orders_.at(row).to()
-              << orders_.at(row).orderTime()
-              << orders_.at(row).deliveryTime();
     return order;
 }
 
@@ -187,6 +182,29 @@ Qt::ItemFlags TableModelOrder::flags(const QModelIndex &index) const
         flags |= Qt::ItemIsEditable;
     }
     return flags;
+}
+
+void TableModelOrder::writeOrdersToFile(const QString &fileName) const
+{
+    QFile file(fileName + QString(".csv"));
+
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        qWarning() << QObject::tr("Ошибка открытия файла для записи..");
+        return;
+    }
+    QString data;
+    for(int i = 0; i < orders_.size(); i++)
+    {
+        data = orders_[i].from() + QString(";") + orders_[i].to() + QString(";")
+                + QString::number(orders_[i].orderTime()) + QString(";")
+                + QString::number(orders_[i].deliveryTime()) + QString(";");
+        data += QString("\n");
+        QByteArray dataForWriting = QByteArray().append(data);
+        file.write(dataForWriting);
+    }
+    file.close();
+
 }
 
 bool TableModelOrder::greaterThan(const QPair<Order, QVariant> &pair1,

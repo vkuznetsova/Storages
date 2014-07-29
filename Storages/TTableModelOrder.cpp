@@ -173,4 +173,80 @@ void TTableModelOrder::TestSort()
     QCOMPARE(actual, expected);
 
 }
+
+void TTableModelOrder::TestWriteOrdersToFile_data()
+{
+    QTest::addColumn<TreeOrderTable>("orderTable");
+
+    QTest::newRow("empty")<< TreeOrderTable();
+
+    QTest::newRow("single")<< (TreeOrderTable()
+                               .insertInc("s1", OrderPlan()
+                                          .insertInc(1, Order(1, 1, 0, QString(), "s1"))));
+
+    QTest::newRow("two1")
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(2, 1, 2, QString(), "s1")))
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(3, 2, 1, "s1", "s2"))));
+
+    QTest::newRow("two2")
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(2, 1, 2, QString(), "s1")))
+                .insertInc("s2", OrderPlan()
+                           .insertInc(1, Order(3, 2, 1, "s1", "s2"))));
+
+    QTest::newRow("three1")
+            << (TreeOrderTable()
+                .insertInc("s1", OrderPlan()
+                           .insertInc(1, Order(2, 1, 1, QString(), "s1"))
+                           .insertInc(2, Order(3, 2, 5, QString(), "s1"))
+                           .insertInc(3, Order(4, 3, 5, QString(), "s1"))));
+
+}
+
+void TTableModelOrder::TestWriteOrdersToFile()
+{
+    QFETCH(TreeOrderTable, orderTable);
+
+    const QString tag = QTest::currentDataTag();
+    const QString fileName = tag + "TTableModelOrder.TestWriteOrdersToFile.csv";
+
+    if(QFile::exists(fileName))
+    {
+        if(!QFile::remove(fileName))
+        {
+            QFAIL("can't remove testing file with data");
+        }
+    }
+
+    TableModelOrder modelOrder(orderTable);
+
+    modelOrder.writeOrdersToFile(fileName);
+    QList<Order> rowData = TreeOrderTable().toList(orderTable);
+    QString modelData;
+    QByteArray dataForWriting;
+    for(int i = 0; i < rowData.size(); i++)
+    {
+        modelData = rowData.at(i).from() + QString(";")
+                + rowData.at(i).to() + QString(";")
+                + QString::number(rowData.at(i).orderTime()) + QString(";")
+                + QString::number(rowData.at(i).deliveryTime()) + QString(";");
+        modelData += QString("\n");
+        dataForWriting = dataForWriting.append(modelData);
+    }
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return;
+    }
+    QByteArray data = file.readAll();
+    QString actual = QString(data);
+    QString expected = QString(dataForWriting);
+
+    QCOMPARE(actual, expected);
+
+}
 Q_DECLARE_METATYPE(Qt::SortOrder)

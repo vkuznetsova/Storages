@@ -27,6 +27,9 @@ private slots:
 
     void TestSort_data();
     void TestSort();
+
+    void TestWriteOrdersToFile_data();
+    void TestWriteOrdersToFile();
 };
 
 #endif // TTABLEMODELORDER_H

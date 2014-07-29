@@ -37,6 +37,8 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    void writeOrdersToFile(const QString &fileName) const;
+
     static const int columnFrom;
     static const int columnTo;
     static const int columnOrderDate;

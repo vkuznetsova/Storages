@@ -17,7 +17,8 @@
 #include <QMessageBox>
 #include <QSpinBox>
 #include <QHBoxLayout>
-#include <QProgressBar>
+#include <QMenuBar>
+#include <QFileDialog>
 
 #include "TableModel.h"
 #include "StorageDatabaseReader.h"
@@ -46,6 +47,7 @@ private slots:
     void currentTreeChanged(const int index);
     void calcOrderPlans();
     void currentTreeChangedForOrder(const int index);
+    void saveOrdersToFile();
 
 private:
     QTableView *tableView_;
@@ -61,6 +63,7 @@ private:
     QSpinBox *spBox_;
 
     QMenu *menu_;
+    QMenu *menuOrder_;
 
     QComboBox *comboBox_;
     QComboBox *comboBoxOrder_;
@@ -70,6 +73,8 @@ private:
     QTabWidget *tabWgt_;
 
     QTableView *viewOrder_;
+
+    QAction *saveToFile_;
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);

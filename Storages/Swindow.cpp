@@ -61,12 +61,22 @@ void Swindow::createView()
 
     menu_ = new QMenu(this);
 
+    menuOrder_ = new QMenu();
+    QMenuBar *menuBar = new QMenuBar(0);
+    QMenu *subMenu = new QMenu(tr("&Меню"));
+    menuOrder_->addMenu(subMenu);
+    saveToFile_ = new QAction(tr("&Сохранить в файл"), this);
+    subMenu->addAction(saveToFile_);
+    menuBar->addMenu(subMenu);
+
+
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->addWidget(addChildButton_);
     mainLayout->addWidget(comboBox_);
     mainLayout->addWidget(tableView_);
 
     QVBoxLayout *vbLayout = new QVBoxLayout();
+    vbLayout->addWidget(menuBar);
     vbLayout->addWidget(spBox_);
     vbLayout->addWidget(comboBoxOrder_);
     vbLayout->addWidget(calcOrderPlansButton_);
@@ -82,6 +92,7 @@ void Swindow::createView()
     tabWgt_->addTab(centralWidget, "Склады");
     tabWgt_->addTab(wgt, "Расчет плана закупок");
     setCentralWidget(tabWgt_);
+
 }
 
 void Swindow::createConnections()
@@ -102,6 +113,8 @@ void Swindow::createConnections()
 
     connect(comboBoxOrder_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(currentTreeChangedForOrder(int)));
+
+    connect(saveToFile_, SIGNAL(triggered()), SLOT(saveOrdersToFile()));
 }
 
 void Swindow::addNewChild()
@@ -149,6 +162,12 @@ void Swindow::currentTreeChangedForOrder(const int index)
     StorageDatabaseReader reader("dataBaseName");
     const QString treeID = comboBox_->itemText(index);
     StorageTree tree = reader.read(treeID);
+}
+
+void Swindow::saveOrdersToFile()
+{
+    QString fileName = QFileDialog::getSaveFileName(0, "Save file", "", "*.csv");
+    tableModelOrder_->writeOrdersToFile(fileName);
 }
 
 void Swindow::contextMenuEvent(QContextMenuEvent *event)
