@@ -41,7 +41,7 @@ int TableModelOrder::rowCount(const QModelIndex &parent) const
 {
     if(!parent.isValid())
     {
-        return orderTable_.rowCount;
+        return orders_.count();
     }
     return 0;
 }
@@ -55,10 +55,6 @@ int TableModelOrder::columnCount(const QModelIndex &parent) const
 QVariant TableModelOrder::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-    {
-        return QVariant();
-    }
-    if(orders_[index.row()].volumeOrder() == 0)
     {
         return QVariant();
     }

@@ -65,6 +65,10 @@ QList<Order> TreeOrderTable::toList(const TreeOrderTable &orderTable) const
     {
         foreach (const int day, orderTable.value(stor).keys())
         {
+            if(orderTable.value(stor).value(day).volumeOrder() == 0)
+            {
+                continue;
+            }
             listOrders<<orderTable.value(stor).value(day);
         }
     }

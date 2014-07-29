@@ -55,13 +55,11 @@ class TreeOrderTable : public QHash<QString, OrderPlan>
 {
 public:
     int numStorages;
-    int rowCount = 0;
     TreeOrderTable& insertInc(const QString &storage,
                               const OrderPlan &plan)
     {
         insert(storage, plan);
         numStorages = this->keys().count();
-        rowCount += plan.keys().count();
         return *this;
     }
 
