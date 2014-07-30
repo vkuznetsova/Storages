@@ -156,21 +156,21 @@ void TableModelOrder::sort(int column, Qt::SortOrder order)
 
 Order TableModelOrder::rowID(const int row) const
 {
-    Order order = Order(orders_.at(row).from(),
-                        orders_.at(row).to(),
+    Order order = Order(orders_.at(row).deliveryTime(),
                         orders_.at(row).orderTime(),
-                        orders_.at(row).deliveryTime(),
-                        orders_.at(row).volumeOrder());
+                        orders_.at(row).volumeOrder(),
+                        orders_.at(row).from(),
+                        orders_.at(row).to());
     return order;
 }
 
 Order TableModelOrder::columnID(const int column) const
 {
-    Order order = Order(orders_.at(column).from(),
-                        orders_.at(column).to(),
+    Order order = Order(orders_.at(column).deliveryTime(),
                         orders_.at(column).orderTime(),
-                        orders_.at(column).deliveryTime(),
-                        orders_.at(column).volumeOrder());
+                        orders_.at(column).volumeOrder(),
+                        orders_.at(column).from(),
+                        orders_.at(column).to());
     return order;
 }
 

@@ -34,14 +34,13 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
         {
             currentBalance = 0;
         }
+        int deliveryDate = i;
+        int orderDate = deliveryDate - deliveryTime;
+        from = node.getParent();
+        to = node.id();
         if(currentBalance == 0 || currentBalance < expense)
         {
-            from = node.getParent();
-            to = node.id();
             volumeOrder = deliveryTime * expense - currentBalance;
-            int deliveryDate = i;
-            int orderDate = deliveryDate - deliveryTime;
-            //            qWarning()<<"data of children";
             foreach (const QString &stor, orderTable.keys())
             {
                 foreach (const int it, orderTable.value(stor).keys())
@@ -50,49 +49,30 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
                             && orderTable.value(stor).value(it).from() == storage)
                     {
                         volumeOrder += orderTable.value(stor).value(it).volumeOrder();
-                        //                        qWarning()<< orderTable.value(stor).value(it).deliveryTime()
-                        //                                  << orderTable.value(stor).value(it).orderTime()
-                        //                                  << orderTable.value(stor).value(it).volumeOrder()
-                        //                                  << orderTable.value(stor).value(it).from()
-                        //                                  << orderTable.value(stor).value(it).to()
-                        //                                  << volumeOrder;
                         currentBalance = currentBalance - orderTable.value(stor).value(it).volumeOrder();
                     }
                 }
             }
-            order = Order(deliveryDate, orderDate, volumeOrder, from, to);
-            orderPlan = orderPlan.insertInc(orderDate, order);
-            //            qWarning()<<"from"<<from
-            //                     <<"to"<<to
-            //                    <<"deliveryDate"<<deliveryDate
-            //                   <<"orderDate"<<orderDate
-            //                  <<"volumeOrder"<<order.volumeOrder();
             countOrder++;
-            currentBalance += volumeOrder;
-            //            qWarning()<<"currentBalance"<<currentBalance;
         }
         else
         {
-            from = node.getParent();
-            to = node.id();
-            int deliveryDate = i;
-            int orderDate = deliveryDate - deliveryTime;
+            volumeOrder = 0;
             foreach (const QString &stor, orderTable.keys())
             {
                 foreach (const int it, orderTable.value(stor).keys())
                 {
                     if(deliveryDate == orderTable.value(stor).value(it).orderTime())
                     {
-                        volumeOrder += orderTable.value(stor).value(it).volumeOrder();
                         currentBalance = currentBalance - orderTable.value(stor).value(it).volumeOrder();
                         countOrder++;
                     }
                 }
             }
-            order = Order(deliveryDate, orderDate, 0, from, to);
-            orderPlan = orderPlan.insertInc(orderDate, order);
-            currentBalance += volumeOrder;
         }
+        order = Order(deliveryDate, orderDate, volumeOrder, from, to);
+        orderPlan = orderPlan.insertInc(orderDate, order);
+        currentBalance += volumeOrder;
         volumeOrder = 0;
         if(order.deliveryTime() == node.getDeliveryTime() + order.orderTime())
         {
@@ -104,6 +84,7 @@ void OrderGenerator::calcOrderPlan(TreeOrderTable &orderTable,
     {
         return;
     }
+
     orderTable.insertInc(storage, orderPlan);
 }
 

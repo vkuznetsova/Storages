@@ -14,15 +14,6 @@ Order::Order(const int deliveryTime, const int orderTime, const int volumeOrder,
 {
 }
 
-Order::Order(const QString &from, const QString &to, const int orderTime, const int deliveryTime, const int volumeOrder)
-{
-    from_ = from;
-    to_ = to;
-    orderTime_ = orderTime;
-    deliveryTime_ = deliveryTime;
-    volumeOrder_ = volumeOrder;
-}
-
 int Order::deliveryTime() const
 {
     return deliveryTime_;

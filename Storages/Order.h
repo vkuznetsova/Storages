@@ -14,12 +14,6 @@ public:
           const QString &from,
           const QString &to);
 
-    Order(const QString &from,
-          const QString &to,
-          const int orderTime,
-          const int deliveryTime,
-          const int volumeOrder);
-
     int deliveryTime() const;
 
     int orderTime() const;

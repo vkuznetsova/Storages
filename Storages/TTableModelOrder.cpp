@@ -31,7 +31,7 @@ void TTableModelOrder::TestRowCount_data()
     QTest::newRow("single1")<< (TreeOrderTable()
                                 .insertInc("s1", OrderPlan()
                                            .insertInc(1, Order(1, 1, 0, QString(), "s1"))))
-                            << 1;
+                            << 0;
 
     QTest::newRow("two1")
             << (TreeOrderTable()
@@ -115,8 +115,7 @@ void TTableModelOrder::TestSort_data()
                                           .insertInc(1, Order(1, 1, 0, QString(), "s1"))))
                            << 1
                            << Qt::AscendingOrder
-                           << (QList<Order>()
-                               << Order(1, 1, 0, QString(), "s1"));
+                           << QList<Order>();
 
     QTest::newRow("two1")
             << (TreeOrderTable()
